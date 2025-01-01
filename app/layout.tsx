@@ -7,7 +7,14 @@ import { Providers } from "./providers";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
-import { Navbar } from "@/components/navbar";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+} from "@nextui-org/navbar";
+import { Button } from "@nextui-org/button";
+import { Input } from "@nextui-org/input";
 
 export const metadata: Metadata = {
   title: {
@@ -38,25 +45,36 @@ export default function RootLayout({
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
+        <Navbar isBordered>
+          <NavbarBrand>
+            <Link className="font-bold text-inherit" href="/">
+              Sklep grzybów
+            </Link>
+          </NavbarBrand>
+          <NavbarContent className="hidden sm:flex gap-4" justify="center">
+            <Input type="search" placeholder="Search" />
+          </NavbarContent>
+          <NavbarContent justify="end">
+            <NavbarItem className="hidden lg:flex">
+              <Link href="/login">Login</Link>
+            </NavbarItem>
+            <NavbarItem>
+              <Button as={Link} color="primary" href="/signup" variant="flat">
+                Sign Up
+              </Button>
+            </NavbarItem>
+          </NavbarContent>
+        </Navbar>
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
-            <Navbar />
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
               {children}
             </main>
             <footer className="w-full flex items-center justify-center py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                title="nextui.org homepage"
-              >
-                <span className="text-default-600">Powered by</span>
-                <p className="text-primary">NextUI</p>
-              </Link>
+              stopka
             </footer>
           </div>
         </Providers>
