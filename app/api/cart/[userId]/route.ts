@@ -7,7 +7,10 @@ export async function GET(
 ) {
   const prisma = new PrismaClient();
   const id = (await params).userId;
-  const cart = await prisma.order.findFirst({ where: { userId: id, orderDate: null}, include: { orderDetails: true } });
+  const cart = await prisma.order.findFirst({
+    where: { userId: id, orderDate: null },
+    include: { orderDetails: true },
+  });
 
   if (!cart) {
     return Response.json({ message: "User not found!" }, { status: 404 });
