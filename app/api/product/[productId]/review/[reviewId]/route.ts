@@ -25,14 +25,7 @@ export async function PATCH(
   const id = (await params).reviewId;
   const productId = (await params).productId;
 
-  if (!data.userId) {
-    return Response.json({ message: "No userId provided!" }, { status: 400 });
-  } else if (typeof data.userId !== "string") {
-    return Response.json(
-      { message: "UserId must be a string!" },
-      { status: 400 },
-    );
-  } else if (!data.description) {
+  if (data.description === undefined) {
     return Response.json(
       { message: "No description provided!" },
       { status: 400 },
@@ -42,15 +35,13 @@ export async function PATCH(
       { message: "Description type must be a string!" },
       { status: 400 },
     );
-  } else if (!data.rating) {
+  } else if (data.rating === undefined) {
     return Response.json({ message: "No rating provided!" }, { status: 400 });
   } else if (typeof data.rating !== "number") {
     return Response.json(
       { message: "Rating must be a number!" },
       { status: 400 },
     );
-  } else if (!(await prisma.user.findFirst({ where: { id: data.userId } }))) {
-    return Response.json({ message: "User not found!" }, { status: 404 });
   } else if (!(await prisma.product.findFirst({ where: { id: productId } }))) {
     return Response.json({ message: "Product not found!" }, { status: 404 });
   }
@@ -58,7 +49,6 @@ export async function PATCH(
     await prisma.review.update({
       where: { id: id },
       data: {
-        userId: data.userId,
         rating: data.rating,
         description: data.description,
       },
