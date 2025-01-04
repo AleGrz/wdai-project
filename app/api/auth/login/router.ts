@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest } from "next/server";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
@@ -30,7 +31,6 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
   }
-
   if (!(await bcrypt.compare(data.password, user.password))) {
     return Response.json(
       { message: "Invalid email or password!" },
@@ -38,8 +38,24 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const token = jwt.sign(
+    { userId: user.id, isAdmin: user.isAdmin },
+    process.env.JWT_SECRET as string,
+    { expiresIn: "1h" },
+  );
+
+  const refreshToken = jwt.sign(
+    { userId: user.id, isAdmin: user.isAdmin },
+    process.env.JWT_REFRESH_SECRET as string,
+    { expiresIn: "7d" },
+  );
+
   return Response.json(
-    { message: "Successfully logged in.", user },
+    {
+      refreshToken: refreshToken,
+      token: token,
+      expiresIn: 3600,
+    },
     { status: 200 },
   );
 }
