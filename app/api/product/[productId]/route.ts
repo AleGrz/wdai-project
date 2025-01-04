@@ -24,21 +24,21 @@ export async function PATCH(
   const data = await request.json();
   const id = (await params).productId;
 
-  if (!data.name) {
+  if (data.name === undefined) {
     return Response.json({ message: "No name provided!" }, { status: 400 });
   } else if (typeof data.name !== "string") {
     return Response.json(
       { message: "Name type must be a string!" },
       { status: 400 },
     );
-  } else if (!data.brand) {
+  } else if (data.brand === undefined) {
     return Response.json({ message: "No brand provided!" }, { status: 400 });
   } else if (typeof data.brand !== "string") {
     return Response.json(
       { message: "Brand type must be a string!" },
       { status: 400 },
     );
-  } else if (!data.description) {
+  } else if (data.description === undefined) {
     return Response.json(
       { message: "No description provided!" },
       { status: 400 },
@@ -48,21 +48,21 @@ export async function PATCH(
       { message: "Description type must be a string!" },
       { status: 400 },
     );
-  } else if (!data.price) {
+  } else if (data.price === undefined) {
     return Response.json({ message: "No price provided!" }, { status: 400 });
   } else if (typeof data.price !== "number") {
     return Response.json(
       { message: "Price type must be a number!" },
       { status: 400 },
     );
-  } else if (!data.inStock) {
+  } else if (data.inStock === undefined) {
     return Response.json({ message: "No inStock provided!" }, { status: 400 });
   } else if (typeof data.inStock !== "number") {
     return Response.json(
       { message: "InStock type must be a number!" },
       { status: 400 },
     );
-  } else if (!data.categoryId) {
+  } else if (data.categoryId === undefined) {
     return Response.json(
       { message: "No categoryId provided!" },
       { status: 400 },
@@ -76,25 +76,33 @@ export async function PATCH(
     !(await prisma.category.findFirst({ where: { id: data.categoryId } }))
   ) {
     return Response.json({ message: "Category not found!" }, { status: 404 });
-  } else if (!(await prisma.product.findFirst({ where: { id: id } }))) {
-    return Response.json({ message: "Product not found!" }, { status: 404 });
   }
-  await prisma.product.update({
-    where: { id: id },
-    data: {
-      name: data.name,
-      brand: data.brand,
-      description: data.description,
-      price: data.price,
-      inStock: data.inStock,
-      categoryId: data.categoryId,
-    },
-  });
+  try {
+    await prisma.product.update({
+      where: { id: id },
+      data: {
+        name: data.name,
+        brand: data.brand,
+        description: data.description,
+        price: data.price,
+        inStock: data.inStock,
+        categoryId: data.categoryId,
+      },
+    });
 
-  return Response.json(
-    { message: "Successfully edited the category." },
-    { status: 200 },
-  );
+    return Response.json(
+      { message: "Successfully edited the product." },
+      { status: 200 },
+    );
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return Response.json({ message: "Product not found!" }, { status: 404 });
+    }
+    throw error;
+  }
 }
 
 export async function DELETE(
@@ -109,7 +117,7 @@ export async function DELETE(
 
     return Response.json(
       { message: "Successfully deleted the product." },
-      { status: 201 },
+      { status: 200 },
     );
   } catch (error) {
     if (
@@ -117,6 +125,12 @@ export async function DELETE(
       error.code === "P2025"
     ) {
       return Response.json({ message: "Product not found!" }, { status: 404 });
+    } else if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2003" &&
+      error.meta?.field_name === "categoryId"
+    ) {
+      return Response.json({ message: "Invalid categoryId!" }, { status: 400 });
     }
     throw error;
   }

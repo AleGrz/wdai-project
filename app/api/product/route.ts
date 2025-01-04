@@ -11,21 +11,21 @@ export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
   const data = await request.json();
 
-  if (!data.name) {
+  if (data.name === undefined) {
     return Response.json({ message: "No name provided!" }, { status: 400 });
   } else if (typeof data.name !== "string") {
     return Response.json(
       { message: "Name type must be a string!" },
       { status: 400 },
     );
-  } else if (!data.brand) {
+  } else if (data.brand === undefined) {
     return Response.json({ message: "No brand provided!" }, { status: 400 });
   } else if (typeof data.brand !== "string") {
     return Response.json(
       { message: "Brand type must be a string!" },
       { status: 400 },
     );
-  } else if (!data.description) {
+  } else if (data.description === undefined) {
     return Response.json(
       { message: "No description provided!" },
       { status: 400 },
@@ -35,21 +35,21 @@ export async function POST(request: NextRequest) {
       { message: "Description type must be a string!" },
       { status: 400 },
     );
-  } else if (!data.price) {
+  } else if (data.price === undefined) {
     return Response.json({ message: "No price provided!" }, { status: 400 });
   } else if (typeof data.price !== "number") {
     return Response.json(
       { message: "Price type must be a number!" },
       { status: 400 },
     );
-  } else if (!data.inStock) {
+  } else if (data.inStock === undefined) {
     return Response.json({ message: "No inStock provided!" }, { status: 400 });
   } else if (typeof data.inStock !== "number") {
     return Response.json(
       { message: "InStock type must be a number!" },
       { status: 400 },
     );
-  } else if (!data.categoryId) {
+  } else if (data.categoryId === undefined) {
     return Response.json(
       { message: "No categoryId provided!" },
       { status: 400 },
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
   });
 
   return Response.json(
-    { message: "Successfully added new category." },
+    { message: "Successfully added new product." },
     { status: 201 },
   );
 }
