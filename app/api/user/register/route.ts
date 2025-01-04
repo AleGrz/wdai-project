@@ -1,7 +1,5 @@
-import type { NextRequest } from "next/server";
-
 import { Prisma, PrismaClient } from "@prisma/client";
-import * as jose from "jose";
+import { NextRequest } from "next/server";
 import bcrypt from "bcrypt";
 
 export async function POST(request: NextRequest) {
@@ -45,7 +43,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const user = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email: data.email,
         password: await bcrypt.hash(data.password, 10),
@@ -54,23 +52,9 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const token = await new jose.SignJWT({ userId: user.id })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("1h")
-      .sign(new TextEncoder().encode(process.env.JWT_SECRET as string));
-
-    const refreshToken = await new jose.SignJWT({ userId: user.id })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("7d")
-      .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string));
-
     return Response.json(
-      {
-        token: token,
-        refreshToken: refreshToken,
-        expiresIn: 3600,
-      },
-      { status: 200 },
+      { message: "Successfully registered the user." },
+      { status: 201 },
     );
   } catch (error) {
     if (

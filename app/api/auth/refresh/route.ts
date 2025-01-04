@@ -1,6 +1,7 @@
+import type { NextRequest } from "next/server";
+
 import { PrismaClient } from "@prisma/client";
-import { NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
+import * as jose from "jose";
 
 export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
@@ -19,13 +20,13 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const decoded = jwt.verify(
+    const decoded = await jose.jwtVerify(
       data.refreshToken,
-      process.env.JWT_REFRESH_SECRET as string,
-    ) as jwt.JwtPayload;
+      new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
+    );
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+      where: { id: decoded.payload.userId as string },
     });
 
     if (!user) {
@@ -35,22 +36,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const newToken = jwt.sign(
-      { userId: user.id, isAdmin: user.isAdmin },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1h" },
-    );
+    const newToken = await new jose.SignJWT({ userId: user.id })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("1h")
+      .sign(new TextEncoder().encode(process.env.JWT_SECRET));
 
-    const newRefreshToken = jwt.sign(
-      { userId: user.id, isAdmin: user.isAdmin },
-      process.env.JWT_REFRESH_SECRET as string,
-      { expiresIn: "7d" },
-    );
+    const newRefreshToken = await new jose.SignJWT({ userId: user.id })
+      .setProtectedHeader({ alg: "HS256" })
+      .setExpirationTime("7d")
+      .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET));
 
     return Response.json(
       {
-        refreshToken: newRefreshToken,
         token: newToken,
+        refreshToken: newRefreshToken,
         expiresIn: 3600,
       },
       { status: 200 },
