@@ -15,3 +15,30 @@ export async function GET(
 
   return Response.json(cart);
 }
+
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ userId: string }> },
+) {
+  const prisma = new PrismaClient();
+  const id = (await params).userId;
+  const body = await request.json();
+
+  const cart = await prisma.order.findFirst({ where: { userId: id, orderDate: null}, include: { orderDetails: true } });
+
+  if (!cart) {
+    return Response.json({ message: "User not found!" }, { status: 404 });
+  }
+
+  const orderDetails = body.orderDetails.map((detail: any) => {
+    return {
+      productId: detail.productId,
+      quantity: detail.quantity,
+      orderId: cart.id,
+    };
+  });
+
+  await prisma.orderDetail.create({ data: orderDetails });
+
+  return Response.json({ message: "Order details added successfully!" });
+}
