@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
   if (!data.name) {
     return Response.json({ message: "No name provided!" }, { status: 400 });
-  } else if (typeof data.parentCategoryId !== "string") {
+  } else if (typeof data.name !== "string") {
     return Response.json(
       { message: "Name type must be a string!" },
       { status: 400 },
@@ -87,7 +87,7 @@ export async function PATCH(request: NextRequest) {
 
   if (!data.name) {
     return Response.json({ message: "No name provided!" }, { status: 400 });
-  } else if (typeof data.parentCategoryId !== "string") {
+  } else if (typeof data.name !== "string") {
     return Response.json(
       { message: "Name type must be a string!" },
       { status: 400 },
