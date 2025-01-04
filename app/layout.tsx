@@ -2,11 +2,6 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
-
-import { Providers } from "./providers";
-
-import { siteConfig } from "@/config/site";
-import { fontSans } from "@/config/fonts";
 import {
   Navbar,
   NavbarBrand,
@@ -15,6 +10,11 @@ import {
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
+
+import { Providers } from "./providers";
+
+import { siteConfig } from "@/config/site";
+import { fontSans } from "@/config/fonts";
 
 export const metadata: Metadata = {
   title: {
@@ -45,7 +45,7 @@ export default function RootLayout({
       <body
         className={clsx(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
+          fontSans.variable,
         )}
       >
         <Navbar isBordered>
@@ -55,7 +55,7 @@ export default function RootLayout({
             </Link>
           </NavbarBrand>
           <NavbarContent className="hidden sm:flex gap-4" justify="center">
-            <Input type="search" placeholder="Search" />
+            <Input placeholder="Search" type="search" />
           </NavbarContent>
           <NavbarContent justify="end">
             <NavbarItem className="hidden lg:flex">

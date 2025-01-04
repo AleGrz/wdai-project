@@ -15,9 +15,9 @@ export default function LoginPage() {
 
   return (
     <Form
-      onSubmit={onSubmit}
-      validationBehavior="native"
       className="flex flex-col flex-wrap gap-4 items-center"
+      validationBehavior="native"
+      onSubmit={onSubmit}
     >
       <Input
         isRequired
