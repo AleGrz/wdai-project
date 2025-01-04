@@ -1,0 +1,71 @@
+// When creating new migration, be sure that it is in the same
+// encoding as the schema.prisma file and has the same line endings.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  firstName     String
+  lastName      String
+  password      String
+  isAdmin       Boolean  @default(false)
+  orders        Order[]
+  reviews       Review[]
+}
+
+model Order {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  orderDate DateTime
+  orderDetails OrderDetail[]
+}
+
+model OrderDetail {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String 
+  product   Product @relation(fields: [productId], references: [id])
+  isSold    Boolean @default(false)
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  brand         String
+  description   String
+  price         Float
+  inStock       Int
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id])
+  orderDetails  OrderDetail[]
+  reviews       Review[]
+}
+
+model Category {
+  id                String    @id @default(cuid())
+  name              String
+  parentCategoryId  String?
+  parentCategory    Category? @relation(fields: [parentCategoryId], references: [id], name: "CategoryToCategory")
+  childrenCategories Category[] @relation(name: "CategoryToCategory")
+  products Product[]
+}
+
+model Review {
+  id          String  @id @default(cuid())
+  userId      String
+  user        User    @relation(fields: [userId], references: [id])
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  rating      Int
+  description String
+}
