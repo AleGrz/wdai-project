@@ -1,8 +1,6 @@
 import type { NextRequest } from "next/server";
 
 import { NextResponse } from "next/server";
-import * as jose from "jose";
-import { PrismaClient } from "@prisma/client";
 
 async function handleRequest(
   request: NextRequest,
@@ -17,29 +15,28 @@ async function handleRequest(
 }
 
 export async function middleware(request: NextRequest) {
-  const prisma = new PrismaClient();
-  const token = request.headers.get("Authorization")?.split(" ")[1];
+  // const token = request.headers.get("Authorization")?.split(" ")[1];
 
-  if (!token) {
-    return handleRequest(request, "No token provided!", "/home");
-  }
+  // if (!token) {
+  //   return handleRequest(request, "No token provided!", "/home");
+  // }
+  // const response = await fetch(`${request.nextUrl.origin}/api/auth`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ token }),
+  // });
 
-  try {
-    const decoded = await jose.jwtVerify(
-      token,
-      new TextEncoder().encode(process.env.JWT_SECRET),
-    );
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.payload.userId as string },
-    });
+  // if (!response.ok) {
+  //   return handleRequest(request, "Invalid token!", "/home");
+  // }
 
-    if (!user?.isAdmin || false) {
-      return handleRequest(request, "You are not an admin!", "/home");
-    }
-  } catch(error) {
-    console.log(error)
-    return handleRequest(request, "Invalid token!", "/home");
-  }
+  // const authData = await response.json();
+
+  // if (!authData.isAdmin) {
+  //   return handleRequest(request, "You are not an admin!", "/home");
+  // }
 
   return NextResponse.next();
 }
