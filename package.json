@@ -1,5 +1,5 @@
 {
-  "name": "next-app",
+  "name": "wdai-project",
   "version": "2.0.14",
   "private": true,
   "scripts": {
@@ -9,7 +9,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@chakra-ui/react": "workspace:*",
+    "@chakra-ui/react": "*",
     "@emotion/react": "^11.14.0",
     "@types/node": "^22.7.4",
     "@types/react": "^18.3.11",
@@ -23,11 +23,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chakra-ui/chakra-ui.git",
+    "url": "git+https://github.com/chakra-ui/chakra-ui.git",
     "directory": "examples/next-app"
   },
   "bugs": {
     "url": "https://github.com/chakra-ui/chakra-ui/issues"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "description": "This is a really simple project that shows the usage of Next.js with TypeScript.",
+  "main": "next.config.js",
+  "author": "",
+  "homepage": "https://github.com/chakra-ui/chakra-ui#readme"
 }

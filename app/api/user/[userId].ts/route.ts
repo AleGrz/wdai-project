@@ -14,5 +14,5 @@ export async function GET(
     return Response.json({ message: "User not found!" }, { status: 404 });
   }
 
-  return Response.json(user);
+  return Response.json({id: user.id, firstName: user.firstName, lastName: user.lastName});
 }
