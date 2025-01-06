@@ -11,7 +11,7 @@ export async function GET(
   const category = await prisma.category.findMany({ where: { parentCategoryId: parseInt(id) } });
 
   if (!category) {
-    return Response.json({ message: "Category not found!" }, { status: 404 });
+    return Response.json({ message: "Category has no subcategories!" }, { status: 404 });
   }
 
   return Response.json(category);
