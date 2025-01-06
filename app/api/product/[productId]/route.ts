@@ -97,7 +97,7 @@ export async function PATCH(
     );
   } catch (error) {
     if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error instanceof PrismaClient.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
       return Response.json({ message: "Product not found!" }, { status: 404 });
@@ -122,12 +122,12 @@ export async function DELETE(
     );
   } catch (error) {
     if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error instanceof PrismaClient.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
       return Response.json({ message: "Product not found!" }, { status: 404 });
     } else if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error instanceof PrismaClient.PrismaClientKnownRequestError &&
       error.code === "P2003" &&
       error.meta?.field_name === "categoryId"
     ) {
