@@ -12,16 +12,14 @@ import { Button } from "@nextui-org/button";
 import { Input } from "@nextui-org/input";
 
 import { Providers } from "./providers";
-
-import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    default: "Sklep grzybów",
+    template: `%s - ${"Sklep grzybów"}`,
   },
-  description: siteConfig.description,
+  description: "Grzyby dla przeciętniaków",
   icons: {
     icon: "/favicon.ico",
   },
