@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const prisma = new PrismaClient();
   const productId = (await params).productId;
-  const product = await prisma.product.findUnique({ where: { id: productId } });
+  const product = await prisma.product.findUnique({ where: { id: parseInt(productId) } });
 
   if (!product) {
     return Response.json({ message: "Product not found!" }, { status: 404 });
@@ -26,7 +26,7 @@ export async function GET(
     await prisma.review.findMany({
       skip: skip,
       take: pageSize,
-      where: { productId: productId },
+      where: { productId: parseInt(productId) },
     }),
   );
 }
@@ -65,13 +65,13 @@ export async function POST(
     );
   } else if (!(await prisma.user.findFirst({ where: { id: data.userId } }))) {
     return Response.json({ message: "User not found!" }, { status: 404 });
-  } else if (!(await prisma.product.findFirst({ where: { id: productId } }))) {
+  } else if (!(await prisma.product.findFirst({ where: { id: parseInt(productId) } }))) {
     return Response.json({ message: "Product not found!" }, { status: 404 });
   }
   await prisma.review.create({
     data: {
       userId: data.userId,
-      productId: productId,
+      productId: parseInt(productId),
       rating: data.rating,
       description: data.description,
     },

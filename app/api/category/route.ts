@@ -16,6 +16,9 @@ export async function GET(request: NextRequest) {
     await prisma.category.findMany({
       skip: skip,
       take: pageSize,
+      where: {
+        parentCategoryId: null
+      },
     }),
   );
 }

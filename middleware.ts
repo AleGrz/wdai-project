@@ -21,7 +21,7 @@ const accessRules = [
   },
   {
     path: "/api/category",
-    methods: ["GET", "POST"],
+    methods: ["POST"],
     roles: ["admin"]
   },
   {
@@ -31,7 +31,7 @@ const accessRules = [
   },
   {
     path: "/api/product",
-    methods: ["GET", "POST"],
+    methods: ["POST"],
     roles: ["admin"]
   },
   {

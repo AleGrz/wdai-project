@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const prisma = new PrismaClient();
   const id = (await params).productId;
-  const product = await prisma.product.findUnique({ where: { id: id } });
+  const product = await prisma.product.findUnique({ where: { id: parseInt(id) } });
 
   if (!product) {
     return Response.json({ message: "Product not found!" }, { status: 404 });
@@ -80,7 +80,7 @@ export async function PATCH(
   }
   try {
     await prisma.product.update({
-      where: { id: id },
+      where: { id: parseInt(id) },
       data: {
         name: data.name,
         brand: data.brand,
@@ -97,7 +97,7 @@ export async function PATCH(
     );
   } catch (error) {
     if (
-      error instanceof PrismaClient.PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
       return Response.json({ message: "Product not found!" }, { status: 404 });
@@ -114,7 +114,7 @@ export async function DELETE(
   const id = (await params).productId;
 
   try {
-    await prisma.product.delete({ where: { id: id } });
+    await prisma.product.delete({ where: { id: parseInt(id) } });
 
     return Response.json(
       { message: "Successfully deleted the product." },
@@ -122,12 +122,12 @@ export async function DELETE(
     );
   } catch (error) {
     if (
-      error instanceof PrismaClient.PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
       return Response.json({ message: "Product not found!" }, { status: 404 });
     } else if (
-      error instanceof PrismaClient.PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2003" &&
       error.meta?.field_name === "categoryId"
     ) {

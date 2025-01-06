@@ -8,7 +8,7 @@ export async function GET(
 ) {
   const prisma = new PrismaClient();
   const id = (await params).categoryId;
-  const category = await prisma.category.findUnique({ where: { id: id } });
+  const category = await prisma.category.findMany({ where: { parentCategoryId: parseInt(id) } });
 
   if (!category) {
     return Response.json({ message: "Category not found!" }, { status: 404 });
@@ -52,7 +52,7 @@ export async function PATCH(
   }
   try {
     await prisma.category.update({
-      where: { id: id },
+      where: { id: parseInt(id) },
       data: {
         name: data.name,
         parentCategoryId: data.parentCategoryId,
@@ -76,7 +76,7 @@ export async function PATCH(
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ categoryId: string }> },
+  { params }: { params: Promise<{ categoryId: number }> },
 ) {
   const prisma = new PrismaClient();
   const id = (await params).categoryId;

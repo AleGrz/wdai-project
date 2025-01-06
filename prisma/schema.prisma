@@ -33,29 +33,29 @@ model OrderDetail {
   id        String  @id @default(cuid())
   orderId   String
   order     Order   @relation(fields: [orderId], references: [id])
-  productId String 
+  productId Int 
   product   Product @relation(fields: [productId], references: [id])
   isSold    Boolean @default(false)
 }
 
 model Product {
-  id            String   @id @default(cuid())
+  id            Int   @id @default(autoincrement())
   name          String
   brand         String
   description   String
   price         Float
   inStock       Int
-  categoryId    String
-  category      Category @relation(fields: [categoryId], references: [id])
+  categoryId    Int
+  category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   orderDetails  OrderDetail[]
   reviews       Review[]
 }
 
 model Category {
-  id                String    @id @default(cuid())
+  id                Int    @id @default(autoincrement())
   name              String
-  parentCategoryId  String?
-  parentCategory    Category? @relation(fields: [parentCategoryId], references: [id], name: "CategoryToCategory")
+  parentCategoryId  Int?
+  parentCategory    Category? @relation(fields: [parentCategoryId], references: [id], name: "CategoryToCategory", onDelete: Cascade)
   childrenCategories Category[] @relation(name: "CategoryToCategory")
   products Product[]
 }
@@ -64,7 +64,7 @@ model Review {
   id          String  @id @default(cuid())
   userId      String
   user        User    @relation(fields: [userId], references: [id])
-  productId   String
+  productId   Int
   product     Product @relation(fields: [productId], references: [id])
   rating      Int
   description String

@@ -6,11 +6,23 @@ export async function GET(request: NextRequest) {
   const prisma = new PrismaClient();
   const searchParams = request.nextUrl.searchParams;
   const page = parseInt(searchParams.get("page") || "1", 10);
+  
   const pageSize = Math.min(
     parseInt(searchParams.get("pageSize") || "10", 10),
     100,
   );
   const skip = (page - 1) * pageSize;
+
+  if (searchParams.get("categoryId")) {
+    const category = parseInt(searchParams.get("categoryId") || "1");
+    return Response.json(
+      await prisma.product.findMany({
+        where: { categoryId: category },
+        skip: skip,
+        take: pageSize,
+      }),
+    );
+  }
 
   return Response.json(
     await prisma.product.findMany({
