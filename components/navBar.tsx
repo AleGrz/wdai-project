@@ -1,20 +1,27 @@
 "use client";
 
-import { Box, Flex, HStack, Input } from "@chakra-ui/react";
-import { Avatar } from "./avatar";
-import { InputGroup } from "./input-group";
-//import { Search2Icon } from "@chakra-ui/icons";
+import { Box, Button, Flex, HStack, Input } from "@chakra-ui/react";
+import { Avatar } from "./ui/avatar";
+import { RiSearch2Fill } from "react-icons/ri";
 
 export default function WithAction() {
   return (
     <Box px={4}>
-      <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+      <Flex
+        h={16}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+        gap={16}
+      >
         <HStack alignItems={"center"}>
           <Box>Logo</Box>
         </HStack>
-        <InputGroup flex="1" startElement={<div />}>
+        <HStack>
           <Input placeholder="Search" />
-        </InputGroup>
+          <Button>
+            <RiSearch2Fill />
+          </Button>
+        </HStack>
         <Flex alignItems={"center"}>
           <Avatar
             size={"sm"}
