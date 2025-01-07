@@ -12,7 +12,7 @@ export default function WithAction() {
         gap={16}
       >
         <HStack alignItems={"center"}>
-          <Image src="/logo.svg" alt="Logo" height={"30px"} />
+          <Image src="/logo.svg" alt="Logo" height={"7"} />
         </HStack>
         <HStack>
           <Input placeholder="Search" />
