@@ -167,3 +167,11 @@ export default async function ProductPage({
     </>
   );
 }
+
+function onSubmit(event: any) {
+  event.preventDefault();
+  if (!event.target.rating.value) {
+    alert("Rating is required");
+    return;
+  }
+}
