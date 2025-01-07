@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { OrderDetail } from "@prisma/client";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -8,7 +9,7 @@ export async function GET(
   const prisma = new PrismaClient();
   const id = (await params).userId;
   const cart = await prisma.order.findFirst({
-    where: { userId: id, orderDate: null },
+    where: { userId: parseInt(id), orderDate: null },
     include: { orderDetails: true },
   });
 
@@ -27,16 +28,15 @@ export async function POST(
   const id = (await params).userId;
   const body = await request.json();
 
-  const cart = await prisma.order.findFirst({ where: { userId: id, orderDate: null}, include: { orderDetails: true } });
+  const cart = await prisma.order.findFirst({ where: { userId: parseInt(id), orderDate: null}, include: { orderDetails: true } });
 
   if (!cart) {
     return Response.json({ message: "User not found!" }, { status: 404 });
   }
 
-  const orderDetails = body.orderDetails.map((detail: any) => {
+  const orderDetails = body.orderDetails.map((detail: OrderDetail) => {
     return {
       productId: detail.productId,
-      quantity: detail.quantity,
       orderId: cart.id,
     };
   });

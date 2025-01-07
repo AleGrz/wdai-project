@@ -4,13 +4,9 @@ import React, { useEffect, useState } from "react";
 import { Product, Review } from "@prisma/client";
 import {
   Box,
-  Heading,
-  Text,
   Image,
   Tabs,
-  Badge,
   Spinner,
-  VStack,
   HStack,
   Flex,
   Button,

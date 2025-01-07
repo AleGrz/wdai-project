@@ -1,6 +1,7 @@
 import { Box, Button, Flex, HStack, Input, Image } from "@chakra-ui/react";
 import { Avatar } from "./ui/avatar";
 import { RiSearch2Fill } from "react-icons/ri";
+import Link from "next/link";
 
 export default function WithAction() {
   return (
@@ -12,9 +13,9 @@ export default function WithAction() {
         gap={16}
       >
         <HStack alignItems={"center"}>
-          <a href={"/"}>
+          <Link href={"/"}>
             <Image src="/logo.svg" alt="Logo" height={"7"} />
-          </a>
+          </Link>
         </HStack>
         <HStack>
           <Input placeholder="Search" />

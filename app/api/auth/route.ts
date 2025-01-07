@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
       new TextEncoder().encode(process.env.JWT_SECRET),
     );
     const user = await prisma.user.findUnique({
-      where: { id: payload.userId as string },
+      where: { id: parseInt(payload.userId as string) },
     });
 
     return Response.json({

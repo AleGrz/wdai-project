@@ -1,32 +1,21 @@
-"use client";
-
 import ProductCard from "@/components/productCard";
-import { Flex } from "@chakra-ui/react";
+import { Center, Flex } from "@chakra-ui/react";
 import { Product } from "@prisma/client";
-import { useEffect, useState } from "react";
 
-export default function Home() {
-  const [products, setProducts] = useState<Product[]>([]);
-  useEffect(() => {
-    async function fetchData() {
-      const productResponse = await fetch(`http://localhost:3000/api/product`);
-      const productData = await productResponse.json();
-      setProducts(productData);
-    }
-
-    fetchData();
-  }, []);
-
+export default async function Home() {
+  const productResponse = await fetch(`http://localhost:3000/api/product`, { next: { revalidate: 300 } });
+  const products = await productResponse.json();
+  let counter = 0;
   return (
     <>
       {products.length > 0 ? (
         <Flex wrap={"wrap"} justifyContent={"center"}>
           {products.map((product: Product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} loading={counter++ < 5 ? "eager" : "lazy"} />
           ))}
         </Flex>
       ) : (
-        <p>No products found.</p>
+        <Center>No products found.</Center>
       )}
     </>
   );

@@ -1,41 +1,31 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import CategoryCard from "@/components/categoryCard";
+import type React from "react";
 import ProductCard from "@/components/productCard";
-import { Category, Product } from "@prisma/client";
-import { Flex } from "@chakra-ui/react";
+import { Product } from "@prisma/client";
+import { Center, Flex } from "@chakra-ui/react";
 
-export default function SearchPage() {
-  const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page") || "1");
-  const categoryId = parseInt(searchParams.get("categoryId") || "1");
-
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    async function fetchData() {
-      const productResponse = await fetch(
-        `http://localhost:3000/api/product?page=${page}&categoryId=${categoryId}`
-      );
-      const productData = await productResponse.json();
-      setProducts(productData);
-    }
-
-    fetchData();
-  }, [categoryId, page]);
-
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
+  const { page = "1", categoryId = "1" } = await searchParams
+  const pageNum = Array.isArray(page) ? 1 : parseInt(page);
+  const categoryIdNum = Array.isArray(categoryId) ? 1 : parseInt(categoryId);
+  const productResponse = await fetch(
+    `http://localhost:3000/api/product?page=${pageNum}&categoryId=${categoryIdNum}`, { next: { revalidate: 300 } }
+  );
+  const products = await productResponse.json();
+  let counter = 0;
   return (
     <>
       {products.length > 0 ? (
         <Flex wrap={"wrap"} justifyContent={"center"}>
           {products.map((product: Product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} loading={counter++ < 5 ? "eager" : "lazy"} />
           ))}
         </Flex>
       ) : (
-        <p>No products found.</p>
+        <Center>No products found.</Center>
       )}
     </>
   );
