@@ -118,6 +118,7 @@ export async function POST(request: NextRequest) {
       price: data.price,
       inStock: data.inStock,
       categoryId: data.categoryId,
+      imageUrl: data.imageUrl,
     },
   });
 

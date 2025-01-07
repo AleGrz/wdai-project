@@ -61,13 +61,7 @@ export default function ProductPage({
         shadow="lg"
         position="relative"
       >
-        <Image
-          src={
-            "https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/42e5394e-7250-4d5e-9ed2-03d618545268/md07501037-large01-jpg"
-          }
-          alt={product.name}
-          rounded="lg"
-        />
+        <Image src={product.imageUrl} alt={product.name} rounded="lg" />
 
         <Box>
           <Box p="6">

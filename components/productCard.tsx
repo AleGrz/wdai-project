@@ -11,19 +11,21 @@ export default function ProductCard({ product }: { product: Product }) {
     >
       <Box
         bg={"gray.800"}
-        maxW="sm"
+        w="sm"
         borderWidth="1px"
         rounded="lg"
         shadow="lg"
         position="relative"
       >
-        <Image
-          src={
-            "https://media.us.lg.com/transform/ecomm-PDPGallery-1100x730/42e5394e-7250-4d5e-9ed2-03d618545268/md07501037-large01-jpg"
-          }
-          alt={product.name}
-          roundedTop="lg"
-        />
+        <Flex justifyContent={"center"} roundedTop="lg" background={"#FFFFFF"}>
+          <Image
+            src={product.imageUrl}
+            alt={product.name}
+            roundedTop="lg"
+            height={300}
+            sizes={"cover"}
+          />
+        </Flex>
 
         <Box p="6">
           <Flex mt="1" justifyContent="space-between" alignItems={"center"}>
@@ -36,6 +38,7 @@ export default function ProductCard({ product }: { product: Product }) {
                 fontWeight="semibold"
                 as="h4"
                 lineHeight="tight"
+                height={50}
               >
                 {product.name}
               </Box>

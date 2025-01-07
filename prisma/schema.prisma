@@ -46,6 +46,7 @@ model Product {
   price         Float
   inStock       Int
   categoryId    Int
+  imageUrl         String
   category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   orderDetails  OrderDetail[]
   reviews       Review[]
