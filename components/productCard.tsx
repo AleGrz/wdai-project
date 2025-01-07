@@ -1,7 +1,8 @@
 import { Product } from "@prisma/client";
-import { Box, Flex, Button, Link } from "@chakra-ui/react";
+import { Box, Flex, Button } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
-import NextImage from "next/image";
+import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const ProductCard: React.FC<{ product: Product, loading?: "eager" | "lazy" | undefined }> = ({ product, loading }) => {
@@ -9,8 +10,7 @@ const ProductCard: React.FC<{ product: Product, loading?: "eager" | "lazy" | und
     <>
       <Link
         href={`/product/${product.id}`}
-        _hover={{ textDecoration: "none" }}
-        margin={50}
+        prefetch={true}
       >
         <Box
           bg={"gray.800"}
@@ -22,7 +22,7 @@ const ProductCard: React.FC<{ product: Product, loading?: "eager" | "lazy" | und
         >
             <Flex justifyContent={"center"} roundedTop="lg" background={"#FFFFFF"} height={300} overflow="hidden">
                 <Box height={300} width="100%" position="relative" _hover={{ transform: "scale(1.1)" }} transition="transform 0.3s ease-in-out">
-                  <NextImage
+                  <Image
                     src={product.imageUrl}
                     alt={product.name}
                     quality={65}

@@ -1,7 +1,4 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { Product } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import {
   Box,
   Image,
@@ -9,7 +6,6 @@ import {
   Spinner,
   HStack,
   Flex,
-  Button,
   Fieldset,
   Textarea,
 } from "@chakra-ui/react";
@@ -28,37 +24,29 @@ import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "@/components/ui/stepper-input";
-import ReviewLabel from "@/components/review";
+import { Button } from "@/components/ui/button";
+import ReviewLabel from "@/components/reviewLabel";
 import { Rating } from "@/components/ui/rating";
 import { Field } from "@/components/ui/field";
+import ReviewForm from "@/components/reviewForm";
 
-export default function ProductPage({
+type ReviewWithUser = Prisma.ReviewGetPayload<{
+  include: { user: true };
+}>;
+
+export default async function ProductPage({
   params,
 }: {
   params: Promise<{ productId: string }>;
 }) {
-  const [product, setProduct] = useState<Product | null>(null);
-  const [reviews, setReviews] = useState<
-    { rating: number; description: string; userFullName: string }[]
-  >([]);
+  const productData = await fetch(
+    `http://localhost:3000/api/product/${(await params).productId}`
+  ).then((res) => res.json());
+  const reviewsData = (await fetch(
+    `http://localhost:3000/api/product/${(await params).productId}/review`
+  ).then((res) => res.json())) as ReviewWithUser[];
 
-  useEffect(() => {
-    async function fetchData() {
-      const productData = await fetch(
-        `http://localhost:3000/api/product/${(await params).productId}`
-      ).then((res) => res.json());
-      setProduct(productData);
-
-      const reviewsData = await fetch(
-        `http://localhost:3000/api/product/${(await params).productId}/review`
-      ).then((res) => res.json());
-      setReviews(reviewsData);
-    }
-
-    fetchData();
-  }, [params]);
-
-  if (!product) {
+  if (!productData) {
     return (
       <Box
         display="flex"
@@ -82,8 +70,8 @@ export default function ProductPage({
         position="relative"
       >
         <Image
-          src={product.imageUrl}
-          alt={product.name}
+          src={productData.imageUrl}
+          alt={productData.name}
           rounded="lg"
           height={600}
           maxW={800}
@@ -94,7 +82,7 @@ export default function ProductPage({
             <Flex mt="1" justifyContent="space-between" alignItems={"center"}>
               <Flex flexDirection={"column"}>
                 <Box as="span" color={"white"} fontSize="lg">
-                  {product.brand}
+                  {productData.brand}
                 </Box>
                 <Box
                   fontSize="2xl"
@@ -102,7 +90,7 @@ export default function ProductPage({
                   as="h4"
                   lineHeight="tight"
                 >
-                  {product.name}
+                  {productData.name}
                 </Box>
               </Flex>
             </Flex>
@@ -113,14 +101,14 @@ export default function ProductPage({
                 <Box as="span" color={"white"} fontSize="lg">
                   $
                 </Box>
-                {product.price.toFixed(2)}
+                {productData.price.toFixed(2)}
               </Box>
             </Flex>
             <Flex alignContent="center">
               <StepperInput
                 defaultValue="1"
                 min={1}
-                max={product.inStock}
+                max={productData.inStock}
                 margin={5}
               />
               <Button w={"auto"} margin={5}>
@@ -145,7 +133,7 @@ export default function ProductPage({
 
         <Tabs.Content value="description">
           <Flex justifyContent={"center"} fontSize={"2xl"}>
-            {product.description}
+            {productData.description}
           </Flex>
         </Tabs.Content>
 
@@ -154,49 +142,22 @@ export default function ProductPage({
             <Flex flexFlow={"column"} justifyContent={"flex-start"} gap={10}>
               <DialogRoot>
                 <DialogBackdrop />
-                <DialogTrigger>
+                <DialogTrigger asChild>
                   <Button>Write a review</Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogCloseTrigger />
                   <DialogHeader>
-                    <DialogTitle>Write a review for {product.name}</DialogTitle>
+                    <DialogTitle>
+                      Write a review for {productData.name}
+                    </DialogTitle>
+                    <ReviewForm />
                   </DialogHeader>
-                  <form onSubmit={onSubmit}>
-                    <DialogBody>
-                      <Fieldset.Root size="lg">
-                        <Fieldset.Content>
-                          <Field
-                            label="Rating"
-                            errorText="This field is required"
-                            required
-                          >
-                            <Rating name="rating" />
-                          </Field>
-                          <Field
-                            label="Comment"
-                            errorText="This field is required"
-                            required
-                          >
-                            <Textarea
-                              name="description"
-                              resize="none"
-                              height={300}
-                              maxLength={500}
-                            />
-                          </Field>
-                        </Fieldset.Content>
-                      </Fieldset.Root>
-                    </DialogBody>
-                    <DialogFooter>
-                      <Button type="submit">Submit</Button>
-                    </DialogFooter>
-                  </form>
                 </DialogContent>
               </DialogRoot>
-              {reviews.length > 0
-                ? reviews.map((r) => (
-                    <ReviewLabel key={r.userFullName} review={r} />
+              {reviewsData.length > 0
+                ? reviewsData.map((review) => (
+                    <ReviewLabel key={review.id} review={review} />
                   ))
                 : "No reviews yet"}
             </Flex>
@@ -205,12 +166,4 @@ export default function ProductPage({
       </Tabs.Root>
     </>
   );
-}
-
-function onSubmit(event: any) {
-  event.preventDefault();
-  if (!event.target.rating.value) {
-    event.target.rating.setCustomValidity("This field is required");
-    return;
-  }
 }

@@ -2,6 +2,7 @@ import NavBar from "@/components/navBar";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
 import Provider from "@/components/ui/provider";
 import { Box, Flex } from "@chakra-ui/react";
+import Footer from "@/components/footer";
 
 export default async function RootLayout({
   children,
@@ -25,6 +26,7 @@ export default async function RootLayout({
               <NavBar />
               <DesktopCategoryMenu categories={categories} />
               {children}
+              <Footer />
             </Box>
           </Flex>
         </Provider>
