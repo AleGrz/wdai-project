@@ -10,6 +10,8 @@ import {
   HStack,
   Flex,
   Button,
+  Fieldset,
+  Textarea,
 } from "@chakra-ui/react";
 import {
   DialogBackdrop,
@@ -27,6 +29,8 @@ import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "@/components/ui/stepper-input";
 import ReviewLabel from "@/components/review";
+import { Rating } from "@/components/ui/rating";
+import { Field } from "@/components/ui/field";
 
 export default function ProductPage({
   params,
@@ -127,9 +131,9 @@ export default function ProductPage({
           </Box>
         </Box>
       </HStack>
-      <Tabs.Root defaultValue="members" variant={"line"}>
+      <Tabs.Root defaultValue="description" variant={"line"}>
         <Tabs.List>
-          <Tabs.Trigger value="description" defaultChecked>
+          <Tabs.Trigger value="description">
             <TbListDetails />
             Description
           </Tabs.Trigger>
@@ -156,10 +160,38 @@ export default function ProductPage({
                 <DialogContent>
                   <DialogCloseTrigger />
                   <DialogHeader>
-                    <DialogTitle />
+                    <DialogTitle>Write a review for {product.name}</DialogTitle>
                   </DialogHeader>
-                  <DialogBody />
-                  <DialogFooter />
+                  <form onSubmit={onSubmit}>
+                    <DialogBody>
+                      <Fieldset.Root size="lg">
+                        <Fieldset.Content>
+                          <Field
+                            label="Rating"
+                            errorText="This field is required"
+                            required
+                          >
+                            <Rating name="rating" />
+                          </Field>
+                          <Field
+                            label="Comment"
+                            errorText="This field is required"
+                            required
+                          >
+                            <Textarea
+                              name="description"
+                              resize="none"
+                              height={300}
+                              maxLength={500}
+                            />
+                          </Field>
+                        </Fieldset.Content>
+                      </Fieldset.Root>
+                    </DialogBody>
+                    <DialogFooter>
+                      <Button type="submit">Submit</Button>
+                    </DialogFooter>
+                  </form>
                 </DialogContent>
               </DialogRoot>
               {reviews.length > 0
@@ -173,4 +205,12 @@ export default function ProductPage({
       </Tabs.Root>
     </>
   );
+}
+
+function onSubmit(event: any) {
+  event.preventDefault();
+  if (!event.target.rating.value || !event.target.description.value) {
+    event.target.rating.
+    return;
+  }
 }
