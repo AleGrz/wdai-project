@@ -209,8 +209,8 @@ export default function ProductPage({
 
 function onSubmit(event: any) {
   event.preventDefault();
-  if (!event.target.rating.value || !event.target.description.value) {
-    event.target.rating.
+  if (!event.target.rating.value) {
+    event.target.rating.setCustomValidity("This field is required");
     return;
   }
 }
