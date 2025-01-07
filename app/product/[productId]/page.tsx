@@ -15,6 +15,17 @@ import {
   Flex,
   Button,
 } from "@chakra-ui/react";
+import {
+  DialogBackdrop,
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
@@ -27,7 +38,9 @@ export default function ProductPage({
   params: Promise<{ productId: string }>;
 }) {
   const [product, setProduct] = useState<Product | null>(null);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<
+    { rating: number; description: string; userFullName: string }[]
+  >([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -130,11 +143,36 @@ export default function ProductPage({
           </Tabs.Trigger>
         </Tabs.List>
 
-        <Tabs.Content value="description">{product.description}</Tabs.Content>
+        <Tabs.Content value="description">
+          <Flex justifyContent={"center"} fontSize={"2xl"}>
+            {product.description}
+          </Flex>
+        </Tabs.Content>
+
         <Tabs.Content value="reviews">
-          {reviews !== null
-            ? reviews.map((r) => <ReviewLabel key={r.id} review={r} />)
-            : "No reviews yet"}
+          <Flex justifyContent={"center"}>
+            <Flex flexFlow={"column"} justifyContent={"flex-start"} gap={10}>
+              <DialogRoot>
+                <DialogBackdrop />
+                <DialogTrigger>
+                  <Button>Write a review</Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogCloseTrigger />
+                  <DialogHeader>
+                    <DialogTitle />
+                  </DialogHeader>
+                  <DialogBody />
+                  <DialogFooter />
+                </DialogContent>
+              </DialogRoot>
+              {reviews.length > 0
+                ? reviews.map((r) => (
+                    <ReviewLabel key={r.userFullName} review={r} />
+                  ))
+                : "No reviews yet"}
+            </Flex>
+          </Flex>
         </Tabs.Content>
       </Tabs.Root>
     </>

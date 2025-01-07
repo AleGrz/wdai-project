@@ -12,17 +12,10 @@ export default function SearchPage() {
   const page = parseInt(searchParams.get("page") || "1");
   const categoryId = parseInt(searchParams.get("categoryId") || "1");
 
-  const [subCategories, setSubCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     async function fetchData() {
-      const subCategoryResponse = await fetch(
-        `http://localhost:3000/api/category/${categoryId}`
-      );
-      const subCategoryData = await subCategoryResponse.json();
-      setSubCategories(subCategoryData);
-
       const productResponse = await fetch(
         `http://localhost:3000/api/product?page=${page}&categoryId=${categoryId}`
       );

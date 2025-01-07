@@ -20,6 +20,7 @@ export async function GET(
     parseInt(searchParams.get("pageSize") || "10", 10),
     100,
   );
+  
   const skip = (page - 1) * pageSize;
 
   return Response.json(
@@ -27,7 +28,22 @@ export async function GET(
       skip: skip,
       take: pageSize,
       where: { productId: parseInt(productId) },
-    }),
+      include: {
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    }).then(reviews =>
+      reviews.map(review => ({
+        ...review,
+        userId: review.user.id,
+        userFullName: `${review.user.firstName} ${review.user.lastName}`,
+      }))
+    )
   );
 }
 
