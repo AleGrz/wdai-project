@@ -21,7 +21,7 @@ export default async function RootLayout({
             bg="linear-gradient(to right, #0f2027, #203a43, #2c5364)"
             minH="100vh"
           >
-            <Box maxW={1500} background={"black"}>
+            <Box maxW={1650} background={"black"}>
               <NavBar />
               <DesktopCategoryMenu categories={categories} />
               {children}
