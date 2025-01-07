@@ -28,7 +28,7 @@ async function DesktopCategoryMainItem(categories: Category[], category: Categor
   }
   return (
     <>
-      <MenuRoot>
+      <MenuRoot positioning={{ sameWidth: true }}>
         <MenuTrigger asChild>
           <Button variant="outline" size="sm">
             {category.name}
