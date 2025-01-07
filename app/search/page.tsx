@@ -1,7 +1,7 @@
 import type React from "react";
 import ProductCard from "@/components/productCard";
 import { Product } from "@prisma/client";
-import { Center, Flex } from "@chakra-ui/react";
+import { AbsoluteCenter, Flex, Text } from "@chakra-ui/react";
 
 export default async function SearchPage({
   searchParams,
@@ -25,7 +25,9 @@ export default async function SearchPage({
           ))}
         </Flex>
       ) : (
-        <Center>No products found.</Center>
+        <AbsoluteCenter axis="both">
+          <Text fontSize={50} animation="rotate infinite 2s linear">No products found.</Text>
+        </AbsoluteCenter>
       )}
     </>
   );
