@@ -1,29 +1,31 @@
-import { Box, Button, Flex, HStack, Input, Image } from "@chakra-ui/react";
 import { Avatar } from "./ui/avatar";
 import { RiSearch2Fill } from "react-icons/ri";
 import Link from "next/link";
+import { Button } from "./ui/button";
+import { Box, Flex, Input } from "@chakra-ui/react";
+import Image from "next/image";
 
-export default function WithAction() {
+const NavBar: React.FC = () => {
   return (
     <Box px={4}>
       <Flex
         h={16}
         alignItems={"center"}
         justifyContent={"space-between"}
-        gap={16}
+        gap={200}
       >
-        <HStack alignItems={"center"}>
+        <Box height={7} width={200} justifyContent="center" position="relative">
           <Link href={"/"}>
-            <Image src="/logo.svg" alt="Logo" height={"7"} />
+            <Image src="/logo.svg" alt="Logo" layout="fill" objectFit="contain" loading="eager" />
           </Link>
-        </HStack>
-        <HStack>
+        </Box>
+        <Flex grow={1}>
           <Input placeholder="Search" />
-          <Button>
+          <Button variant="outline">
             <RiSearch2Fill />
           </Button>
-        </HStack>
-        <Flex alignItems={"center"}>
+        </Flex>
+        <Flex justifyContent="flex-end" width={200}>
           <Avatar
             size={"sm"}
             src={
@@ -35,3 +37,4 @@ export default function WithAction() {
     </Box>
   );
 }
+export default NavBar;

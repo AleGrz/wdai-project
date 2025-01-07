@@ -9,7 +9,7 @@ export default async function Home() {
   return (
     <>
       {products.length > 0 ? (
-        <Flex wrap={"wrap"} justifyContent={"center"}>
+        <Flex wrap={"wrap"} justifyContent={"center"} gap={20} margin={10} >
           {products.map((product: Product) => (
             <ProductCard key={product.id} product={product} loading={counter++ < 5 ? "eager" : "lazy"} />
           ))}
