@@ -1,5 +1,5 @@
 import { Category } from "@prisma/client";
-import CategoryCard from "../components/ui/categoryCard";
+import CategoryCard from "../components/categoryCard";
 
 export default async function Home() {
   const response = await fetch("http://localhost:3000/api/category");

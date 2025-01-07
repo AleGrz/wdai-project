@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import CategoryCard from "../../components/ui/categoryCard";
-import ProductCard from "../../components/ui/productCard";
+import CategoryCard from "../../components/categoryCard";
+import ProductCard from "../../components/productCard";
 import { Category, Product } from "@prisma/client";
 
 export default function SearchPage() {
