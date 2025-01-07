@@ -1,9 +1,9 @@
-"use client"; // This file will be a client-side component
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import CategoryCard from "../../components/categoryCard";
-import ProductCard from "../../components/productCard";
+import CategoryCard from "@/components/categoryCard";
+import ProductCard from "@/components/productCard";
 import { Category, Product } from "@prisma/client";
 
 export default function SearchPage() {
@@ -34,9 +34,7 @@ export default function SearchPage() {
   }, [categoryId, page]);
 
   return (
-    <div
-      style={{ display: "flex", justifyContent: "space-around", width: "100%" }}
-    >
+    <div className={"container"}>
       {
         <div>
           {subCategories.map((category: Category) => (
@@ -46,7 +44,7 @@ export default function SearchPage() {
       }
 
       {products.length > 0 ? (
-        <div>
+        <div className={"flex flex-wrap"}>
           {products.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
