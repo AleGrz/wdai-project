@@ -35,14 +35,6 @@ export default function SearchPage() {
 
   return (
     <>
-      {
-        <div>
-          {subCategories.map((category: Category) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
-        </div>
-      }
-
       {products.length > 0 ? (
         <Flex wrap={"wrap"} justifyContent={"center"}>
           {products.map((product: Product) => (
