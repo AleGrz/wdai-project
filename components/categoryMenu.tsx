@@ -1,13 +1,6 @@
 "use client";
 import { Category } from "@prisma/client";
 import { Button } from "@/components/ui/button";
-import {
-  MenuContent,
-  MenuItem,
-  MenuRoot,
-  MenuTrigger,
-  MenuTriggerItem,
-} from "@/components/ui/menu";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useState } from "react";
 import { Box, Flex, VStack } from "@chakra-ui/react";
@@ -27,11 +20,11 @@ const DesktopCategoryMainItem: React.FC<{ categories: Category[], category: Cate
   const subCategories = categories.filter(x => x.parentCategoryId === category.id);
   if (subCategories.length === 0) {
     return (
-      <GetButton category={category} visibleOutline={true} />
+      <CategoryMenuButton category={category} visibleOutline={true} />
     );
   }
   return (
-    <GetButton
+    <CategoryMenuButton
       category={category}
       visibleOutline={true}
       onMouseEnter={() => setIsHovered(true)}
@@ -50,29 +43,34 @@ const DesktopCategoryMainItem: React.FC<{ categories: Category[], category: Cate
           zIndex={10}
           width="100%"
         >
-          {subCategories.map(cat => <DesktopCategorySubItem key={cat.id} categories={categories} category={cat} />)}
+          {subCategories.map(cat => <DesktopCategorySubItem key={cat.id} categories={categories} category={cat} onClick={() => setIsHovered(false)} />)}
         </VStack>
       )}
-    </GetButton>
+    </CategoryMenuButton>
   );
 }
-const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Category }> = ({ categories, category }) => {
+const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Category, onClick?: MouseEventHandler<HTMLButtonElement> }> = ({ categories, category, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [left, setLeft] = useState<string | undefined>("100%");
   const [right, setRight] = useState<string | undefined>("auto");
   const [posSet, setPosSet] = useState(false);
   const subCategories = categories.filter(x => x.parentCategoryId === category.id);
+  const handle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) onClick(event);
+    setIsHovered(false);
+  };
   if (subCategories.length === 0) {
     return (
-      <GetButton category={category} hasArrow={false} />
+      <CategoryMenuButton category={category} hasArrow={false} onClick={handle} />
     );
   }
   return (
-    <GetButton
+    <CategoryMenuButton
       category={category}
       hasArrow={true}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}>
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}>
       {isHovered && (
         <VStack
           background="bg.panel"
@@ -92,71 +90,33 @@ const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Categ
             setPosSet(true);
           }}
         >
-          {subCategories.map(cat => <DesktopCategorySubItem key={cat.id} categories={categories} category={cat} />)}
+          {subCategories.map(cat => <DesktopCategorySubItem key={cat.id} categories={categories} category={cat} onClick={handle} />)}
         </VStack>
       )}
-    </GetButton>
+    </CategoryMenuButton>
   );
 }
 
-
-const GetButton : React.FC<{category: Category,
+export const CategoryMenuButton : React.FC<{category: Category,
   children?: React.ReactNode,
   hasArrow?: boolean,
   visibleOutline?: boolean,
   onMouseEnter?: MouseEventHandler<HTMLDivElement>,
-  onMouseLeave?: MouseEventHandler<HTMLDivElement>}> = ({category, children, hasArrow, visibleOutline, onMouseEnter, onMouseLeave}) => {
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>,
+  onClick?: MouseEventHandler<HTMLButtonElement>}> =
+  ({category, children, hasArrow, visibleOutline, onMouseEnter, onMouseLeave, onClick}) => {
   const router = useRouter();
   return (
     <Box position="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Button key={category.id} width="100%" justifyContent="left"
-        variant={visibleOutline ? "outline" : "ghost"} onClick={() => {router.push(`/search?categoryId=${category.id}`)}}>
+        variant={visibleOutline ? "outline" : "ghost"} onClick={(event) => {
+            if (onClick) onClick(event);
+            router.push(`/search?categoryId=${category.id}`);
+          }}>
         {category.name}
         {hasArrow && (<LuChevronRight />)}
       </Button>
       {<>{children}</>}
     </Box>
-  );
-}
-
-export async function MobileCategoryMenu(props: { categories: Category[] }) {
-  const subCategories = props.categories.filter(
-    (x) => x.parentCategoryId === null
-  );
-  return (
-    <MenuRoot>
-      <MenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          Categories
-        </Button>
-      </MenuTrigger>
-      <MenuContent>
-        {subCategories.map((cat) => CategoryItem(props.categories, cat))}
-      </MenuContent>
-    </MenuRoot>
-  );
-}
-
-async function CategoryItem(categories: Category[], category: Category) {
-  const subCategories = categories.filter(
-    (x) => x.parentCategoryId === category.id
-  );
-  return (
-    <>
-      {subCategories.length > 0 ? (
-        <MenuRoot positioning={{ placement: "right-start", gutter: 2 }}>
-          <MenuTriggerItem value={category.id.toString()}>
-            {category.name}
-          </MenuTriggerItem>
-          <MenuContent>
-            {subCategories.map((cat) => CategoryItem(categories, cat))}
-          </MenuContent>
-        </MenuRoot>
-      ) : (
-        <a href={`/search/?categoryId=${category.id}`}>
-          <MenuItem value={category.id.toString()}>{category.name}</MenuItem>
-        </a>
-      )}
-    </>
   );
 }

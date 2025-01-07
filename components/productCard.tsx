@@ -22,15 +22,15 @@ const ProductCard: React.FC<{ product: Product, loading?: "eager" | "lazy" | und
         >
             <Flex justifyContent={"center"} roundedTop="lg" background={"#FFFFFF"} height={300} overflow="hidden">
                 <Box height={300} width="100%" position="relative" _hover={{ transform: "scale(1.1)" }} transition="transform 0.3s ease-in-out">
-                <NextImage
-                  src={product.imageUrl}
-                  alt={product.name}
-                  quality={65}
-                  layout="fill"
-                  objectFit="contain"
-                  loading={loading}
-                  style={{ borderRadius: '0.5rem' }}
-                />
+                  <NextImage
+                    src={product.imageUrl}
+                    alt={product.name}
+                    quality={65}
+                    layout="fill"
+                    objectFit="contain"
+                    loading={loading}
+                    style={{ borderRadius: '0.5rem' }}
+                  />
                 </Box>
             </Flex>
 
