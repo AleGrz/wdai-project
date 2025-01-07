@@ -8,11 +8,11 @@ import {
   MenuTriggerItem,
 } from "@/components/ui/menu";
 
-export async function DesktopCategoryMenu(categories: Category[]) {
-  const subCategories = categories.filter(x => x.parentCategoryId === null);
+export async function DesktopCategoryMenu(props : { categories: Category[] }) {
+  const subCategories = props.categories.filter(x => x.parentCategoryId === null);
   return (
     <>
-      {subCategories.map(cat => DesktopCategoryMainItem(categories, cat))}
+      {subCategories.map(cat => DesktopCategoryMainItem(props.categories, cat))}
     </>
   )
 }
@@ -42,8 +42,8 @@ async function DesktopCategoryMainItem(categories: Category[], category: Categor
   )
 }
 
-export async function MobileCategoryMenu(categories: Category[]) {
-  const subCategories = categories.filter(x => x.parentCategoryId === null);
+export async function MobileCategoryMenu(props : { categories: Category[] }) {
+  const subCategories = props.categories.filter(x => x.parentCategoryId === null);
   return (
     <MenuRoot>
       <MenuTrigger asChild>
@@ -52,7 +52,7 @@ export async function MobileCategoryMenu(categories: Category[]) {
         </Button>
       </MenuTrigger>
       <MenuContent>
-        {subCategories.map(cat => CategoryItem(categories, cat))}
+        {subCategories.map(cat => CategoryItem(props.categories, cat))}
       </MenuContent>
     </MenuRoot>
   )
