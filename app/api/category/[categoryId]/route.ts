@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export async function GET(
   _request: NextRequest,
