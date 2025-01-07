@@ -30,3 +30,7 @@ yarn-error.log*
 .env.production.local
 
 .now
+
+# temp-db
+/prisma/*.db
+/prisma/*.db-journal

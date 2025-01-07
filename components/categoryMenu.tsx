@@ -28,7 +28,7 @@ export default async function CategoryMenu() {
 async function CategoryItem(categoryId: string, categoryName: string) {
   const data = await fetch(`http://localhost:3000/api/category/${categoryId}/childrenCategories`);
   const content = await data.json();
-  if (!content) {
+  if (!content || Array.isArray(content) && content.length === 0) {
     return (<MenuItem value={categoryId}>{categoryName}</MenuItem>);
   } else {
     return (
