@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/menu";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useState } from "react";
-import { Box, Flex, HStack, Stack, VStack } from "@chakra-ui/react";
+import { Box, Flex, VStack } from "@chakra-ui/react";
 import { LuChevronRight } from "react-icons/lu";
 
-export function DesktopCategoryMenu(props : { categories: Category[] }) {
-  const subCategories = props.categories.filter(x => x.parentCategoryId === null);
+export const DesktopCategoryMenu: React.FC<{ categories: Category[] }> = ({ categories }) => {
+  const subCategories = categories.filter(x => x.parentCategoryId === null);
   return (
     <Flex wrap="wrap" justifyContent="center">
-      {subCategories.map(cat => <DesktopCategoryMainItem key={cat.id} categories={props.categories} category={cat} />)}
+      {subCategories.map(cat => <DesktopCategoryMainItem key={cat.id} categories={categories} category={cat} />)}
     </Flex>
   )
 }
@@ -100,22 +100,21 @@ const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Categ
 }
 
 
-function GetButton(props: {
-  category: Category,
+const GetButton : React.FC<{category: Category,
   children?: React.ReactNode,
   hasArrow?: boolean,
   visibleOutline?: boolean,
   onMouseEnter?: MouseEventHandler<HTMLDivElement>,
-  onMouseLeave?: MouseEventHandler<HTMLDivElement> }) {
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>}> = ({category, children, hasArrow, visibleOutline, onMouseEnter, onMouseLeave}) => {
   const router = useRouter();
   return (
-    <Box position="relative" onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
-      <Button key={props.category.id} width="100%" justifyContent="left"
-        variant={props.visibleOutline ? "outline" : "ghost"} onClick={() => {router.push(`/search?categoryId=${props.category.id}`)}}>
-        {props.category.name}
-        {props.hasArrow && (<LuChevronRight />)}
+    <Box position="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+      <Button key={category.id} width="100%" justifyContent="left"
+        variant={visibleOutline ? "outline" : "ghost"} onClick={() => {router.push(`/search?categoryId=${category.id}`)}}>
+        {category.name}
+        {hasArrow && (<LuChevronRight />)}
       </Button>
-      {<>{props.children}</>}
+      {<>{children}</>}
     </Box>
   );
 }
