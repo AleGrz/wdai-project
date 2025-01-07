@@ -26,7 +26,7 @@ export default async function SearchPage({
         </Flex>
       ) : (
         <AbsoluteCenter axis="both">
-          <Text fontSize={50} animation="rotate infinite 2s linear">No products found.</Text>
+          <Text fontSize={50} animation="spin infinite 2s linear">No products found.</Text>
         </AbsoluteCenter>
       )}
     </>

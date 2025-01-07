@@ -3,7 +3,6 @@ import { DesktopCategoryMenu } from "@/components/categoryMenu";
 import Provider from "@/components/ui/provider";
 import { Box, Flex } from "@chakra-ui/react";
 import Footer from "@/components/footer";
-import '@/config/globalStyle.css'
 
 export default async function RootLayout({
   children,
