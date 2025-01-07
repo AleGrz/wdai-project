@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import CategoryCard from "@/components/categoryCard";
 import ProductCard from "@/components/productCard";
 import { Category, Product } from "@prisma/client";
+import { Flex } from "@chakra-ui/react";
 
 export default function SearchPage() {
   const searchParams = useSearchParams();
@@ -20,7 +21,6 @@ export default function SearchPage() {
         `http://localhost:3000/api/category/${categoryId}`
       );
       const subCategoryData = await subCategoryResponse.json();
-      console.log(subCategoryData);
       setSubCategories(subCategoryData);
 
       const productResponse = await fetch(
@@ -34,24 +34,16 @@ export default function SearchPage() {
   }, [categoryId, page]);
 
   return (
-    <div className={"container"}>
-      {
-        <div>
-          {subCategories.map((category: Category) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
-        </div>
-      }
-
+    <>
       {products.length > 0 ? (
-        <div className={"flex flex-wrap"}>
+        <Flex wrap={"wrap"} justifyContent={"center"}>
           {products.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
-        </div>
+        </Flex>
       ) : (
         <p>No products found.</p>
       )}
-    </div>
+    </>
   );
 }

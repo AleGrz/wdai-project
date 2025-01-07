@@ -94,8 +94,10 @@ function GetButton(props: { category: Category, children?: React.ReactNode, onMo
   );
 }
 
-export async function MobileCategoryMenu(props : { categories: Category[] }) {
-  const subCategories = props.categories.filter(x => x.parentCategoryId === null);
+export async function MobileCategoryMenu(props: { categories: Category[] }) {
+  const subCategories = props.categories.filter(
+    (x) => x.parentCategoryId === null
+  );
   return (
     <MenuRoot>
       <MenuTrigger asChild>
@@ -104,14 +106,16 @@ export async function MobileCategoryMenu(props : { categories: Category[] }) {
         </Button>
       </MenuTrigger>
       <MenuContent>
-        {subCategories.map(cat => CategoryItem(props.categories, cat))}
+        {subCategories.map((cat) => CategoryItem(props.categories, cat))}
       </MenuContent>
     </MenuRoot>
   );
 }
 
 async function CategoryItem(categories: Category[], category: Category) {
-  const subCategories = categories.filter(x => x.parentCategoryId === category.id);
+  const subCategories = categories.filter(
+    (x) => x.parentCategoryId === category.id
+  );
   return (
     <>
       {subCategories.length > 0 ? (
@@ -120,11 +124,13 @@ async function CategoryItem(categories: Category[], category: Category) {
             {category.name}
           </MenuTriggerItem>
           <MenuContent>
-            {subCategories.map(cat => CategoryItem(categories, cat))}
+            {subCategories.map((cat) => CategoryItem(categories, cat))}
           </MenuContent>
         </MenuRoot>
       ) : (
-        <MenuItem value={category.id.toString()}>{category.name}</MenuItem>
+        <a href={`/search/?categoryId=${category.id}`}>
+          <MenuItem value={category.id.toString()}>{category.name}</MenuItem>
+        </a>
       )}
     </>
   );

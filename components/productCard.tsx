@@ -1,11 +1,14 @@
 import { Product } from "@prisma/client";
-import { Image, Box, Flex, Icon } from "@chakra-ui/react";
+import { Image, Box, Flex, Button, chakra } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
-import { Tooltip } from "@/components/ui/tooltip";
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <Flex p={50} w="full" alignItems="center" justifyContent="center">
+    <chakra.a
+      href={`/product/${product.id}`}
+      _hover={{ textDecoration: "none" }}
+      margin={50}
+    >
       <Box
         bg={"gray.800"}
         maxW="sm"
@@ -23,21 +26,29 @@ export default function ProductCard({ product }: { product: Product }) {
         />
 
         <Box p="6">
-          <Flex mt="1" justifyContent="space-between" alignContent="center">
-            <Box
-              fontSize="2xl"
-              fontWeight="semibold"
-              as="h4"
-              lineHeight="tight"
-            >
-              {product.name}
-            </Box>
-            <Icon as={FiShoppingCart} h={7} w={7} alignSelf={"center"} />
+          <Flex mt="1" justifyContent="space-between" alignItems={"center"}>
+            <Flex flexDirection={"column"}>
+              <Box as="span" color={"white"} fontSize="lg">
+                {product.brand}
+              </Box>
+              <Box
+                fontSize="2xl"
+                fontWeight="semibold"
+                as="h4"
+                lineHeight="tight"
+              >
+                {product.name}
+              </Box>
+            </Flex>
+            <Button w={30}>
+              <FiShoppingCart />
+            </Button>
           </Flex>
-
+        </Box>
+        <Box p="6">
           <Flex justifyContent="space-between" alignContent="center">
             <Box fontSize="2xl" color={"white"}>
-              <Box as="span" color={"gray.600"} fontSize="lg">
+              <Box as="span" color={"white"} fontSize="lg">
                 $
               </Box>
               {product.price.toFixed(2)}
@@ -45,6 +56,6 @@ export default function ProductCard({ product }: { product: Product }) {
           </Flex>
         </Box>
       </Box>
-    </Flex>
+    </chakra.a>
   );
 }
