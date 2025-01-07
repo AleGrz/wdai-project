@@ -25,6 +25,7 @@ const ProductCard: React.FC<{ product: Product, loading?: "eager" | "lazy" | und
                 <NextImage
                   src={product.imageUrl}
                   alt={product.name}
+                  quality={65}
                   layout="fill"
                   objectFit="contain"
                   loading={loading}
