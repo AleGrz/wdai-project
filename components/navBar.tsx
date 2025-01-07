@@ -1,6 +1,4 @@
-"use client";
-
-import { Box, Button, Flex, HStack, Input } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Input, Image } from "@chakra-ui/react";
 import { Avatar } from "./ui/avatar";
 import { RiSearch2Fill } from "react-icons/ri";
 
@@ -14,7 +12,7 @@ export default function WithAction() {
         gap={16}
       >
         <HStack alignItems={"center"}>
-          <Box>Logo</Box>
+          <Image src="/logo.svg" alt="Logo" height={"30px"} />
         </HStack>
         <HStack>
           <Input placeholder="Search" />
