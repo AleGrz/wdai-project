@@ -10,11 +10,16 @@ export default async function SearchPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const { page = "1", categoryId = "1" } = await searchParams
+  const { page = "1", categoryId, query } = await searchParams
   const pageNum = Array.isArray(page) ? 1 : parseInt(page);
-  const categoryIdNum = Array.isArray(categoryId) ? 1 : parseInt(categoryId);
+  const queryParams = new URLSearchParams({ page: pageNum.toString() });
+
+  if (categoryId) queryParams.append('categoryId', categoryId.toString());
+  if (query) queryParams.append('query', query.toString());
+
   const productResponse = await fetch(
-    `http://localhost:3000/api/product?page=${pageNum}&categoryId=${categoryIdNum}`, { next: { revalidate: 300 } }
+    `http://localhost:3000/api/product?${queryParams.toString()}`, 
+    { next: { revalidate: 300 } }
   );
   const products = await productResponse.json();
   let counter = 0;

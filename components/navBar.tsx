@@ -1,13 +1,12 @@
-import { RiSearch2Fill } from "react-icons/ri";
 import Link from "next/link";
-import { Box, Flex, Input } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import { Category } from "@prisma/client";
 
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
 
-import { Button } from "./ui/button";
 import { Avatar } from "./ui/avatar";
+import SearchControl from "./searchControl";
 
 const NavBar: React.FC = async () => {
   const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(
@@ -28,10 +27,7 @@ const NavBar: React.FC = async () => {
           </Link>
         </Box>
         <Flex grow={1}>
-          <Input placeholder="Search" />
-          <Button variant="outline">
-            <RiSearch2Fill />
-          </Button>
+          <SearchControl/>
         </Flex>
         <Flex justifyContent="flex-end" width={200}>
           <Avatar
