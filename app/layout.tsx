@@ -1,7 +1,7 @@
 import NavBar from "@/components/navBar";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
 import Provider from "@/components/ui/provider";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 
 export default async function RootLayout({
   children,
@@ -16,9 +16,17 @@ export default async function RootLayout({
       <head />
       <body>
         <Provider>
-          <NavBar />
-          <DesktopCategoryMenu categories={categories} />
-          {children}
+          <Flex
+            justifyContent={"center"}
+            bg="linear-gradient(to right, #0f2027, #203a43, #2c5364)"
+            minH="100vh"
+          >
+            <Box maxW={1500} background={"black"}>
+              <NavBar />
+              <DesktopCategoryMenu categories={categories} />
+              {children}
+            </Box>
+          </Flex>
         </Provider>
       </body>
     </html>
