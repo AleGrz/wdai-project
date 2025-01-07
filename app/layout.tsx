@@ -1,4 +1,4 @@
-import NavBar from "@/components/ui/navBar";
+import NavBar from "@/components/navBar";
 import Provider from "@/components/ui/provider";
 
 export default function RootLayout({
