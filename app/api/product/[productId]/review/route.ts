@@ -29,21 +29,9 @@ export async function GET(
       take: pageSize,
       where: { productId: parseInt(productId) },
       include: {
-        user: {
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-          },
-        },
+        user: true,
       },
-    }).then(reviews =>
-      reviews.map(review => ({
-        ...review,
-        userId: review.user.id,
-        userFullName: `${review.user.firstName} ${review.user.lastName}`,
-      }))
-    )
+    })
   );
 }
 

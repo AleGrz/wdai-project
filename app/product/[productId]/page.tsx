@@ -1,4 +1,4 @@
-import { Product, Review } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import {
   Box,
   Image,
@@ -6,7 +6,6 @@ import {
   Spinner,
   HStack,
   Flex,
-  Button,
 } from "@chakra-ui/react";
 import {
   DialogBackdrop,
@@ -23,6 +22,13 @@ import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "@/components/ui/stepper-input";
+import { Button } from "@/components/ui/button";
+import ReviewLabel from "@/components/reviewLabel";
+
+type ReviewWithUser = Prisma.ReviewGetPayload<{
+  include: { user: true };
+}>;
+
 
 export default async function ProductPage({
   params,
@@ -32,9 +38,9 @@ export default async function ProductPage({
   const productData = await fetch(
     `http://localhost:3000/api/product/${(await params).productId}`
   ).then((res) => res.json());
-  // const reviewsData = await fetch(
-  //   `http://localhost:3000/api/product/${(await params).productId}/review`
-  // ).then((res) => res.json());
+  const reviewsData = await fetch(
+    `http://localhost:3000/api/product/${(await params).productId}/review`
+  ).then((res) => res.json()) as ReviewWithUser[];
 
   if (!productData) {
     return (
@@ -144,11 +150,11 @@ export default async function ProductPage({
                   <DialogFooter />
                 </DialogContent>
               </DialogRoot>
-              {/* {reviewsData.length > 0
-                ? reviewsData.map((r: Review) => (
-                    <ReviewLabel key={r.userFullName} review={r} />
+              {reviewsData.length > 0
+                ? reviewsData.map(review => (
+                    <ReviewLabel key={review.id} review={review} />
                   ))
-                : "No reviews yet"} */}
+                : "No reviews yet"}
             </Flex>
           </Flex>
         </Tabs.Content>
