@@ -20,12 +20,13 @@ export default async function RootLayout({
           <Flex
             justifyContent={"center"}
             bg="linear-gradient(to right, #0f2027, #203a43, #2c5364)"
-            minH="100vh"
           >
-            <Box maxW={1650} background={"black"}>
-              <NavBar />
-              <DesktopCategoryMenu categories={categories} />
-              {children}
+            <Box maxW={1650}>
+              <Flex flex={1} direction="column" minH="100dvh" background={"black"}>
+                <NavBar />
+                <DesktopCategoryMenu categories={categories} />
+                  {children}
+              </Flex>
               <Footer />
             </Box>
           </Flex>
