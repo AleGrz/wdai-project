@@ -47,6 +47,8 @@ model Product {
   inStock       Int
   categoryId    Int
   imageUrl      String
+  reviewsCount  Int @default(0)
+  rating        Float @default(0)
   category      Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   orderDetails  OrderDetail[]
   reviews       Review[]
