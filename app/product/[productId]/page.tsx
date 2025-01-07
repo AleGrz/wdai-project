@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Product } from "@prisma/client";
+import { Product, Review } from "@prisma/client";
 import {
   Box,
   Heading,
@@ -19,6 +19,7 @@ import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "@/components/ui/stepper-input";
+import ReviewLabel from "@/components/review";
 
 export default function ProductPage({
   params,
@@ -26,6 +27,7 @@ export default function ProductPage({
   params: Promise<{ productId: string }>;
 }) {
   const [product, setProduct] = useState<Product | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -33,6 +35,11 @@ export default function ProductPage({
         `http://localhost:3000/api/product/${(await params).productId}`
       ).then((res) => res.json());
       setProduct(productData);
+
+      const reviewsData = await fetch(
+        `http://localhost:3000/api/product/${(await params).productId}/review`
+      ).then((res) => res.json());
+      setReviews(reviewsData);
     }
 
     fetchData();
@@ -61,7 +68,13 @@ export default function ProductPage({
         shadow="lg"
         position="relative"
       >
-        <Image src={product.imageUrl} alt={product.name} rounded="lg" />
+        <Image
+          src={product.imageUrl}
+          alt={product.name}
+          rounded="lg"
+          height={600}
+          maxW={800}
+        />
 
         <Box>
           <Box p="6">
@@ -107,7 +120,7 @@ export default function ProductPage({
       </HStack>
       <Tabs.Root defaultValue="members" variant={"line"}>
         <Tabs.List>
-          <Tabs.Trigger value="description">
+          <Tabs.Trigger value="description" defaultChecked>
             <TbListDetails />
             Description
           </Tabs.Trigger>
@@ -118,7 +131,11 @@ export default function ProductPage({
         </Tabs.List>
 
         <Tabs.Content value="description">{product.description}</Tabs.Content>
-        <Tabs.Content value="reviews"> Reviews</Tabs.Content>
+        <Tabs.Content value="reviews">
+          {reviews !== null
+            ? reviews.map((r) => <ReviewLabel key={r.id} review={r} />)
+            : "No reviews yet"}
+        </Tabs.Content>
       </Tabs.Root>
     </>
   );
