@@ -4,8 +4,13 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { Box, Flex, Input } from "@chakra-ui/react";
 import Image from "next/image";
+import { DesktopCategoryMenu } from "@/components/categoryMenu";
+import { Category } from "@prisma/client";
 
-const NavBar: React.FC = () => {
+const NavBar: React.FC = async () => {
+  const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(
+    (data) => data.json()
+  ) as Category[];
   return (
     <Box px={4}>
       <Flex
@@ -34,6 +39,7 @@ const NavBar: React.FC = () => {
           />
         </Flex>
       </Flex>
+      <DesktopCategoryMenu categories={categories} />
     </Box>
   );
 }

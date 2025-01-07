@@ -32,16 +32,13 @@ const DesktopCategoryMainItem: React.FC<{ categories: Category[], category: Cate
       {isHovered  && (
         <VStack
           background="bg.panel"
-          outline={0}
           position="absolute"
           top="100%"
-          left={0}
-          boxShadow="lg"
+          boxShadow="md"
           rounded="md"
           align="stretch"
-          color="fg"
-          zIndex={10}
           width="100%"
+          zIndex={10}
         >
           {subCategories.map(cat => <DesktopCategorySubItem key={cat.id} categories={categories} category={cat} onClick={() => setIsHovered(false)} />)}
         </VStack>
@@ -85,8 +82,9 @@ const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Categ
           ref={el => {
             if (!el || posSet) return;
             const rect = el.getBoundingClientRect();
-            setLeft(window.innerWidth - rect.right < el.offsetWidth ? "auto" : "100%");
-            setRight(window.innerWidth - rect.right < el.offsetWidth ? "100%" : "auto");
+            console.log(window.innerWidth, rect.right, el.offsetWidth);
+            setLeft(window.innerWidth - rect.right < 0 ? "auto" : "100%");
+            setRight(window.innerWidth - rect.right < 0 ? "100%" : "auto");
             setPosSet(true);
           }}
         >

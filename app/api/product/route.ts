@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 
 async function getDescendantCategoryIds(prisma: PrismaClient, categoryId: number): Promise<number[]> {
   const descendants: number[] = [categoryId];
@@ -19,38 +20,51 @@ async function getDescendantCategoryIds(prisma: PrismaClient, categoryId: number
 
   return descendants;
 }
+
 export async function GET(request: NextRequest) {
   const prisma = new PrismaClient();
   const searchParams = request.nextUrl.searchParams;
   const page = parseInt(searchParams.get("page") || "1", 10);
-  
   const pageSize = Math.min(
     parseInt(searchParams.get("pageSize") || "10", 10),
     100,
   );
   const skip = (page - 1) * pageSize;
-
+  const filters: Prisma.ProductWhereInput = {};
+  const searchParam = searchParams.get("query");
+  if (searchParam) {
+    filters.OR = [
+      {
+        name: {
+          contains: searchParam.toString(),
+        },
+      },
+      {
+        brand: {
+          contains: searchParam.toString(),
+        },
+      },
+      {
+        description: {
+          contains: searchParam.toString(),
+        },
+      },
+    ];
+  }
   if (searchParams.get("categoryId")) {
     const category = parseInt(searchParams.get("categoryId") || "1");
-    return Response.json(
-      await prisma.product.findMany({
-        where: {
-          categoryId: {
-            in: await getDescendantCategoryIds(prisma, category),
-          }
-        },
-        skip: skip,
-        take: pageSize,
-      }),
-    );
+    filters.categoryId = {
+      in: await getDescendantCategoryIds(prisma, category),
+    };
   }
-
+  console.log(JSON.stringify(filters));
   return Response.json(
     await prisma.product.findMany({
+      where: filters,
       skip: skip,
       take: pageSize,
-    }),
-  );
+    }
+  ));
 }
 
 export async function POST(request: NextRequest) {
