@@ -1,13 +1,15 @@
 "use client";
 import { Category } from "@prisma/client";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useState } from "react";
 import { Box, Flex, VStack } from "@chakra-ui/react";
 import { LuChevronRight } from "react-icons/lu";
 
+import { Button } from "@/components/ui/button";
+
 export const DesktopCategoryMenu: React.FC<{ categories: Category[] }> = ({ categories }) => {
   const subCategories = categories.filter(x => x.parentCategoryId === null);
+
   return (
     <Flex wrap="wrap" justifyContent="center">
       {subCategories.map(cat => <DesktopCategoryMainItem key={cat.id} categories={categories} category={cat} />)}
@@ -18,11 +20,13 @@ export const DesktopCategoryMenu: React.FC<{ categories: Category[] }> = ({ cate
 const DesktopCategoryMainItem: React.FC<{ categories: Category[], category: Category }> = ({ categories, category }) => {
   const [isHovered, setIsHovered] = useState(false);
   const subCategories = categories.filter(x => x.parentCategoryId === category.id);
+
   if (subCategories.length === 0) {
     return (
       <CategoryMenuButton category={category} visibleOutline={true} />
     );
   }
+
   return (
     <CategoryMenuButton
       category={category}
@@ -56,11 +60,13 @@ const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Categ
     if (onClick) onClick(event);
     setIsHovered(false);
   };
+
   if (subCategories.length === 0) {
     return (
       <CategoryMenuButton category={category} hasArrow={false} onClick={handle} />
     );
   }
+
   return (
     <CategoryMenuButton
       category={category}
@@ -82,6 +88,7 @@ const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Categ
           ref={el => {
             if (!el || posSet) return;
             const rect = el.getBoundingClientRect();
+
             console.log(window.innerWidth, rect.right, el.offsetWidth);
             setLeft(window.innerWidth - rect.right < 0 ? "auto" : "100%");
             setRight(window.innerWidth - rect.right < 0 ? "100%" : "auto");
@@ -104,6 +111,7 @@ export const CategoryMenuButton : React.FC<{category: Category,
   onClick?: MouseEventHandler<HTMLButtonElement>}> =
   ({category, children, hasArrow, visibleOutline, onMouseEnter, onMouseLeave, onClick}) => {
   const router = useRouter();
+
   return (
     <Box position="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
       <Button key={category.id} width="100%" justifyContent="left"

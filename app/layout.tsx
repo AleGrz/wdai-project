@@ -1,6 +1,7 @@
+import { Flex } from "@chakra-ui/react";
+
 import NavBar from "@/components/navBar";
 import Provider from "@/components/ui/provider";
-import { Flex } from "@chakra-ui/react";
 import Footer from "@/components/footer";
 
 export default async function RootLayout({
@@ -10,7 +11,12 @@ export default async function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="en">
-      <head />
+      <head>
+        <title>Zetatech</title>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.png" />
+      </head>
       <body>
         <Provider>
           <Flex

@@ -1,4 +1,5 @@
 import type { Prisma } from "@prisma/client";
+
 import {
   Box,
   Image,
@@ -6,28 +7,23 @@ import {
   Spinner,
   HStack,
   Flex,
-  Fieldset,
-  Textarea,
 } from "@chakra-ui/react";
+import { TbListDetails } from "react-icons/tb";
+import { FaStar } from "react-icons/fa6";
+import { FiShoppingCart } from "react-icons/fi";
+
 import {
   DialogBackdrop,
-  DialogBody,
   DialogCloseTrigger,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogRoot,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { TbListDetails } from "react-icons/tb";
-import { FaStar } from "react-icons/fa6";
-import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "@/components/ui/stepper-input";
 import { Button } from "@/components/ui/button";
 import ReviewLabel from "@/components/reviewLabel";
-import { Rating } from "@/components/ui/rating";
-import { Field } from "@/components/ui/field";
 import ReviewForm from "@/components/reviewForm";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
@@ -151,7 +147,7 @@ export default async function ProductPage({
                     <DialogTitle>
                       Write a review for {productData.name}
                     </DialogTitle>
-                    <ReviewForm />
+                    <ReviewForm productId={productData.id} />
                   </DialogHeader>
                 </DialogContent>
               </DialogRoot>
@@ -168,10 +164,10 @@ export default async function ProductPage({
   );
 }
 
-function onSubmit(event: any) {
-  event.preventDefault();
-  if (!event.target.rating.value) {
-    alert("Rating is required");
-    return;
-  }
-}
+// function onSubmit(event: any) {
+//   event.preventDefault();
+//   if (!event.target.rating.value) {
+//     alert("Rating is required");
+//     return;
+//   }
+// }

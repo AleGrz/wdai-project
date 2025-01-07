@@ -1,4 +1,5 @@
 import { Button, Fieldset, Input, Stack, Link } from "@chakra-ui/react";
+
 import { Field } from "@/components/ui/field";
 
 export default function LoginPage() {
@@ -19,7 +20,7 @@ export default function LoginPage() {
 
       <Button type="submit">Log in</Button>
       <Fieldset.HelperText>
-        Don't have an account? <Link href="/signup">Sign up</Link>
+        Don&apos;t have an account? <Link href="/signup">Sign up</Link>
       </Fieldset.HelperText>
     </Fieldset.Root>
   );

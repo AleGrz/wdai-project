@@ -1,7 +1,9 @@
 import type React from "react";
-import ProductCard from "@/components/productCard";
+
 import { Product } from "@prisma/client";
 import { AbsoluteCenter, Flex, Text } from "@chakra-ui/react";
+
+import ProductCard from "@/components/productCard";
 
 export default async function SearchPage({
   searchParams,
@@ -16,6 +18,7 @@ export default async function SearchPage({
   );
   const products = await productResponse.json();
   let counter = 0;
+
   return (
     <>
       {products.length > 0 ? (

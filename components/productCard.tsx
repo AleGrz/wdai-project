@@ -4,6 +4,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+
 import { Rating } from "./ui/rating";
 
 const ProductCard: React.FC<{
@@ -94,4 +95,5 @@ const ProductCard: React.FC<{
     </>
   );
 };
+
 export default ProductCard;

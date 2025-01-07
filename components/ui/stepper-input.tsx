@@ -9,6 +9,7 @@ export interface StepperInputProps extends NumberInput.RootProps {
 export const StepperInput = React.forwardRef<HTMLDivElement, StepperInputProps>(
   function StepperInput(props, ref) {
     const { label, ...rest } = props
+
     return (
       <NumberInput.Root {...rest} unstyled ref={ref}>
         {label && <NumberInput.Label>{label}</NumberInput.Label>}

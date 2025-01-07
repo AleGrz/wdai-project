@@ -1,4 +1,5 @@
 import type { ButtonProps as ChakraButtonProps } from "@chakra-ui/react"
+
 import {
   AbsoluteCenter,
   Button as ChakraButton,
@@ -17,6 +18,7 @@ export interface ButtonProps extends ChakraButtonProps, ButtonLoadingProps {}
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   function Button(props, ref) {
     const { loading, disabled, loadingText, children, ...rest } = props
+
     return (
       <ChakraButton _active={{bg: "gray.950"}} disabled={loading || disabled} ref={ref} {...rest}>
         {loading && !loadingText ? (

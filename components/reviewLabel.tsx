@@ -1,7 +1,9 @@
+import type { Prisma } from '@prisma/client';
+
+import { Box, Flex } from '@chakra-ui/react';
+
 import { Rating } from '@/components/ui/rating';
 import { Avatar } from '@/components/ui/avatar';
-import { Box, Flex } from '@chakra-ui/react';
-import type { Prisma } from '@prisma/client';
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };

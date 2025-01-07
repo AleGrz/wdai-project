@@ -1,16 +1,19 @@
-import { Avatar } from "./ui/avatar";
 import { RiSearch2Fill } from "react-icons/ri";
 import Link from "next/link";
-import { Button } from "./ui/button";
 import { Box, Flex, Input } from "@chakra-ui/react";
 import Image from "next/image";
-import { DesktopCategoryMenu } from "@/components/categoryMenu";
 import { Category } from "@prisma/client";
+
+import { DesktopCategoryMenu } from "@/components/categoryMenu";
+
+import { Button } from "./ui/button";
+import { Avatar } from "./ui/avatar";
 
 const NavBar: React.FC = async () => {
   const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(
     (data) => data.json()
   ) as Category[];
+
   return (
     <Box px={4}>
       <Flex
@@ -43,4 +46,5 @@ const NavBar: React.FC = async () => {
     </Box>
   );
 }
+
 export default NavBar;

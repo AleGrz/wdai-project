@@ -12,6 +12,7 @@ interface MenuContentProps extends ChakraMenu.ContentProps {
 export const MenuContent = React.forwardRef<HTMLDivElement, MenuContentProps>(
   function MenuContent(props, ref) {
     const { portalled = true, portalRef, ...rest } = props
+
     return (
       <Portal disabled={!portalled} container={portalRef}>
         <ChakraMenu.Positioner>
@@ -52,6 +53,7 @@ export const MenuRadioItem = React.forwardRef<
   ChakraMenu.RadioItemProps
 >(function MenuRadioItem(props, ref) {
   const { children, ...rest } = props
+
   return (
     <ChakraMenu.RadioItem ps="8" ref={ref} {...rest}>
       <AbsoluteCenter axis="horizontal" left="4" asChild>
@@ -69,6 +71,7 @@ export const MenuItemGroup = React.forwardRef<
   ChakraMenu.ItemGroupProps
 >(function MenuItemGroup(props, ref) {
   const { title, children, ...rest } = props
+
   return (
     <ChakraMenu.ItemGroup ref={ref} {...rest}>
       {title && (
@@ -90,6 +93,7 @@ export const MenuTriggerItem = React.forwardRef<
   MenuTriggerItemProps
 >(function MenuTriggerItem(props, ref) {
   const { startIcon, children, ...rest } = props
+
   return (
     <ChakraMenu.TriggerItem ref={ref} {...rest}>
       {startIcon}

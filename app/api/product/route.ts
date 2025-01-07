@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
+import type { Prisma } from "@prisma/client";
 
 import { PrismaClient } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
 
 async function getDescendantCategoryIds(prisma: PrismaClient, categoryId: number): Promise<number[]> {
   const descendants: number[] = [categoryId];
@@ -11,11 +11,13 @@ async function getDescendantCategoryIds(prisma: PrismaClient, categoryId: number
       where: { parentCategoryId: parentId },
       select: { id: true },
     });
+
     for (const category of categories) {
       descendants.push(category.id);
       await getChildren(category.id);
     }
   };
+
   await getChildren(categoryId);
 
   return descendants;
@@ -32,6 +34,7 @@ export async function GET(request: NextRequest) {
   const skip = (page - 1) * pageSize;
   const filters: Prisma.ProductWhereInput = {};
   const searchParam = searchParams.get("query");
+
   if (searchParam) {
     filters.OR = [
       {
@@ -53,11 +56,13 @@ export async function GET(request: NextRequest) {
   }
   if (searchParams.get("categoryId")) {
     const category = parseInt(searchParams.get("categoryId") || "1");
+
     filters.categoryId = {
       in: await getDescendantCategoryIds(prisma, category),
     };
   }
   console.log(JSON.stringify(filters));
+
   return Response.json(
     await prisma.product.findMany({
       where: filters,

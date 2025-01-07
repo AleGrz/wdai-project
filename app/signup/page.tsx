@@ -1,5 +1,6 @@
-import { Field } from "@/components/ui/field";
 import { Button, Fieldset, Input, Stack, Link } from "@chakra-ui/react";
+
+import { Field } from "@/components/ui/field";
 
 export default function SignupPage() {
   // const tokens = await fetch("/api/auth/register", {
