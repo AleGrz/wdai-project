@@ -6,6 +6,8 @@ import {
   Spinner,
   HStack,
   Flex,
+  Fieldset,
+  Textarea,
 } from "@chakra-ui/react";
 import {
   DialogBackdrop,
@@ -24,11 +26,13 @@ import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "@/components/ui/stepper-input";
 import { Button } from "@/components/ui/button";
 import ReviewLabel from "@/components/reviewLabel";
+import { Rating } from "@/components/ui/rating";
+import { Field } from "@/components/ui/field";
+import ReviewForm from "@/components/reviewForm";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
 }>;
-
 
 export default async function ProductPage({
   params,
@@ -38,9 +42,9 @@ export default async function ProductPage({
   const productData = await fetch(
     `http://localhost:3000/api/product/${(await params).productId}`
   ).then((res) => res.json());
-  const reviewsData = await fetch(
+  const reviewsData = (await fetch(
     `http://localhost:3000/api/product/${(await params).productId}/review`
-  ).then((res) => res.json()) as ReviewWithUser[];
+  ).then((res) => res.json())) as ReviewWithUser[];
 
   if (!productData) {
     return (
@@ -115,9 +119,9 @@ export default async function ProductPage({
           </Box>
         </Box>
       </HStack>
-      <Tabs.Root defaultValue="members" variant={"line"}>
+      <Tabs.Root defaultValue="description" variant={"line"}>
         <Tabs.List>
-          <Tabs.Trigger value="description" defaultChecked>
+          <Tabs.Trigger value="description">
             <TbListDetails />
             Description
           </Tabs.Trigger>
@@ -144,14 +148,15 @@ export default async function ProductPage({
                 <DialogContent>
                   <DialogCloseTrigger />
                   <DialogHeader>
-                    <DialogTitle />
+                    <DialogTitle>
+                      Write a review for {productData.name}
+                    </DialogTitle>
+                    <ReviewForm />
                   </DialogHeader>
-                  <DialogBody />
-                  <DialogFooter />
                 </DialogContent>
               </DialogRoot>
               {reviewsData.length > 0
-                ? reviewsData.map(review => (
+                ? reviewsData.map((review) => (
                     <ReviewLabel key={review.id} review={review} />
                   ))
                 : "No reviews yet"}
