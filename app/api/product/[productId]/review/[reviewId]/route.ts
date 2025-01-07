@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 
 export async function GET(
   _request: NextRequest,
@@ -43,7 +43,7 @@ export async function PATCH(
       { message: "Rating must be a number!" },
       { status: 400 },
     );
-  } else if (!(await prisma.product.findFirst({ where: { id: productId } }))) {
+  } else if (!(await prisma.product.findFirst({ where: { id: parseInt(productId) } }))) {
     return Response.json({ message: "Product not found!" }, { status: 404 });
   }
   try {
@@ -61,7 +61,7 @@ export async function PATCH(
     );
   } catch (error) {
     if (
-      error instanceof PrismaClient.PrismaClientKnownRequestError &&
+      error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
       return Response.json({ message: "Review not found!" }, { status: 404 });

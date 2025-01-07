@@ -1,14 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
-export async function POST(
-    request: NextRequest,
-    { params }: { params: Promise<{ userId: string }> },
-  ) {
-    const prisma = new PrismaClient();
-    const id = (await params).userId;
-  
-    await prisma.order.updateMany({ where: { userId: id, orderDate: null}, data: { orderDate: new Date() } });
+export async function POST(_request: NextRequest,
+  { params }: { params: Promise<{ userId: string }> },
+) {
+  const prisma = new PrismaClient();
+  const { userId } = await params;
+  const id = userId;
 
-  return Response.json({ message: "Order details added successfully!" });
+  await prisma.order.updateMany({
+    where: { userId: parseInt(id), orderDate: null },
+    data: { orderDate: new Date() },
+  });
+
+  return new Response(JSON.stringify({ message: "Order details added successfully!" }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
+  });
 }
