@@ -5,15 +5,45 @@ import {
   MenuItem,
   MenuRoot,
   MenuTrigger,
+  MenuTriggerItem,
 } from "@/components/ui/menu";
 
-import { GetServerSideProps } from "next";
-
-interface CategoryMenuProps {
-  categories: Category[];
+export async function DesktopCategoryMenu(categories: Category[]) {
+  const subCategories = categories.filter(x => x.parentCategoryId === null);
+  return (
+    <>
+      {subCategories.map(cat => DesktopCategoryMainItem(categories, cat))}
+    </>
+  )
 }
 
-export default function CategoryMenu({ categories }: CategoryMenuProps) {
+async function DesktopCategoryMainItem(categories: Category[], category: Category) {
+  const subCategories = categories.filter(x => x.parentCategoryId === category.id);
+  if (subCategories.length === 0) {
+    return (
+      <Button key={category.id} variant="outline" size="sm">
+          {category.name}
+      </Button>
+    );
+  }
+  return (
+    <>
+      <MenuRoot positioning={{ sameWidth: true }}>
+        <MenuTrigger asChild>
+          <Button variant="outline" size="sm">
+            {category.name}
+          </Button>
+        </MenuTrigger>
+        <MenuContent>
+          {subCategories.map(cat => CategoryItem(categories, cat))}
+        </MenuContent>
+      </MenuRoot>
+    </>
+  )
+}
+
+export async function MobileCategoryMenu(categories: Category[]) {
+  const subCategories = categories.filter(x => x.parentCategoryId === null);
   return (
     <MenuRoot>
       <MenuTrigger asChild>
@@ -22,15 +52,20 @@ export default function CategoryMenu({ categories }: CategoryMenuProps) {
         </Button>
       </MenuTrigger>
       <MenuContent>
+<<<<<<< HEAD
         {categories &&
           categories
             .filter((x) => x.parentCategoryId === undefined)
             .map((cat: Category) => CategoryItem(cat.id, cat.name))}
+=======
+        {subCategories.map(cat => CategoryItem(categories, cat))}
+>>>>>>> f6abdea5c5355c63695a3bade2d329b7297656be
       </MenuContent>
     </MenuRoot>
   );
 }
 
+<<<<<<< HEAD
 export const getServerSideProps: GetServerSideProps = async () => {
   const data = await fetch("http://localhost:3000/api/category");
   const categories = await data.json();
@@ -56,3 +91,24 @@ async function CategoryItem(categoryId: number, categoryName: string) {
   //   </MenuRoot>)
   // }
 }
+=======
+async function CategoryItem(categories: Category[], category: Category) {
+  const subCategories = categories.filter(x => x.parentCategoryId === category.id);
+  return (
+    <>
+      {subCategories.length > 0 ? (
+        <MenuRoot positioning={{ placement: "right-start", gutter: 2 }}>
+          <MenuTriggerItem value={category.id.toString()}>
+            {category.name}
+          </MenuTriggerItem>
+          <MenuContent>
+            {subCategories.map(cat => CategoryItem(categories, cat))}
+          </MenuContent>
+        </MenuRoot>
+      ) : (
+        <MenuItem value={category.id.toString()}>{category.name}</MenuItem>
+      )}
+    </>
+  );
+}
+>>>>>>> f6abdea5c5355c63695a3bade2d329b7297656be

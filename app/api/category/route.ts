@@ -6,11 +6,7 @@ export async function GET(_request: NextRequest) {
   const prisma = new PrismaClient();
 
   return Response.json(
-    await prisma.category.findMany({
-      where: {
-        parentCategoryId: null
-      },
-    }),
+    await prisma.category.findMany(),
   );
 }
 
