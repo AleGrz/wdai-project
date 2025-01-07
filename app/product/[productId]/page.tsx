@@ -36,10 +36,9 @@ export default function ProductPage({
       ).then((res) => res.json());
       setProduct(productData);
 
-      const reviewsData =
-        (await fetch(
-          `http://localhost:3000/api/product/${(await params).productId}/review`
-        ).then((res) => res.json())) || [];
+      const reviewsData = await fetch(
+        `http://localhost:3000/api/product/${(await params).productId}/review`
+      ).then((res) => res.json());
       setReviews(reviewsData);
     }
 
@@ -121,7 +120,7 @@ export default function ProductPage({
       </HStack>
       <Tabs.Root defaultValue="members" variant={"line"}>
         <Tabs.List>
-          <Tabs.Trigger value="description">
+          <Tabs.Trigger value="description" defaultChecked>
             <TbListDetails />
             Description
           </Tabs.Trigger>
@@ -133,8 +132,8 @@ export default function ProductPage({
 
         <Tabs.Content value="description">{product.description}</Tabs.Content>
         <Tabs.Content value="reviews">
-          {reviews.length === 0
-            ? reviews.map((r) => <ReviewLabel review={r} />)
+          {reviews !== null
+            ? reviews.map((r) => <ReviewLabel key={r.id} review={r} />)
             : "No reviews yet"}
         </Tabs.Content>
       </Tabs.Root>
