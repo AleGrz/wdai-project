@@ -26,7 +26,7 @@ const NavBar: React.FC = async () => {
             <Image src="/logo.svg" alt="Logo" layout="fill" objectFit="contain" loading="eager" />
           </Link>
         </Box>
-        <Flex grow={1}>
+        <Flex grow={1} asChild>
           <SearchControl/>
         </Flex>
         <Flex justifyContent="flex-end" width={200}>
