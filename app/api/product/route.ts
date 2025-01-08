@@ -61,7 +61,6 @@ export async function GET(request: NextRequest) {
       in: await getDescendantCategoryIds(prisma, category),
     };
   }
-  console.log(JSON.stringify(filters));
 
   return Response.json(
     await prisma.product.findMany({
