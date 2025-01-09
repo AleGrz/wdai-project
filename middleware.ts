@@ -1,4 +1,6 @@
+import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
+
 import { NextResponse } from "next/server";
 
 const accessRules = [
@@ -45,15 +47,19 @@ export async function middleware(request: NextRequest) {
   const token = request.headers.get("Authorization")?.split(" ")[1];
   const path = request.nextUrl.pathname;
   const method = request.method;
+  const cookieStore = await cookies()
+  cookieStore.getAll().forEach((cookie) => console.log(cookie));
 
   const matchesPath = (rulePath: string, requestPath: string) => {
     const ruleRegex = new RegExp(
       "^" + rulePath.replace(/:([a-zA-Z]+)/g, "([^/]+)") + "$"
     );
+
     return ruleRegex.test(requestPath);
   };
 
   let move = true;
+
   for (const rule of accessRules) {
     if (matchesPath(rule.path, path) && rule.methods.includes(method)) {
       move = false;
@@ -73,6 +79,7 @@ export async function middleware(request: NextRequest) {
   });
 
   const loginUrl = request.nextUrl.clone();
+
   loginUrl.pathname = "/login";
 
   if (!response.ok) {
@@ -94,6 +101,7 @@ export async function middleware(request: NextRequest) {
       if (rule.userSpecific) {
         const userSpecificPlace = rule.path.split("/").indexOf(":userid");
         const userIdFromPath = path.split("/")[userSpecificPlace];
+
         if (userIdFromPath !== user.id && !user.isAdmin) {
           return NextResponse.json(
             { message: "Forbidden: You can only access your own resources." },
