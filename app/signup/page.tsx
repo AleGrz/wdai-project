@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Field } from "@/components/ui/field";
+
 import { setCookies } from "./actions";
 
 export default function SignupPage() {
@@ -37,7 +38,7 @@ export default function SignupPage() {
         "Content-type": "application/json; charset=UTF-8",
       },
     }).then((res) => res.json());
-    console.log(tokens);
+
     setCookies(tokens);
     router.push("/");
   };

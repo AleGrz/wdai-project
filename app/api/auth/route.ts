@@ -7,13 +7,13 @@ export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
   const data = await request.json();
 
-  if (!data.token) {
+  if (!data.accessToken) {
     return Response.json({ message: "Token is required" }, { status: 400 });
   }
 
   try {
     const { payload } = await jwtVerify(
-      data.token,
+      data.accessToken,
       new TextEncoder().encode(process.env.JWT_SECRET),
     );
     const user = await prisma.user.findUnique({
@@ -22,6 +22,7 @@ export async function POST(request: NextRequest) {
 
     return Response.json({
       userFound: user !== undefined,
+      id: user?.id,
       isAdmin: user?.isAdmin || false,
     });
   } catch {

@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     return Response.json(
       {
-        token: token,
+        accessToken: token,
         refreshToken: refreshToken,
         expiresIn: 3600,
       },

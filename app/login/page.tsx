@@ -1,8 +1,9 @@
 "use client";
 import { Button, Fieldset, Input, Stack, Link } from "@chakra-ui/react";
+import { useState } from "react";
 
 import { Field } from "@/components/ui/field";
-import { useState } from "react";
+
 import { setCookies } from "./actions";
 
 export default function LoginPage() {
@@ -33,11 +34,14 @@ export default function LoginPage() {
         "Content-type": "application/json; charset=UTF-8",
       },
     });
+
     if (!response.ok) {
       alert("Invalid email or password");
+
       return;
     }
     const tokens = await response.json();
+
     setCookies(tokens);
   };
 
