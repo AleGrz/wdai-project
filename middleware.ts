@@ -40,15 +40,20 @@ const accessRules = [
     path: "/api/user",
     methods: ["GET"],
     roles: ["admin"]
+  },
+  {
+    path: "/cart/:userid",
+    methods: ["GET"],
+    roles: ["user", "admin"],
+    userSpecific: true
   }
 ];
 
 export async function middleware(request: NextRequest) {
-  const token = request.headers.get("Authorization")?.split(" ")[1];
   const path = request.nextUrl.pathname;
   const method = request.method;
-  const cookieStore = await cookies()
-  cookieStore.getAll().forEach((cookie) => console.log(cookie));
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken");
 
   const matchesPath = (rulePath: string, requestPath: string) => {
     const ruleRegex = new RegExp(
@@ -75,13 +80,13 @@ export async function middleware(request: NextRequest) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify({ token: accessToken }),
   });
+
 
   const loginUrl = request.nextUrl.clone();
 
   loginUrl.pathname = "/login";
-
   if (!response.ok) {
     return NextResponse.redirect(loginUrl);
   }

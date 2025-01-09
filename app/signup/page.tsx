@@ -37,35 +37,58 @@ export default function SignupPage() {
         "Content-type": "application/json; charset=UTF-8",
       },
     }).then((res) => res.json());
-
+    console.log(tokens);
     setCookies(tokens);
     router.push("/");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Fieldset.Root size="lg" maxW="md">
+    <Fieldset.Root size="lg" maxW="md">
+      <form onSubmit={handleSubmit}>
         <Stack>
           <Fieldset.Legend>Sign up</Fieldset.Legend>
         </Stack>
 
         <Fieldset.Content>
           <Field label="First Name">
-            <Input name="firstName" value={formData.firstName} onChange={handleChange} />
+            <Input
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+            />
           </Field>
 
           <Field label="Last Name">
-            <Input name="lastName" value={formData.lastName} onChange={handleChange} />
+            <Input
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+            />
           </Field>
 
           <Field label="Email address">
-            <Input name="email" type="email" value={formData.email} onChange={handleChange} />
+            <Input
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
           </Field>
           <Field label="Password">
-            <Input name="password" type="password" value={formData.password} onChange={handleChange} />
+            <Input
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+            />
           </Field>
           <Field label="Repeat Password">
-            <Input name="repeatPassword" type="password" value={formData.repeatPassword} onChange={handleChange} />
+            <Input
+              name="repeatPassword"
+              type="password"
+              value={formData.repeatPassword}
+              onChange={handleChange}
+            />
           </Field>
         </Fieldset.Content>
 
@@ -73,7 +96,7 @@ export default function SignupPage() {
         <Fieldset.HelperText>
           Already have an account? <Link href="/login">Log in</Link>
         </Fieldset.HelperText>
-      </Fieldset.Root>
-    </form>
+      </form>
+    </Fieldset.Root>
   );
 }

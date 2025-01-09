@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
   }
-  const token = await new jose.SignJWT({ userId: user.id })
+  const accessToken = await new jose.SignJWT({ userId: user.id })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("1h")
     .sign(new TextEncoder().encode(process.env.JWT_SECRET as string));
@@ -50,9 +50,8 @@ export async function POST(request: NextRequest) {
 
   return Response.json(
     {
-      token: token,
-      refreshToken: refreshToken,
-      expiresIn: 3600,
+      accessToken: accessToken,
+      refreshToken: refreshToken
     },
     { status: 200 },
   );
