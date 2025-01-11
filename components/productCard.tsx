@@ -39,12 +39,12 @@ const ProductCard: React.FC<{
               quality={65}
               loading={loading}
               fill
+              variant="pulse"
               style={{
                 background: "white"
               }}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               imageStyle={{
-                borderRadius: "0.5rem",
                 objectFit: "contain"
               }} />
           </Box>

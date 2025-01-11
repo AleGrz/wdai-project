@@ -1,9 +1,8 @@
 import type { Prisma } from "@prisma/client";
 
-import { Box, Image, Tabs, Spinner, HStack, Flex } from "@chakra-ui/react";
+import { Box, Tabs, Spinner, HStack, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
-import { FiShoppingCart } from "react-icons/fi";
 
 import {
   DialogBackdrop,
@@ -14,12 +13,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { StepperInput } from "@/components/ui/stepper-input";
 import { Button } from "@/components/ui/button";
 import ReviewLabel from "@/components/reviewLabel";
 import ReviewForm from "@/components/reviewForm";
-
 import AddProduct from "@/components/addProduct";
+import SkeletonNextImage from "@/components/skeletonNextImage";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
@@ -60,13 +58,22 @@ export default async function ProductPage({
         shadow="lg"
         position="relative"
       >
-        <Image
-          src={productData.imageUrl}
-          alt={productData.name}
-          rounded="lg"
-          height={600}
-          maxW={800}
-        />
+        <Box position="relative" height={600} maxW={800} width="100%">
+          <SkeletonNextImage
+            src={productData.imageUrl}
+            alt={productData.name}
+            fill
+            priority
+            loading="eager"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            style={{
+              background: "white",
+              borderRadius: "0.5rem"
+            }}
+            imageStyle={{
+              objectFit: "contain"
+            }} />
+          </Box>
 
         <Box>
           <Box p="6">

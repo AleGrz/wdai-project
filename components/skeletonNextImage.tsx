@@ -14,14 +14,17 @@ const SkeletonNextImage: React.FC<{
   fill?: boolean | undefined,
   sizes?: string | undefined,
   style?: React.CSSProperties | undefined,
-  imageStyle?: React.CSSProperties | undefined
-}> = ({src, alt, quality, loading, priority, fill, sizes, style, imageStyle}) => {
+  imageStyle?: React.CSSProperties | undefined,
+  width?: number | undefined,
+  height?: number | undefined,
+  variant?: "shine" | "pulse" | "none",
+}> = ({src, alt, quality, loading, priority, fill, sizes, style, imageStyle, width, height, variant = "shine"}) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
     <>
-      {!isLoaded && <Skeleton height="100%" width="100%" variant="shine" />}
-      <Box style={{ ...style, height: "100%", width: "100%", position: "relative" }}>
+      {!isLoaded && <Skeleton height="100%" width="100%" variant={variant} />}
+      <Box style={{ ...style, height: "100%", width: "100%", position: "relative", visibility: isLoaded ? "visible" : "hidden" }}>
         <Image
           src={src}
           alt={alt}
@@ -31,7 +34,9 @@ const SkeletonNextImage: React.FC<{
           onLoad={() => setIsLoaded(true)}
           fill={fill}
           sizes={sizes}
-          style={imageStyle} />
+          style={imageStyle}
+          width={width}
+          height={height} />
       </Box>
     </>
   )
