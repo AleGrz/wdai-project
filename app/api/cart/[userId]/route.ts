@@ -8,15 +8,18 @@ export async function GET(
 ) {
   const prisma = new PrismaClient();
   const id = (await params).userId;
-  const cart = await prisma.order.findFirst({
+  let cart = await prisma.order.findFirst({
     where: { userId: parseInt(id), orderDate: null },
     include: { orderDetails: true },
   });
 
-  if (!cart) {
+  if (await prisma.user.findFirst({ where: { id: parseInt((await params).userId) } }) === null) {
     return Response.json({ message: "User not found!" }, { status: 404 });
   }
 
+  if (!cart) {
+    cart = await prisma.order.create({ data: { userId: parseInt(id) }, include: { orderDetails: true } });
+  }
   return Response.json(cart);
 }
 
@@ -28,20 +31,29 @@ export async function POST(
   const id = (await params).userId;
   const body = await request.json();
 
-  const cart = await prisma.order.findFirst({ where: { userId: parseInt(id), orderDate: null}, include: { orderDetails: true } });
-
-  if (!cart) {
+  if (await prisma.user.findFirst({ where: { id: parseInt((await params).userId) } }) === null) {
     return Response.json({ message: "User not found!" }, { status: 404 });
   }
 
-  const orderDetails = body.orderDetails.map((detail: OrderDetail) => {
-    return {
-      productId: detail.productId,
+  let cart = await prisma.order.findFirst({ where: { userId: parseInt(id), orderDate: null}, include: { orderDetails: true } });
+
+  if (!cart) {
+    cart = await prisma.order.create({ data: { userId: parseInt(id) }, include: { orderDetails: true } });
+  }
+
+  if (await prisma.orderDetail.findFirst({ where: { orderId: cart.id, productId: body.productId } }) !== null) {
+    await prisma.orderDetail.updateMany({
+      where: {orderId: cart.id, productId: body.productId },
+      data: { quantity: { increment: body.quantity } },
+      });
+  } else {
+  await prisma.orderDetail.create({
+    data: {
       orderId: cart.id,
-    };
+      productId: body.productId,
+      quantity: body.quantity,
+    },
   });
-
-  await prisma.orderDetail.create({ data: orderDetails });
-
+  }
   return Response.json({ message: "Order details added successfully!" });
 }

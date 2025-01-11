@@ -2,7 +2,8 @@ import type { NextRequest } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import * as jose from "jose";
+
+import { generateTokens } from "@/app/api/auth/helper";
 
 export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
@@ -38,21 +39,6 @@ export async function POST(request: NextRequest) {
       { status: 401 },
     );
   }
-  const accessToken = await new jose.SignJWT({ userId: user.id })
-    .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("1h")
-    .sign(new TextEncoder().encode(process.env.JWT_SECRET as string));
-
-  const refreshToken = await new jose.SignJWT({ userId: user.id })
-    .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("7d")
-    .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string));
-
-  return Response.json(
-    {
-      accessToken: accessToken,
-      refreshToken: refreshToken
-    },
-    { status: 200 },
-  );
+  
+  return Response.json(await generateTokens(user), { status: 200 });
 }

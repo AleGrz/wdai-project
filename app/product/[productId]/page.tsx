@@ -18,9 +18,8 @@ import { StepperInput } from "@/components/ui/stepper-input";
 import { Button } from "@/components/ui/button";
 import ReviewLabel from "@/components/reviewLabel";
 import ReviewForm from "@/components/reviewForm";
-import { getUserData } from "@/app/validator";
-import { redirect } from "next/dist/server/api-utils";
-import AddProductButton from "@/components/addProductButton";
+
+import AddProduct from "@/components/addProduct";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
@@ -50,16 +49,6 @@ export default async function ProductPage({
       </Box>
     );
   }
-
-  const addToCart = async () => {
-    const user = await getUserData();
-    if (!user) {
-      redirect("/login");
-    }
-    await fetch(`/api/cart/${user.id}`, {
-      method: "POST",
-    });
-  };
 
   return (
     <>
@@ -106,15 +95,7 @@ export default async function ProductPage({
                 {productData.price.toFixed(2)}
               </Box>
             </Flex>
-            <Flex alignContent="center">
-              <StepperInput
-                defaultValue="1"
-                min={1}
-                max={productData.inStock}
-                margin={5}
-              />
-              <AddProductButton />
-            </Flex>
+            <AddProduct productData={productData}/>
           </Box>
         </Box>
       </HStack>
