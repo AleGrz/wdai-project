@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import type { MessageResponse } from "@/types";
 
 import { Prisma, PrismaClient } from "@prisma/client";
 
@@ -11,7 +12,9 @@ export async function GET(
   const review = await prisma.review.findUnique({ where: { id: id } });
 
   if (!review) {
-    return Response.json({ message: "Review not found!" }, { status: 404 });
+    return Response.json(
+      { message: "Review not found!" } as MessageResponse,
+      { status: 404 });
   }
 
   return Response.json(review);
@@ -28,19 +31,22 @@ export async function PATCH(
 
   if (data.description === undefined) {
     return Response.json(
-      { message: "No description provided!" },
+      { message: "No description provided!" } as MessageResponse,
       { status: 400 },
     );
   } else if (typeof data.description !== "string") {
     return Response.json(
-      { message: "Description type must be a string!" },
+      { message: "Description type must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.rating === undefined) {
-    return Response.json({ message: "No rating provided!" }, { status: 400 });
+    return Response.json(
+      { message: "No rating provided!" } as MessageResponse,
+      { status: 400 }
+    );
   } else if (typeof data.rating !== "number") {
     return Response.json(
-      { message: "Rating must be a number!" },
+      { message: "Rating must be a number!" } as MessageResponse,
       { status: 400 },
     );
   } else if (!(await prisma.product.findFirst({ where: { id: parseInt(productId) } }))) {
@@ -56,7 +62,7 @@ export async function PATCH(
     });
 
     return Response.json(
-      { message: "Successfully edited the review." },
+      { message: "Successfully edited the review." } as MessageResponse,
       { status: 200 },
     );
   } catch (error) {
@@ -64,7 +70,10 @@ export async function PATCH(
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
-      return Response.json({ message: "Review not found!" }, { status: 404 });
+      return Response.json(
+        { message: "Review not found!" } as MessageResponse,
+        { status: 404 }
+      );
     }
     throw error;
   }

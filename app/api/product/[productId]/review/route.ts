@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import type { MessageResponse } from "@/types";
 
 import { PrismaClient } from "@prisma/client";
 
@@ -11,7 +12,9 @@ export async function GET(
   const product = await prisma.product.findUnique({ where: { id: parseInt(productId) } });
 
   if (!product) {
-    return Response.json({ message: "Product not found!" }, { status: 404 });
+    return Response.json(
+      { message: "Product not found!" } as MessageResponse,
+      { status: 404 });
   }
 
   const searchParams = request.nextUrl.searchParams;
@@ -47,30 +50,34 @@ export async function POST(
     return Response.json({ message: "No userId provided!" }, { status: 400 });
   } else if (typeof data.userId !== "string") {
     return Response.json(
-      { message: "UserId must be a string!" },
+      { message: "UserId must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.rating === undefined) {
     return Response.json({ message: "No rating provided!" }, { status: 400 });
   } else if (typeof data.rating !== "number") {
     return Response.json(
-      { message: "Rating must be a number!" },
+      { message: "Rating must be a number!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.description === undefined) {
     return Response.json(
-      { message: "No description provided!" },
+      { message: "No description provided!" } as MessageResponse,
       { status: 400 },
     );
   } else if (typeof data.description !== "string") {
     return Response.json(
-      { message: "Description type must be a string!" },
+      { message: "Description type must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (!(await prisma.user.findFirst({ where: { id: data.userId } }))) {
-    return Response.json({ message: "User not found!" }, { status: 404 });
+    return Response.json(
+      { message: "User not found!" } as MessageResponse,
+      { status: 404 });
   } else if (!(await prisma.product.findFirst({ where: { id: parseInt(productId) } }))) {
-    return Response.json({ message: "Product not found!" }, { status: 404 });
+    return Response.json(
+      { message: "Product not found!" } as MessageResponse,
+      { status: 404 });
   }
   await prisma.review.create({
     data: {
@@ -82,7 +89,7 @@ export async function POST(
   });
 
   return Response.json(
-    { message: "Successfully added new review." },
+    { message: "Successfully added new review." } as MessageResponse,
     { status: 201 },
   );
 }
