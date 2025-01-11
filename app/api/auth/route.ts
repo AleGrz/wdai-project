@@ -20,11 +20,9 @@ export async function POST(request: NextRequest) {
       where: { id: parseInt(payload.userId as string) },
     });
 
-    return Response.json({
-      userFound: user !== undefined,
-      id: user?.id,
-      isAdmin: user?.isAdmin || false,
-    });
+    if (user === null) return Response.json({ message: "User not found" }, { status: 404 });
+
+    return Response.json(user);
   } catch {
     return Response.json({ message: "Invalid token" }, { status: 400 });
   }

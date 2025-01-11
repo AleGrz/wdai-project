@@ -8,12 +8,14 @@ import { DesktopCategoryMenu } from "@/components/categoryMenu";
 
 import { Avatar } from "./ui/avatar";
 import SearchControl from "./searchControl";
+import { getUserData } from "./validator";
 
 const NavBar: React.FC = async () => {
   const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(
     (data) => data.json()
   ) as Category[];
-  
+  const user = await getUserData();
+
   return (
     <Box px={4}>
       <Flex
@@ -31,14 +33,19 @@ const NavBar: React.FC = async () => {
           <SearchControl/>
         </Flex>
         <Flex justifyContent="flex-end" gap={5} width={200}>
-          <NavButton route="login">Log in</NavButton>
-          <NavButton route="signup">Sign up</NavButton>
-          <Avatar
-            size={"sm"}
-            src={
-              "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-            }
-          />
+          {user ?
+          (
+            <Avatar
+              size={"sm"}
+              name={user.firstName + " " + user.lastName}
+            />
+          )
+          : (
+            <>
+              <NavButton route="login">Log in</NavButton>
+              <NavButton route="signup">Sign up</NavButton>
+            </>)
+          }
         </Flex>
       </Flex>
       <DesktopCategoryMenu categories={categories} />

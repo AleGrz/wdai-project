@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Field } from "@/components/ui/field";
 
 import { setCookies } from "./actions";
+import router from "next/router";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -39,10 +40,12 @@ export default function LoginPage() {
       alert("Invalid email or password");
 
       return;
-    }
-    const tokens = await response.json();
+    } else {
+      const tokens = await response.json();
 
-    setCookies(tokens);
+      await setCookies(tokens);
+      router.push("/");
+    }
   };
 
   return (
