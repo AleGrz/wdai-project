@@ -18,6 +18,7 @@ import ReviewLabel from "@/components/reviewLabel";
 import ReviewForm from "@/components/reviewForm";
 import AddProduct from "@/components/addProduct";
 import SkeletonNextImage from "@/components/skeletonNextImage";
+import { getUserData } from "@/app/api/auth/helper";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
