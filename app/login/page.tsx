@@ -54,7 +54,7 @@ const LoginPage: React.FC = () => {
 
   return (
     (<Fieldset.Root size="lg" maxW="md">
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} noValidate>
         <Stack>
           <Fieldset.Legend>Log in</Fieldset.Legend>
         </Stack>
@@ -64,6 +64,7 @@ const LoginPage: React.FC = () => {
             label="Email address"
             invalid={!!errors.email}
             errorText={errors.email?.message}
+            required
           >
             <Input
               {...register("email", {
@@ -79,6 +80,7 @@ const LoginPage: React.FC = () => {
             label="Password"
             invalid={!!errors.password}
             errorText={errors.password?.message}
+            required
           >
             <PasswordInput
               {...register("password", { required: "Password is required!" })}
