@@ -86,3 +86,31 @@ export async function PATCH(
     throw error;
   }
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ productId: string; reviewId: string }> },
+) {
+  const prisma = new PrismaClient();
+  const id = (await params).reviewId;
+
+  try {
+    await prisma.review.delete({ where: { id: id } });
+
+    return Response.json(
+      { message: "Successfully deleted the review." } as MessageResponse,
+      { status: 200 },
+    );
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2025"
+    ) {
+      return Response.json(
+        { message: "Review not found!" } as MessageResponse,
+        { status: 404 }
+      );
+    }
+    throw error;
+  }
+}

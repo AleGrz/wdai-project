@@ -18,6 +18,7 @@ import ReviewLabel from "@/components/reviewLabel";
 import ReviewForm from "@/components/reviewForm";
 import AddProduct from "@/components/addProduct";
 import SkeletonNextImage from "@/components/skeletonNextImage";
+import { getUserData } from "@/app/api/auth/helper";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
@@ -69,12 +70,13 @@ export default async function ProductPage({
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{
               background: "white",
-              borderRadius: "0.5rem"
+              borderRadius: "0.5rem",
             }}
             imageStyle={{
               objectFit: "contain",
-            }} />
-          </Box>
+            }}
+          />
+        </Box>
 
         <Box>
           <Box p="6">
@@ -156,6 +158,7 @@ export default async function ProductPage({
                             user?.isAdmin ||
                             false
                           }
+                          productId={productData.id}
                         />
                       )
                     )

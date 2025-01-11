@@ -3,6 +3,7 @@ import type { Prisma } from "@prisma/client";
 import { Box, Button, Flex, Textarea } from "@chakra-ui/react";
 import { Rating } from "@/components/ui/rating";
 import { Avatar } from "@/components/ui/avatar";
+import { Field } from "@/components/ui/field";
 import { LuCheck, LuX } from "react-icons/lu";
 import { useState, useRef } from "react";
 
@@ -13,29 +14,48 @@ type ReviewWithUser = Prisma.ReviewGetPayload<{
 export default function ReviewLabel({
   review,
   isUD,
+  productId,
 }: {
   review: ReviewWithUser;
   isUD: boolean;
+  productId: number;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isVisible, setIsVisible] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(review.description);
   const [prev, setPrev] = useState(review.description);
+  const [empty, setEmpty] = useState(false);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
+    if (!content) {
+      setEmpty(true);
+      return;
+    }
     setIsEditing(false);
     setPrev(content);
-    setContent(textareaRef.current?.value || "");
+    await fetch(`/api/product/${productId}/review/${review.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ description: content, rating: review.rating }),
+    });
   };
 
   const onCancel = () => {
     setIsEditing(false);
     setContent(prev);
   };
-
-  const onDeleteClicked = () => {
+  const onDeleteClicked = async () => {
     setIsVisible(false);
+    await fetch(`/api/product/${productId}/review/${review.id}`, {
+      method: "DELETE",
+    });
+  };
+
+  const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(event.target.value);
   };
 
   return (
@@ -52,15 +72,27 @@ export default function ReviewLabel({
               readOnly={!isEditing}
               defaultValue={review.rating}
               size="md"
+              onChange={(event) => {
+                const value = (event.target as HTMLDivElement).getAttribute(
+                  "value"
+                );
+                if (value) {
+                  review.rating = parseInt(value);
+                }
+              }}
             />
             {isEditing ? (
               <Flex>
-                <Textarea
-                  resize="none"
-                  height="200"
-                  defaultValue={content}
-                  ref={textareaRef}
-                />
+                <Field invalid={empty} errorText="This field is required">
+                  <Textarea
+                    resize="none"
+                    height="200"
+                    value={content}
+                    onChange={onChange}
+                    ref={textareaRef}
+                  />
+                </Field>
+
                 <Button onClick={onCancel} variant="plain">
                   <LuX />
                 </Button>

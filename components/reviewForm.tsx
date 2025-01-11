@@ -19,10 +19,15 @@ export default function ReviewForm({ productId }: { productId: string }) {
   const router = useRouter();
   const [isRatingInvalid, setIsRatingInvalid] = useState(false);
   const [isResponseInvalid, setIsResponseInvalid] = useState(false);
+  const [empty, setEmpty] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
     const target = event.target as HTMLFormElement;
+    event.preventDefault();
+    if (target.description.value === "") {
+      setEmpty(true);
+      return;
+    }
     if (target.rating.value === "-1") {
       setIsRatingInvalid(true);
       return;
@@ -37,9 +42,15 @@ export default function ReviewForm({ productId }: { productId: string }) {
     });
     if (response.status === 403) {
       setIsResponseInvalid(true);
-      return
+      return;
     }
     router.refresh();
+  };
+
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setEmpty(event.target.value === "");
   };
 
   return (
@@ -53,14 +64,24 @@ export default function ReviewForm({ productId }: { productId: string }) {
               invalid={isRatingInvalid}
               required
             >
-              <Rating name="rating" />
+              <Rating
+                name="rating"
+                onChange={() => setIsRatingInvalid(false)}
+              />
             </Field>
-            <Field label="Comment" errorText="This field is required" required>
+            <Field
+              label="Comment"
+              errorText="This field is required"
+              required
+              invalid={empty}
+            >
               <Textarea
+                required={false}
                 name="description"
                 resize="none"
                 height={300}
                 maxLength={500}
+                onChange={handleDescriptionChange}
               />
             </Field>
           </Fieldset.Content>

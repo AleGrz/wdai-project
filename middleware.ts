@@ -85,7 +85,7 @@ export async function middleware(request: NextRequest) {
   const loginUrl = request.nextUrl.clone();
 
   loginUrl.pathname = "/login";
-  if (!response.ok) {
+  if (!response.ok && !path.startsWith("/api")) {
     return NextResponse.redirect(loginUrl);
   }
 
