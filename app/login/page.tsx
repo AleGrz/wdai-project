@@ -53,7 +53,7 @@ const LoginPage: React.FC = () => {
   });
 
   return (
-    <Fieldset.Root size="lg" maxW="md">
+    (<Fieldset.Root size="lg" maxW="md">
       <form onSubmit={onSubmit}>
         <Stack>
           <Fieldset.Legend>Log in</Fieldset.Legend>
@@ -91,8 +91,8 @@ const LoginPage: React.FC = () => {
       <Fieldset.HelperText>
         Don&apos;t have an account? <Link href="/signup">Sign up</Link>
       </Fieldset.HelperText>
-    </Fieldset.Root>
-  )
+    </Fieldset.Root>)
+  );
 }
 
 export default LoginPage;
