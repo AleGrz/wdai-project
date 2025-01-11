@@ -16,31 +16,35 @@ export async function GET(
       { status: 400 }
     );
   }
-  let cart = await prisma.order.findFirst({
-    where: {
-      userId: id,
-      orderDate: null
-    },
-    include: {
-      orderDetails: true
-  }});
-
   if (await prisma.user.findFirst({ where: { id: id } }) === null) {
     return Response.json(
       { message: "User not found!" } as MessageResponse,
       { status: 404 }
     );
   }
+  let cart = await prisma.order.findFirst({
+    where: {
+      userId: id,
+      orderDate: null
+    },
+    include: {
+      orderDetails: {
+        include: {
+          product: true
+  }}}});
 
   if (!cart) {
     cart = await prisma.order.create({
       data: {
-        userId: id },
+        userId: id
+      },
         include: {
-          orderDetails: true
-    }});
+          orderDetails: {
+            include: {
+              product: true
+    }}}});
   }
-
+  
   return Response.json(cart);
 }
 
