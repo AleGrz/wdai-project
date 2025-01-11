@@ -147,7 +147,6 @@ export default async function ProductPage({
               {reviewsData.length > 0
                 ? reviewsData.map(
                     (review) => (
-                      console.log(review),
                       (
                         <ReviewLabel
                           key={review.id}

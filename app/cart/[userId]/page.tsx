@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import { cookies } from "next/headers";
 
 import CartProduct from "@/components/cartProduct";
+import { Flex, Stack } from "@chakra-ui/react";
 
 type OrderWithOrderDetailWithProducts = Prisma.OrderGetPayload<{
   include: { 
@@ -32,18 +33,20 @@ export default async function CartPage({
   const cart = await response.json() as OrderWithOrderDetailWithProducts;
 
   return (
-    <>
+    <Stack>
       <h1>Cart</h1>
       {cart.orderDetails.length === 0 && <p>Your cart is empty</p>}
-      {cart.orderDetails.map((cartProduct: OrderDetailWithProducts) => {
-        return (
-          <CartProduct
-            key={cartProduct.id}
-            product={cartProduct.product}
-            quantity={cartProduct.quantity}
-          />
-        );
-      })}
-    </>
+      <Flex direction="column" gap={4}>
+        {cart.orderDetails.map((cartProduct: OrderDetailWithProducts) => {
+          return (
+            <CartProduct
+              key={cartProduct.id}
+              product={cartProduct.product}
+              quantity={cartProduct.quantity}
+            />
+          );
+        })}
+      </Flex>
+    </Stack>
   );
 }

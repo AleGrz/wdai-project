@@ -1,3 +1,4 @@
+import { HStack } from "@chakra-ui/react";
 import { Product } from "@prisma/client";
 
 export default function CartProduct({
@@ -8,10 +9,10 @@ export default function CartProduct({
   quantity: number;
 }) {
   return (
-    <div>
+    <HStack>
       <h2>{product.name}</h2>
       <p>{product.price}</p>
       <p>Quantity: {quantity}</p>
-    </div>
+    </HStack>
   );
 }
