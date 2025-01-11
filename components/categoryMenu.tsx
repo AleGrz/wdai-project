@@ -7,7 +7,9 @@ import { LuChevronRight } from "react-icons/lu";
 
 import { Button } from "@/components/ui/button";
 
-export const DesktopCategoryMenu: React.FC<{ categories: Category[] }> = ({ categories }) => {
+export const DesktopCategoryMenu: React.FC<{
+  categories: Category[]
+}> = ({ categories }) => {
   const subCategories = categories.filter(x => x.parentCategoryId === null);
 
   return (
@@ -17,7 +19,10 @@ export const DesktopCategoryMenu: React.FC<{ categories: Category[] }> = ({ cate
   )
 }
 
-const DesktopCategoryMainItem: React.FC<{ categories: Category[], category: Category }> = ({ categories, category }) => {
+const DesktopCategoryMainItem: React.FC<{
+  categories: Category[],
+  category: Category
+}> = ({ categories, category }) => {
   const [isHovered, setIsHovered] = useState(false);
   const subCategories = categories.filter(x => x.parentCategoryId === category.id);
 
@@ -50,7 +55,11 @@ const DesktopCategoryMainItem: React.FC<{ categories: Category[], category: Cate
     </CategoryMenuButton>
   );
 }
-const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Category, onClick?: MouseEventHandler<HTMLButtonElement> }> = ({ categories, category, onClick }) => {
+const DesktopCategorySubItem: React.FC<{
+  categories: Category[],
+  category: Category,
+  onClick?: MouseEventHandler<HTMLButtonElement>
+}> = ({ categories, category, onClick }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [left, setLeft] = useState<string | undefined>("100%");
   const [right, setRight] = useState<string | undefined>("auto");
@@ -108,8 +117,8 @@ export const CategoryMenuButton : React.FC<{
   visibleOutline?: boolean,
   onMouseEnter?: MouseEventHandler<HTMLDivElement>,
   onMouseLeave?: MouseEventHandler<HTMLDivElement>,
-  onClick?: MouseEventHandler<HTMLButtonElement>}> =
-  ({category, children, hasArrow, visibleOutline, onMouseEnter, onMouseLeave, onClick}) => {
+  onClick?: MouseEventHandler<HTMLButtonElement>
+}> = ({category, children, hasArrow, visibleOutline, onMouseEnter, onMouseLeave, onClick}) => {
   const router = useRouter();
 
   return (

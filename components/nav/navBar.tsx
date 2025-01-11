@@ -4,13 +4,11 @@ import Image from "next/image";
 import { Category } from "@prisma/client";
 import { FaShoppingCart } from "react-icons/fa";
 
-import NavButton from "@/components/navButton";
+import NavButton from "@/components/nav/navButton";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
 import { getUserData } from "@/app/api/auth/helper";
-
-import { Avatar } from "./ui/avatar";
-import SearchControl from "./searchControl";
-import LogoutButton from "./logoutButton";
+import SearchControl from "@/components/nav/searchControl";
+import AvatarButton from "@/components/nav/avatarButton";
 
 const NavBar: React.FC = async () => {
   const categories = (await fetch("http://localhost:3000/api/category", {
@@ -53,8 +51,7 @@ const NavBar: React.FC = async () => {
         <Flex justifyContent="flex-end" gap={5} width={200}>
           {user ? (
             <>
-              <Avatar size={"sm"} name={user.firstName + " " + user.lastName} />
-              <LogoutButton>Log out</LogoutButton>
+              <AvatarButton name={user.firstName + " " + user.lastName} />
               <NavButton route={`/cart/${user.id}`}>
                 <FaShoppingCart />
               </NavButton>

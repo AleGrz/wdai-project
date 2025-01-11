@@ -2,7 +2,7 @@ import { Flex, Group, Input } from "@chakra-ui/react";
 import { RiSearch2Fill } from "react-icons/ri";
 import Form from 'next/form'
 
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 const SearchControl: React.FC = () => {
   return (
