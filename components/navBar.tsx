@@ -3,6 +3,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import { Category } from "@prisma/client";
 
+import NavButton from "@/components/navButton";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
 
 import { Avatar } from "./ui/avatar";
@@ -12,7 +13,7 @@ const NavBar: React.FC = async () => {
   const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(
     (data) => data.json()
   ) as Category[];
-
+  
   return (
     <Box px={4}>
       <Flex
@@ -29,7 +30,9 @@ const NavBar: React.FC = async () => {
         <Flex grow={1} asChild>
           <SearchControl/>
         </Flex>
-        <Flex justifyContent="flex-end" width={200}>
+        <Flex justifyContent="flex-end" gap={5} width={200}>
+          <NavButton route="login">Log in</NavButton>
+          <NavButton route="signup">Sign up</NavButton>
           <Avatar
             size={"sm"}
             src={
