@@ -1,23 +1,27 @@
 "use client";
 
-import { getUserData } from "@/app/api/auth/helper";
 import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FiShoppingCart } from "react-icons/fi";
-import { StepperInput } from "./ui/stepper-input";
 import { Product } from "@prisma/client";
 import { useState, useRef } from "react";
 import confetti from "canvas-confetti";
 
+import { getUserData } from "@/app/api/auth/helper";
+
+import { StepperInput } from "./ui/stepper-input";
+
 export default function AddProduct({ productData }: { productData: Product }) {
   const [quantity, setQuantity] = useState("1");
+  const router = useRouter();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const addToCart = async () => {
     const user = await getUserData();
+
     if (!user) {
-      const router = useRouter();
       router.push("/login");
+
       return;
     }
 
@@ -31,10 +35,12 @@ export default function AddProduct({ productData }: { productData: Product }) {
 
     if (!response.ok) {
       console.error("Failed to add product to cart");
+
       return;
     }
 
     const button = buttonRef.current;
+
     if (button) {
       const { left, top, width, height } = button.getBoundingClientRect();
       console.log(left, top, width, height);

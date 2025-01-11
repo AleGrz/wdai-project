@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Box, Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import { Category } from "@prisma/client";
+import { FaShoppingCart } from "react-icons/fa";
 
 import NavButton from "@/components/navButton";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
@@ -10,8 +11,6 @@ import { getUserData } from "@/app/api/auth/helper";
 import { Avatar } from "./ui/avatar";
 import SearchControl from "./searchControl";
 import LogoutButton from "./logoutButton";
-
-import { FaShoppingCart } from "react-icons/fa";
 
 const NavBar: React.FC = async () => {
   const categories = (await fetch("http://localhost:3000/api/category", {
