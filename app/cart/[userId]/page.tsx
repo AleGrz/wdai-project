@@ -1,8 +1,8 @@
 import { Prisma } from "@prisma/client";
 import { cookies } from "next/headers";
+import { Flex, Stack } from "@chakra-ui/react";
 
 import CartProduct from "@/components/cartProduct";
-import { Flex, Stack } from "@chakra-ui/react";
 
 type OrderWithOrderDetailWithProducts = Prisma.OrderGetPayload<{
   include: { 

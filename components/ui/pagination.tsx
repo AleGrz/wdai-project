@@ -1,6 +1,7 @@
 "use client"
 
 import type { ButtonProps, TextProps } from "@chakra-ui/react"
+
 import {
   Button,
   Pagination as ChakraPagination,
@@ -15,6 +16,7 @@ import {
   HiChevronRight,
   HiMiniEllipsisHorizontal,
 } from "react-icons/hi2"
+
 import { LinkButton } from "./link-button"
 
 interface ButtonVariantMap {
@@ -53,6 +55,7 @@ export const PaginationRoot = React.forwardRef<
   PaginationRootProps
 >(function PaginationRoot(props, ref) {
   const { size = "sm", variant = "outline", getHref, ...rest } = props
+
   return (
     <RootPropsProvider
       value={{ size, variantMap: variantMap[variant], getHref }}
@@ -71,6 +74,7 @@ export const PaginationEllipsis = React.forwardRef<
   ChakraPagination.EllipsisProps
 >(function PaginationEllipsis(props, ref) {
   const { size, variantMap } = useRootProps()
+
   return (
     <ChakraPagination.Ellipsis ref={ref} {...props} asChild>
       <Button as="span" variant={variantMap.ellipsis} size={size}>
@@ -197,6 +201,7 @@ export const PaginationPageText = React.forwardRef<
   const content = React.useMemo(() => {
     if (format === "short") return `${page} / ${totalPages}`
     if (format === "compact") return `${page} of ${totalPages}`
+
     return `${pageRange.start + 1} - ${Math.min(pageRange.end, count)} of ${count}`
   }, [format, page, totalPages, pageRange, count])
 
