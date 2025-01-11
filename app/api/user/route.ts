@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
+import type { MessageResponse } from "@/types";
 
-import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 export async function GET(request: NextRequest) {
@@ -11,6 +11,19 @@ export async function GET(request: NextRequest) {
     parseInt(searchParams.get("pageSize") || "10", 10),
     100,
   );
+
+  if (isNaN(page) || page < 1) {
+    return Response.json(
+      { message: "Invalid page number!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  if (isNaN(pageSize) || pageSize < 1) {
+    return Response.json(
+      { message: "Invalid page size!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
   const skip = (page - 1) * pageSize;
 
   const users = await prisma.user.findMany({
@@ -18,5 +31,5 @@ export async function GET(request: NextRequest) {
     take: pageSize,
   });
 
-  return NextResponse.json(users);
+  return Response.json(users);
 }

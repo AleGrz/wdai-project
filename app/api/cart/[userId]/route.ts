@@ -8,13 +8,24 @@ export async function GET(
   { params }: { params: Promise<{ userId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const id = (await params).userId;
-  let cart = await prisma.order.findFirst({
-    where: { userId: parseInt(id), orderDate: null },
-    include: { orderDetails: true },
-  });
+  const id = parseInt((await params).userId);
 
-  if (await prisma.user.findFirst({ where: { id: parseInt((await params).userId) } }) === null) {
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid user id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  let cart = await prisma.order.findFirst({
+    where: {
+      userId: id,
+      orderDate: null
+    },
+    include: {
+      orderDetails: true
+  }});
+
+  if (await prisma.user.findFirst({ where: { id: id } }) === null) {
     return Response.json(
       { message: "User not found!" } as MessageResponse,
       { status: 404 }
@@ -24,7 +35,7 @@ export async function GET(
   if (!cart) {
     cart = await prisma.order.create({
       data: {
-        userId: parseInt(id) },
+        userId: id },
         include: {
           orderDetails: true
     }});
@@ -38,7 +49,14 @@ export async function POST(
   { params }: { params: Promise<{ userId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const id = (await params).userId;
+  const id = parseInt((await params).userId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid user id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
   const body = await request.json();
 
   if (await prisma.user.findFirst({ where: { id: parseInt((await params).userId) } }) === null) {
@@ -48,10 +66,10 @@ export async function POST(
     );
   }
 
-  let cart = await prisma.order.findFirst({ where: { userId: parseInt(id), orderDate: null}, include: { orderDetails: true } });
+  let cart = await prisma.order.findFirst({ where: { userId: id, orderDate: null}, include: { orderDetails: true } });
 
   if (!cart) {
-    cart = await prisma.order.create({ data: { userId: parseInt(id) }, include: { orderDetails: true } });
+    cart = await prisma.order.create({ data: { userId: id }, include: { orderDetails: true } });
   }
 
   if (await prisma.orderDetail.findFirst({ where: { orderId: cart.id, productId: body.productId } }) !== null) {

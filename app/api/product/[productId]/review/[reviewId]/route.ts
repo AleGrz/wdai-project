@@ -9,6 +9,7 @@ export async function GET(
 ) {
   const prisma = new PrismaClient();
   const id = (await params).reviewId;
+  
   const review = await prisma.review.findUnique({ where: { id: id } });
 
   if (!review) {
@@ -27,7 +28,14 @@ export async function PATCH(
   const prisma = new PrismaClient();
   const data = await request.json();
   const id = (await params).reviewId;
-  const productId = (await params).productId;
+  const productId = parseInt((await params).productId);
+
+  if (isNaN(productId) || productId < 1) {
+    return Response.json(
+      { message: "Invalid product id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
 
   if (data.description === undefined) {
     return Response.json(
@@ -49,7 +57,7 @@ export async function PATCH(
       { message: "Rating must be a number!" } as MessageResponse,
       { status: 400 },
     );
-  } else if (!(await prisma.product.findFirst({ where: { id: parseInt(productId) } }))) {
+  } else if (!(await prisma.product.findFirst({ where: { id: productId } }))) {
     return Response.json({ message: "Product not found!" }, { status: 404 });
   }
   try {

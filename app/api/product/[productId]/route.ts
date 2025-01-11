@@ -8,8 +8,15 @@ export async function GET(
   { params }: { params: Promise<{ productId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const id = (await params).productId;
-  const product = await prisma.product.findUnique({ where: { id: parseInt(id) } });
+  const id = parseInt((await params).productId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid product id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  const product = await prisma.product.findUnique({ where: { id: id } });
 
   if (!product) {
     return Response.json(
@@ -27,7 +34,14 @@ export async function PATCH(
 ) {
   const prisma = new PrismaClient();
   const data = await request.json();
-  const id = (await params).productId;
+  const id = parseInt((await params).productId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid product id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
 
   if (data.name === undefined) {
     return Response.json({ message: "No name provided!" }, { status: 400 });
@@ -90,7 +104,7 @@ export async function PATCH(
   }
   try {
     await prisma.product.update({
-      where: { id: parseInt(id) },
+      where: { id: id },
       data: {
         name: data.name,
         brand: data.brand,
@@ -124,10 +138,17 @@ export async function DELETE(
   { params }: { params: Promise<{ productId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const id = (await params).productId;
+  const id = parseInt((await params).productId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid product id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
 
   try {
-    await prisma.product.delete({ where: { id: parseInt(id) } });
+    await prisma.product.delete({ where: { id: id } });
 
     return Response.json(
       { message: "Successfully deleted the product." } as MessageResponse,

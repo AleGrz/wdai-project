@@ -8,11 +8,21 @@ export async function GET(
   { params }: { params: Promise<{ userId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const id = (await params).userId;
-  const user = await prisma.user.findUnique({ where: { id: parseInt(id) } });
+  const id = parseInt((await params).userId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid user id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  const user = await prisma.user.findUnique({ where: { id: id } });
 
   if (!user) {
-    return Response.json({ message: "User not found!" } as MessageResponse, { status: 404 });
+    return Response.json(
+      { message: "User not found!" } as MessageResponse,
+      { status: 404 }
+    );
   }
 
   return Response.json({id: user.id, firstName: user.firstName, lastName: user.lastName});
