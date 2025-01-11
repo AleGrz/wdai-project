@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import type { MessageResponse } from "@/types";
 
 import { PrismaClient, Prisma } from "@prisma/client";
 
@@ -11,7 +12,9 @@ export async function GET(
   const category = await prisma.category.findMany({ where: { parentCategoryId: parseInt(id) } });
 
   if (!category) {
-    return Response.json({ message: "Category has no subcategories!" }, { status: 404 });
+    return Response.json(
+      { message: "Category has no subcategories!" } as MessageResponse,
+      { status: 404 });
   }
 
   return Response.json(category);
@@ -26,16 +29,18 @@ export async function PATCH(
   const id = (await params).categoryId;
 
   if (data.name === undefined) {
-    return Response.json({ message: "No name provided!" }, { status: 400 });
+    return Response.json(
+      { message: "No name provided!" } as MessageResponse,
+      { status: 400 });
   } else if (typeof data.name !== "string") {
     return Response.json(
-      { message: "Name type must be a string!" },
+      { message: "Name type must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.parentCategoryId !== undefined) {
     if (typeof data.parentCategoryId !== "string") {
       return Response.json(
-        { message: "ParentCategoryId type must be a string!" },
+        { message: "ParentCategoryId type must be a string!" } as MessageResponse,
         { status: 400 },
       );
     }
@@ -45,7 +50,7 @@ export async function PATCH(
       }))
     ) {
       return Response.json(
-        { message: "Parent category not found!" },
+        { message: "Parent category not found!" } as MessageResponse,
         { status: 404 },
       );
     }
@@ -60,7 +65,7 @@ export async function PATCH(
     });
 
     return Response.json(
-      { message: "Successfully updated the category." },
+      { message: "Successfully updated the category." } as MessageResponse,
       { status: 200 },
     );
   } catch (error) {
@@ -68,7 +73,10 @@ export async function PATCH(
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
-      return Response.json({ message: "Category not found!" }, { status: 404 });
+      return Response.json(
+        { message: "Category not found!" } as MessageResponse,
+        { status: 404 }
+      );
     }
     throw error;
   }
@@ -85,7 +93,7 @@ export async function DELETE(
     await prisma.category.delete({ where: { id: id } });
 
     return Response.json(
-      { message: "Successfully deleted the category." },
+      { message: "Successfully deleted the category." } as MessageResponse,
       { status: 200 },
     );
   } catch (error) {
@@ -93,7 +101,10 @@ export async function DELETE(
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2025"
     ) {
-      return Response.json({ message: "Category not found!" }, { status: 404 });
+      return Response.json(
+        { message: "Category not found!" } as MessageResponse,
+        { status: 404 }
+      );
     }
     throw error;
   }
