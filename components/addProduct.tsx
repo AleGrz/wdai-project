@@ -44,7 +44,6 @@ export default function AddProduct({ productData }: { productData: Product }) {
     if (button) {
       const { left, top, width, height } = button.getBoundingClientRect();
 
-      console.log(left, top, width, height);
       const x = (left + width / 2) / window.innerWidth;
       const y = (top + height / 2) / window.innerHeight;
 

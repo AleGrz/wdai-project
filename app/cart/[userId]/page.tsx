@@ -1,66 +1,52 @@
-"use client";
-import { useState, useEffect } from "react";
-import { OrderDetail, Product } from "@prisma/client";
-import CartProduct from "@/components/cartProduct";
+import { Prisma } from "@prisma/client";
+import { cookies } from "next/headers";
 
-export default function CartPage({
+import CartProduct from "@/components/cartProduct";
+import { Flex, Stack } from "@chakra-ui/react";
+
+type OrderWithOrderDetailWithProducts = Prisma.OrderGetPayload<{
+  include: { 
+    orderDetails: {
+      include: {
+        product: true
+}}}}>;
+
+type OrderDetailWithProducts = Prisma.OrderDetailGetPayload<{
+  include: { 
+    product: true
+}}>;
+
+export default async function CartPage({
   params,
 }: {
   params: Promise<{ userId: string }>;
 }) {
-  const [cart, setCart] = useState<OrderDetail[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  async function getCart() {
-    const response = await fetch(`/api/cart/${(await params).userId}`);
-    if (!response.ok) {
-      return;
+  const cookieStore = await cookies();
+  const allCookies = cookieStore.getAll().map(x => `${x.name}=${x.value}`).join("; ");
+  const response = await fetch(`http://localhost:3000/api/cart/${(await params).userId}`, {
+    headers: {
+      Cookie: allCookies
     }
-    const cart = await response.json();
-    setCart(cart.orderDetails);
-    for (const orderDetail of cart.orderDetails) {
-      const productResponse = await fetch(
-        `/api/product/${orderDetail.productId}`
-      );
-      if (!productResponse.ok) {
-        continue;
-      }
-      const product = await productResponse.json();
-      setProducts((products) => [...products, product]);
-    }
-  }
-  useEffect(() => {
-    getCart();
-  }, []);
+  });
+
+  if (!response.ok) return;
+  const cart = await response.json() as OrderWithOrderDetailWithProducts;
 
   return (
-    <>
+    <Stack>
       <h1>Cart</h1>
-      {cart.length === 0 && <p>Your cart is empty</p>}
-      {cart.map((cartProduct: OrderDetail) => {
-        const product = products.find(
-          (product) => product.id === cartProduct.productId
-        );
-        return (
-          <CartProduct
-            key={cartProduct.id}
-            product={
-              product || {
-                name: "",
-                id: 0,
-                brand: "",
-                description: "",
-                price: 0,
-                inStock: 0,
-                categoryId: 0,
-                imageUrl: "",
-                reviewsCount: 0,
-                rating: 0,
-              }
-            }
-            quantity={cartProduct.quantity}
-          />
-        );
-      })}
-    </>
+      {cart.orderDetails.length === 0 && <p>Your cart is empty</p>}
+      <Flex direction="column" gap={4}>
+        {cart.orderDetails.map((cartProduct: OrderDetailWithProducts) => {
+          return (
+            <CartProduct
+              key={cartProduct.id}
+              product={cartProduct.product}
+              quantity={cartProduct.quantity}
+            />
+          );
+        })}
+      </Flex>
+    </Stack>
   );
 }
