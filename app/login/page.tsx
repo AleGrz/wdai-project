@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import type { TokenPair, MessageResponse } from "@/types"
 
@@ -30,10 +30,7 @@ const LoginPage: React.FC = () => {
       body: JSON.stringify({
         email: data.email,
         password: data.password,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
+      })
     });
 
     if (response.ok) {

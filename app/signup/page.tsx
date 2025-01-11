@@ -1,43 +1,42 @@
 "use client";
-import type { TokenPair } from "@/types";
 
-import { Button, Fieldset, Input, Stack, Link } from "@chakra-ui/react";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import type { TokenPair, MessageResponse } from "@/types"
 
-import { Field } from "@/components/ui/field";
-import { login } from "@/app/api/auth/helper";
+import { Button, Fieldset, Input, Link, Stack } from "@chakra-ui/react"
+import { useForm } from "react-hook-form"
+import { useRouter } from "next/navigation"
 
-export default function SignupPage() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    repeatPassword: "",
-  });
+import { Field } from "@/components/ui/field"
+import { PasswordInput } from "@/components/ui/password-input"
+import { login } from "@/app/api/auth/helper"
+
+interface FormValues {
+  email: string
+  firstName: string
+  lastName: string
+  password: string
+  repeatPassword: string
+}
+
+const SignupPage: React.FC = () => {
+  const {
+    register,
+    setError,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>()
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = handleSubmit(async (data) => {
     const response = await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
-        email: formData.email,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        password: formData.password,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+      })
     });
 
     if (response.ok) {
@@ -45,64 +44,101 @@ export default function SignupPage() {
 
       await login(tokens);
       router.push("/");
+    } else {
+      const body = await response.json() as MessageResponse;
+
+      if (body.message === "Email already exists!") {
+        setError("email", { type: "manual", message: "Email already exists!" });
+      }
     }
-  };
+  });
 
   return (
-    <Fieldset.Root size="lg" maxW="md">
-      <form onSubmit={handleSubmit}>
+    (<Fieldset.Root size="lg" maxW="md">
+      <form onSubmit={onSubmit} noValidate>
         <Stack>
-          <Fieldset.Legend>Sign up</Fieldset.Legend>
+          <Fieldset.Legend>Log in</Fieldset.Legend>
         </Stack>
 
         <Fieldset.Content>
-          <Field label="First Name">
+          <Field
+            label="First name"
+            invalid={!!errors.firstName}
+            errorText={errors.firstName?.message}
+            required
+          >
             <Input
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
+              {...register("firstName", {
+                  required: "First name is required!",
+              })}
             />
           </Field>
-
-          <Field label="Last Name">
+          <Field
+            label="Last name"
+            invalid={!!errors.lastName}
+            errorText={errors.lastName?.message}
+            required
+          >
             <Input
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
+              {...register("lastName", {
+                  required: "Last name is required!",
+              })}
             />
           </Field>
-
-          <Field label="Email address">
+          <Field
+            label="Email address"
+            invalid={!!errors.email}
+            errorText={errors.email?.message}
+            required
+          >
             <Input
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
+              {...register("email", {
+                required: "Email is required!",
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Entered value does not match email format!",
+                },
+              })}
             />
           </Field>
-          <Field label="Password">
-            <Input
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
+          <Field
+            label="Password"
+            invalid={!!errors.password}
+            errorText={errors.password?.message}
+            required
+          >
+            <PasswordInput
+              {...register("password", {
+                required: "Password is required!"
+              })}
             />
           </Field>
-          <Field label="Repeat Password">
-            <Input
-              name="repeatPassword"
-              type="password"
-              value={formData.repeatPassword}
-              onChange={handleChange}
+          <Field
+            label="Repeat password"
+            invalid={!!errors.repeatPassword}
+            errorText={errors.repeatPassword?.message}
+            required
+          >
+            <PasswordInput
+              {...register("repeatPassword", {
+                required: "Repeated password is required!",
+                validate: (value) => {
+                  if (watch("password") !== value)
+                    return "Passwords do not match!";
+                }
+              })}
             />
           </Field>
         </Fieldset.Content>
 
-        <Button type="submit">Sign up</Button>
-        <Fieldset.HelperText>
-          Already have an account? <Link href="/login">Log in</Link>
-        </Fieldset.HelperText>
+        <Button variant="outline" type="submit" marginTop={5}>Sign up</Button>
       </form>
-    </Fieldset.Root>
+      <Fieldset.HelperText>
+        Already have an account? <Link href="/login">Log in</Link>
+      </Fieldset.HelperText>
+    </Fieldset.Root>)
   );
 }
+
+export default SignupPage;
+
