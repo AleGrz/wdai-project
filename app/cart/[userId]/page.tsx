@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Product } from "@prisma/client";
+import CartProduct from "@/components/cartProduct";
 
 export default function CartPage({
   params,
@@ -25,12 +26,8 @@ export default function CartPage({
     <>
       <h1>Cart</h1>
       {cart.length === 0 && <p>Your cart is empty</p>}
-      {cart.map(({ id, name, description, price }) => (
-        <div key={id}>
-          <h2>{name}</h2>
-          <p>{description}</p>
-          <p>{price}</p>
-        </div>
+      {cart.map((product) => (
+        <CartProduct key={product.id} product={product} />
       ))}
     </>
   );

@@ -1,13 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-import {
-  Box,
-  Image,
-  Tabs,
-  Spinner,
-  HStack,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, Image, Tabs, Spinner, HStack, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
@@ -54,6 +47,12 @@ export default async function ProductPage({
       </Box>
     );
   }
+
+  const addToCart = async () => {
+    await fetch(`/api/cart/${user.id}`, {
+      method: "POST",
+    });
+  };
 
   return (
     <>
@@ -107,7 +106,7 @@ export default async function ProductPage({
                 max={productData.inStock}
                 margin={5}
               />
-              <Button w={"auto"} margin={5}>
+              <Button w={"auto"} margin={5} onClick={addToCart}>
                 Add to cart
                 <FiShoppingCart />
               </Button>

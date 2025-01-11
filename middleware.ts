@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 const accessRules = [
@@ -54,7 +54,10 @@ export async function middleware(request: NextRequest) {
   const method = request.method;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken");
+<<<<<<< HEAD
 
+=======
+>>>>>>> 081dc51f2c9d5468272308010f16b4ce9166da66
   const matchesPath = (rulePath: string, requestPath: string) => {
     const ruleRegex = new RegExp(
       "^" + rulePath.replace(/:([a-zA-Z]+)/g, "([^/]+)") + "$"
@@ -74,13 +77,16 @@ export async function middleware(request: NextRequest) {
   if (move) {
     return NextResponse.next();
   }
-
   const response = await fetch(`${request.nextUrl.origin}/api/auth`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+<<<<<<< HEAD
     body: JSON.stringify({ token: accessToken }),
+=======
+    body: JSON.stringify({ accessToken: accessToken?.value }),
+>>>>>>> 081dc51f2c9d5468272308010f16b4ce9166da66
   });
 
 
@@ -91,12 +97,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  const data = await response.json();
-  const user = data.user;
+  const user = await response.json();
 
   for (const rule of accessRules) {
     if (matchesPath(rule.path, path) && rule.methods.includes(method)) {
-      if (!rule.roles.includes(user.role)) {
+      if (!rule.roles.includes(user.isAdmin ? "admin" : "user")) {
         return NextResponse.json(
           { message: "Forbidden: You do not have access to this resource." },
           { status: 403 }
@@ -107,7 +112,7 @@ export async function middleware(request: NextRequest) {
         const userSpecificPlace = rule.path.split("/").indexOf(":userid");
         const userIdFromPath = path.split("/")[userSpecificPlace];
 
-        if (userIdFromPath !== user.id && !user.isAdmin) {
+        if (parseInt(userIdFromPath) !== user.id && !user.isAdmin) {
           return NextResponse.json(
             { message: "Forbidden: You can only access your own resources." },
             { status: 403 }
