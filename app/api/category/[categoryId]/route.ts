@@ -8,8 +8,15 @@ export async function GET(
   { params }: { params: Promise<{ categoryId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const id = (await params).categoryId;
-  const category = await prisma.category.findMany({ where: { parentCategoryId: parseInt(id) } });
+  const id = parseInt((await params).categoryId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid category id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  const category = await prisma.category.findMany({ where: { parentCategoryId: id } });
 
   if (!category) {
     return Response.json(
@@ -26,7 +33,14 @@ export async function PATCH(
 ) {
   const prisma = new PrismaClient();
   const data = await request.json();
-  const id = (await params).categoryId;
+  const id = parseInt((await params).categoryId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid category id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
 
   if (data.name === undefined) {
     return Response.json(
@@ -57,7 +71,7 @@ export async function PATCH(
   }
   try {
     await prisma.category.update({
-      where: { id: parseInt(id) },
+      where: { id: id },
       data: {
         name: data.name,
         parentCategoryId: data.parentCategoryId,
@@ -84,10 +98,17 @@ export async function PATCH(
 
 export async function DELETE(
   _request: NextRequest,
-  { params }: { params: Promise<{ categoryId: number }> },
+  { params }: { params: Promise<{ categoryId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const id = (await params).categoryId;
+  const id = parseInt((await params).categoryId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid category id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
 
   try {
     await prisma.category.delete({ where: { id: id } });

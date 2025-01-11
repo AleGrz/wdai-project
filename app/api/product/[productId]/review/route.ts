@@ -8,8 +8,15 @@ export async function GET(
   { params }: { params: Promise<{ productId: string }> },
 ) {
   const prisma = new PrismaClient();
-  const productId = (await params).productId;
-  const product = await prisma.product.findUnique({ where: { id: parseInt(productId) } });
+  const productId = parseInt((await params).productId);
+
+  if (isNaN(productId) || productId < 1) {
+    return Response.json(
+      { message: "Invalid product id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  const product = await prisma.product.findUnique({ where: { id: productId } });
 
   if (!product) {
     return Response.json(
@@ -24,13 +31,25 @@ export async function GET(
     100,
   );
   
+  if (isNaN(page) || page < 1) {
+    return Response.json(
+      { message: "Invalid page number!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  if (isNaN(pageSize) || pageSize < 1) {
+    return Response.json(
+      { message: "Invalid page size!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
   const skip = (page - 1) * pageSize;
 
   return Response.json(
     await prisma.review.findMany({
       skip: skip,
       take: pageSize,
-      where: { productId: parseInt(productId) },
+      where: { productId: productId },
       include: {
         user: true,
       },
@@ -44,7 +63,14 @@ export async function POST(
 ) {
   const prisma = new PrismaClient();
   const data = await request.json();
-  const productId = (await params).productId;
+  const productId = parseInt((await params).productId);
+
+  if (isNaN(productId) || productId < 1) {
+    return Response.json(
+      { message: "Invalid product id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
 
   if (data.userId === undefined) {
     return Response.json({ message: "No userId provided!" }, { status: 400 });
@@ -74,7 +100,7 @@ export async function POST(
     return Response.json(
       { message: "User not found!" } as MessageResponse,
       { status: 404 });
-  } else if (!(await prisma.product.findFirst({ where: { id: parseInt(productId) } }))) {
+  } else if (!(await prisma.product.findFirst({ where: { id: productId } }))) {
     return Response.json(
       { message: "Product not found!" } as MessageResponse,
       { status: 404 });
@@ -82,7 +108,7 @@ export async function POST(
   await prisma.review.create({
     data: {
       userId: data.userId,
-      productId: parseInt(productId),
+      productId: productId,
       rating: data.rating,
       description: data.description,
     },

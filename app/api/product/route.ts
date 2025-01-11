@@ -4,7 +4,6 @@ import type { MessageResponse } from "@/types";
 
 import { PrismaClient } from "@prisma/client";
 
-
 async function getDescendantCategoryIds(prisma: PrismaClient, categoryId: number): Promise<number[]> {
   const descendants: number[] = [categoryId];
 
@@ -33,6 +32,19 @@ export async function GET(request: NextRequest) {
     parseInt(searchParams.get("pageSize") || "12", 12),
     100,
   );
+
+  if (isNaN(page) || page < 1) {
+    return Response.json(
+      { message: "Invalid page number!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+  if (isNaN(pageSize) || pageSize < 1) {
+    return Response.json(
+      { message: "Invalid page size!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
   const skip = (page - 1) * pageSize;
   const filters: Prisma.ProductWhereInput = {};
   const searchParam = searchParams.get("query");
@@ -57,10 +69,16 @@ export async function GET(request: NextRequest) {
     ];
   }
   if (searchParams.get("categoryId")) {
-    const category = parseInt(searchParams.get("categoryId") || "1");
-
+    const categoryId = parseInt(searchParams.get("categoryId") || "1");
+    
+    if (isNaN(categoryId) || categoryId < 1) {
+      return Response.json(
+        { message: "Invalid category id!" } as MessageResponse,
+        { status: 400 }
+      );
+    }
     filters.categoryId = {
-      in: await getDescendantCategoryIds(prisma, category),
+      in: await getDescendantCategoryIds(prisma, categoryId),
     };
   }
 
