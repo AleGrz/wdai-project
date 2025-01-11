@@ -1,11 +1,12 @@
 "use client";
+import type { TokenPair } from "@/types";
+
 import { Button, Fieldset, Input, Stack, Link } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { Field } from "@/components/ui/field";
-
-import { setCookies } from "./actions";
+import { login } from "@/app/api/auth/helper";
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -40,9 +41,9 @@ export default function SignupPage() {
     });
 
     if (response.ok) {
-      const tokens = await response.json();
+      const tokens = await response.json() as TokenPair;
 
-      await setCookies(tokens);
+      await login(tokens);
       router.push("/");
     }
   };

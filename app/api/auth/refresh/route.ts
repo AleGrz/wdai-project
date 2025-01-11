@@ -1,7 +1,8 @@
 import type { NextRequest } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
-import * as jose from "jose";
+
+import { decodeToken, generateTokens } from "@/app/api/auth/helper";
 
 export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
@@ -18,46 +19,25 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
+  const userId = await decodeToken(data.refreshToken);
 
-  try {
-    const decoded = await jose.jwtVerify(
-      data.refreshToken,
-      new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
-    );
-
-    const user = await prisma.user.findUnique({
-      where: { id: parseInt(decoded.payload.userId as string) },
-    });
-
-    if (!user) {
-      return Response.json(
-        { message: "Invalid refresh token!" },
-        { status: 401 },
-      );
-    }
-
-    const newToken = await new jose.SignJWT({ userId: user.id })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("1h")
-      .sign(new TextEncoder().encode(process.env.JWT_SECRET));
-
-    const newRefreshToken = await new jose.SignJWT({ userId: user.id })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("7d")
-      .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET));
-
-    return Response.json(
-      {
-        accessToken: newToken,
-        refreshToken: newRefreshToken,
-        expiresIn: 3600,
-      },
-      { status: 200 },
-    );
-  } catch {
+  if (userId === null) {
     return Response.json(
       { message: "Invalid refresh token!" },
       { status: 401 },
     );
   }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    return Response.json(
+      { message: "Invalid refresh token!" },
+      { status: 401 },
+    );
+  }
+
+  return Response.json(await generateTokens(user), { status: 200 });
 }

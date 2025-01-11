@@ -5,10 +5,11 @@ import { Category } from "@prisma/client";
 
 import NavButton from "@/components/navButton";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
+import { getUserData } from "@/app/api/auth/helper";
 
 import { Avatar } from "./ui/avatar";
 import SearchControl from "./searchControl";
-import { getUserData } from "./validator";
+import LogoutButton from "./logoutButton";
 
 const NavBar: React.FC = async () => {
   const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(
@@ -35,10 +36,13 @@ const NavBar: React.FC = async () => {
         <Flex justifyContent="flex-end" gap={5} width={200}>
           {user ?
           (
-            <Avatar
-              size={"sm"}
-              name={user.firstName + " " + user.lastName}
-            />
+            <>
+              <Avatar
+                size={"sm"}
+                name={user.firstName + " " + user.lastName}
+              />
+              <LogoutButton>Log out</LogoutButton>
+            </>
           )
           : (
             <>

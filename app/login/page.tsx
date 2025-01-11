@@ -1,13 +1,16 @@
 "use client";
+import type { TokenPair } from "@/types";
+
 import { Button, Fieldset, Input, Stack, Link } from "@chakra-ui/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Field } from "@/components/ui/field";
+import { login } from "@/app/api/auth/helper";
 
-import { setCookies } from "./actions";
-import router from "next/router";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,12 +41,11 @@ export default function LoginPage() {
 
     if (!response.ok) {
       alert("Invalid email or password");
-
       return;
     } else {
-      const tokens = await response.json();
+      const tokens = await response.json() as TokenPair;
 
-      await setCookies(tokens);
+      await login(tokens);
       router.push("/");
     }
   };
