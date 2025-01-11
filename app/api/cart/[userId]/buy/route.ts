@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import type { MessageResponse } from "@/types";
 
 import { PrismaClient } from "@prisma/client";
 
@@ -14,8 +15,8 @@ export async function POST(_request: NextRequest,
     data: { orderDate: new Date() },
   });
 
-  return new Response(JSON.stringify({ message: "Order details added successfully!" }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return Response.json(
+    { message: "Order details added successfully!" } as MessageResponse,
+    { status: 200 }
+  );
 }
