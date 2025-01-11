@@ -1,7 +1,10 @@
 import type { NextRequest } from "next/server";
+import type { TokenPair } from "./types";
 
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+
+import { login } from "@/app/api/auth/helper";
 
 const accessRules = [
   {
@@ -53,7 +56,8 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const method = request.method;
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken");
+  let accessToken = cookieStore.get("accessToken");
+  let refreshToken = cookieStore.get("refreshToken");
   const matchesPath = (rulePath: string, requestPath: string) => {
     const ruleRegex = new RegExp(
       "^" + rulePath.replace(/:([a-zA-Z]+)/g, "([^/]+)") + "$"
@@ -61,6 +65,24 @@ export async function middleware(request: NextRequest) {
 
     return ruleRegex.test(requestPath);
   };
+
+  if (!accessToken || !accessToken.value && refreshToken && refreshToken.value) {
+    const response = await fetch(`${request.nextUrl.origin}/api/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refreshToken: refreshToken?.value }),
+    });
+
+    if (response.ok) {
+      const data = await response.json() as TokenPair;
+
+      await login(data);
+      accessToken = cookieStore.get("accessToken");
+      refreshToken = cookieStore.get("refreshToken");
+    }
+  }
 
   let move = true;
 

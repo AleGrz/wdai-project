@@ -4,22 +4,11 @@ import { Box, Tabs, Spinner, HStack, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 
-import {
-  DialogBackdrop,
-  DialogCloseTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import ReviewLabel from "@/components/reviewLabel";
-import ReviewForm from "@/components/reviewForm";
 import AddProduct from "@/components/addProduct";
 import SkeletonNextImage from "@/components/skeletonNextImage";
 import { getUserData } from "@/app/api/auth/helper";
-import WriteReviewButton from "@/components/writeReviewButton";
+import ReviewDialog from "@/components/reviewDialog";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
@@ -131,21 +120,7 @@ export default async function ProductPage({
         <Tabs.Content value="reviews">
           <Flex justifyContent={"center"}>
             <Flex flexFlow={"column"} justifyContent={"flex-start"} gap={10}>
-              <DialogRoot>
-                <DialogBackdrop />
-                <DialogTrigger asChild>
-                  <WriteReviewButton />
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogCloseTrigger />
-                  <DialogHeader>
-                    <DialogTitle>
-                      Write a review for {productData.name}
-                    </DialogTitle>
-                    <ReviewForm productId={productData.id} />
-                  </DialogHeader>
-                </DialogContent>
-              </DialogRoot>
+              <ReviewDialog product={productData} />
               {reviewsData.length > 0
                 ? reviewsData.map((review) => (
                     <ReviewLabel
