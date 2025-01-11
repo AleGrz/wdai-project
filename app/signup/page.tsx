@@ -26,7 +26,7 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const tokens = await fetch("/api/auth/register", {
+    const response = await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({
         email: formData.email,
@@ -37,10 +37,14 @@ export default function SignupPage() {
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
-    }).then((res) => res.json());
-    console.log(tokens);
-    setCookies(tokens);
-    router.push("/");
+    });
+
+    if (response.ok) {
+      const tokens = await response.json();
+
+      await setCookies(tokens);
+      router.push("/");
+    }
   };
 
   return (
