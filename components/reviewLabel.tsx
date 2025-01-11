@@ -8,7 +8,9 @@ import { Avatar } from '@/components/ui/avatar';
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
 }>;
-export default function ReviewLabel({ review }: { review: ReviewWithUser }) {
+const ReviewLabel: React.FC<{
+  review: ReviewWithUser
+}> = async ({ review }) =>{
   return (
     <Box>
       <Flex alignItems={"center"} gap={5}>
@@ -22,3 +24,5 @@ export default function ReviewLabel({ review }: { review: ReviewWithUser }) {
     </Box>
   );
 }
+
+export default ReviewLabel;

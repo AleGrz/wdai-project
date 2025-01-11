@@ -1,13 +1,19 @@
-import { Category } from "@prisma/client";
+import type { Category } from "@prisma/client";
 
-export default function CategoryCard({ category }: { category: Category }) {
+import Link from "next/link";
+
+const CategoryCard: React.FC<{
+  category: Category
+}> = async ({ category }) => {
   return (
-    <a href={`/search/?categoryId=${category.id}`}>
+    <Link prefetch={true} href={`/search/?categoryId=${category.id}`}>
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="p-4">
           <h3 className="font-semibold text-lg">{category.name}</h3>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
+
+export default CategoryCard;

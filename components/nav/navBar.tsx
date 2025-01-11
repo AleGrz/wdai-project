@@ -4,13 +4,12 @@ import Image from "next/image";
 import { Category } from "@prisma/client";
 import { FaShoppingCart } from "react-icons/fa";
 
-import NavButton from "@/components/navButton";
+import NavButton from "@/components/nav/navButton";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
 import { getUserData } from "@/app/api/auth/helper";
-
-import { Avatar } from "./ui/avatar";
-import SearchControl from "./searchControl";
-import LogoutButton from "./logoutButton";
+import { Avatar } from "@/components/ui/avatar";
+import SearchControl from "@/components/nav/searchControl";
+import LogoutButton from "@/components/nav/logoutButton";
 
 const NavBar: React.FC = async () => {
   const categories = (await fetch("http://localhost:3000/api/category", {
