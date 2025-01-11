@@ -122,22 +122,16 @@ export default async function ProductPage({
             <Flex flexFlow={"column"} justifyContent={"flex-start"} gap={10}>
               <ReviewDialog product={productData} />
               {reviewsData.length > 0
-                ? reviewsData.map(
-                    (review) => (
-                      (
-                        <ReviewLabel
-                          key={review.id}
-                          review={review}
-                          isUD={
-                            review.user.id === user?.id ||
-                            user?.isAdmin ||
-                            false
-                          }
-                          productId={productData.id}
-                        />
-                      )
-                    )
-                  )
+                ? reviewsData.map((review) => (
+                    <ReviewLabel
+                      key={review.id}
+                      review={review}
+                      isUD={
+                        review.user.id === user?.id || user?.isAdmin || false
+                      }
+                      productId={productData.id}
+                    />
+                  ))
                 : "No reviews yet"}
             </Flex>
           </Flex>
