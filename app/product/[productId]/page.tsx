@@ -19,6 +19,7 @@ import ReviewForm from "@/components/reviewForm";
 import AddProduct from "@/components/addProduct";
 import SkeletonNextImage from "@/components/skeletonNextImage";
 import { getUserData } from "@/app/api/auth/helper";
+import WriteReviewButton from "@/components/writeReviewButton";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
@@ -133,7 +134,7 @@ export default async function ProductPage({
               <DialogRoot>
                 <DialogBackdrop />
                 <DialogTrigger asChild>
-                  <Button>Write a review</Button>
+                  <WriteReviewButton />
                 </DialogTrigger>
                 <DialogContent>
                   <DialogCloseTrigger />
@@ -146,22 +147,16 @@ export default async function ProductPage({
                 </DialogContent>
               </DialogRoot>
               {reviewsData.length > 0
-                ? reviewsData.map(
-                    (review) => (
-                      (
-                        <ReviewLabel
-                          key={review.id}
-                          review={review}
-                          isUD={
-                            review.user.id === user?.id ||
-                            user?.isAdmin ||
-                            false
-                          }
-                          productId={productData.id}
-                        />
-                      )
-                    )
-                  )
+                ? reviewsData.map((review) => (
+                    <ReviewLabel
+                      key={review.id}
+                      review={review}
+                      isUD={
+                        review.user.id === user?.id || user?.isAdmin || false
+                      }
+                      productId={productData.id}
+                    />
+                  ))
                 : "No reviews yet"}
             </Flex>
           </Flex>
