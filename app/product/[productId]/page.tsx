@@ -71,7 +71,7 @@ export default async function ProductPage({
               borderRadius: "0.5rem"
             }}
             imageStyle={{
-              objectFit: "contain"
+              objectFit: "contain",
             }} />
           </Box>
 

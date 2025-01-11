@@ -21,6 +21,9 @@ const ProductCard: React.FC<{
         rounded="lg"
         shadow="lg"
         position="relative"
+        _hover={{
+          shadow: "0 0 1px 1px white"
+        }}
       >
         <Flex
           justifyContent={"center"}
