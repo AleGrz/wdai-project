@@ -6,11 +6,14 @@ import { Button } from "@/components/ui/button";
 
 const LogoutButton: React.FC<{
   children?: React.ReactNode,
-}> = ({ children }) => {
+  width?: number | string | undefined,
+  height?: number | string | undefined,
+  variant?: "solid" | "subtle" | "surface" | "outline" | "ghost" | "plain" | undefined,
+}> = ({ children, width, height, variant = "solid" }) => {
   const router = useRouter();
 
   return (
-    <Button variant="outline" onClick={async () => {
+    <Button variant={variant} width={width} height={height} onClick={async () => {
       await logout();
       router.refresh();
     }}>{children}</Button>
