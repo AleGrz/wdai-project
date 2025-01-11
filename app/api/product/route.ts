@@ -1,7 +1,9 @@
 import type { NextRequest } from "next/server";
 import type { Prisma } from "@prisma/client";
+import type { MessageResponse } from "@/types";
 
 import { PrismaClient } from "@prisma/client";
+
 
 async function getDescendantCategoryIds(prisma: PrismaClient, categoryId: number): Promise<number[]> {
   const descendants: number[] = [categoryId];
@@ -79,54 +81,57 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: "No name provided!" }, { status: 400 });
   } else if (typeof data.name !== "string") {
     return Response.json(
-      { message: "Name type must be a string!" },
+      { message: "Name type must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.brand === undefined) {
     return Response.json({ message: "No brand provided!" }, { status: 400 });
   } else if (typeof data.brand !== "string") {
     return Response.json(
-      { message: "Brand type must be a string!" },
+      { message: "Brand type must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.description === undefined) {
     return Response.json(
-      { message: "No description provided!" },
+      { message: "No description provided!" } as MessageResponse,
       { status: 400 },
     );
   } else if (typeof data.description !== "string") {
     return Response.json(
-      { message: "Description type must be a string!" },
+      { message: "Description type must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.price === undefined) {
     return Response.json({ message: "No price provided!" }, { status: 400 });
   } else if (typeof data.price !== "number") {
     return Response.json(
-      { message: "Price type must be a number!" },
+      { message: "Price type must be a number!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.inStock === undefined) {
     return Response.json({ message: "No inStock provided!" }, { status: 400 });
   } else if (typeof data.inStock !== "number") {
     return Response.json(
-      { message: "InStock type must be a number!" },
+      { message: "InStock type must be a number!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.categoryId === undefined) {
     return Response.json(
-      { message: "No categoryId provided!" },
+      { message: "No categoryId provided!" } as MessageResponse,
       { status: 400 },
     );
   } else if (typeof data.categoryId !== "string") {
     return Response.json(
-      { message: "CategoryId type must be a string!" },
+      { message: "CategoryId type must be a string!" } as MessageResponse,
       { status: 400 },
     );
   } else if (
     !(await prisma.category.findFirst({ where: { id: data.categoryId } }))
   ) {
-    return Response.json({ message: "Category not found!" }, { status: 404 });
+    return Response.json(
+      { message: "Category not found!" } as MessageResponse,
+      { status: 404 }
+    );
   }
   await prisma.product.create({
     data: {
@@ -141,7 +146,7 @@ export async function POST(request: NextRequest) {
   });
 
   return Response.json(
-    { message: "Successfully added new product." },
+    { message: "Successfully added new product." } as MessageResponse,
     { status: 201 },
   );
 }

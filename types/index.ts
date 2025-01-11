@@ -14,6 +14,6 @@ export type TokenPair = {
   refreshToken: Token;
 }
 
-export type ExceptionResponse = {
+export type MessageResponse = {
   message: string;
 }

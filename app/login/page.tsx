@@ -1,6 +1,6 @@
 "use client"
 
-import type { TokenPair, ExceptionResponse } from "@/types"
+import type { TokenPair, MessageResponse } from "@/types"
 
 import { Button, Fieldset, Input, Link, Stack } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
@@ -42,7 +42,7 @@ const LoginPage: React.FC = () => {
       await login(tokens);
       router.push("/");
     } else {
-      const body = await response.json() as ExceptionResponse;
+      const body = await response.json() as MessageResponse;
 
       if (body.message === "User not found!") {
         setError("email", { type: "manual", message: "User not found!" });
