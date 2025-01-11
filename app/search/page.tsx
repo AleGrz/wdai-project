@@ -6,6 +6,12 @@ import { RxCross2 } from "react-icons/rx";
 
 import ProductCard from "@/components/productCard";
 import { EmptyState } from "@/components/ui/empty-state";
+import {
+  PaginationItems,
+  PaginationNextTrigger,
+  PaginationPrevTrigger,
+  PaginationRoot,
+} from "@/components/ui/pagination"
 
 export default async function SearchPage({
   searchParams,
@@ -19,20 +25,26 @@ export default async function SearchPage({
   if (categoryId) queryParams.append('categoryId', categoryId.toString());
   if (query) queryParams.append('query', query.toString());
 
-  const productResponse = await fetch(
-    `http://localhost:3000/api/product?${queryParams.toString()}`, 
-    { next: { revalidate: 300 } }
-  );
+  const productResponse = await fetch(`http://localhost:3000/api/product?${queryParams.toString()}`);
   const products = await productResponse.json();
   let counter = 0;
 
   return (
     <>
       {products.length > 0 ? (
-        <Flex wrap={"wrap"} justifyContent={"center"} gap={20} margin={10}>
-          {products.map((product: Product) => (
-            <ProductCard key={product.id} product={product} loading={counter++ < 5 ? "eager" : "lazy"} />
-          ))}
+        <Flex justifyContent={"center"} direction="column" >
+          <Flex wrap={"wrap"} justifyContent={"center"} gap={20} margin={10}>
+            {products.map((product: Product) => (
+              <ProductCard key={product.id} product={product} loading={counter++ < 5 ? "eager" : "lazy"} />
+            ))}
+          </Flex>
+          <PaginationRoot count={20} pageSize={2} defaultPage={1} variant="solid">
+            <Flex justifyContent="center" alignItems="center">
+              <PaginationPrevTrigger />
+              <PaginationItems />
+              <PaginationNextTrigger />
+            </Flex>
+          </PaginationRoot>
         </Flex>
       ) : (
         <AbsoluteCenter>

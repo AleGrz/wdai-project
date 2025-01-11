@@ -6,8 +6,7 @@ import ProductCard from "@/components/productCard";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function Home() {
-  const productResponse = await fetch(`http://localhost:3000/api/product`, { next: { revalidate: 300 } });
-  const products = await productResponse.json();
+  const products = await fetch(`http://localhost:3000/api/product?featured=true&pageSize=9`).then((res) => res.json());
   let counter = 0;
 
   return (
