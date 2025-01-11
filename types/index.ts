@@ -13,3 +13,7 @@ export type TokenPair = {
   accessToken: Token;
   refreshToken: Token;
 }
+
+export type ExceptionResponse = {
+  message: string;
+}

@@ -89,7 +89,6 @@ const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Categ
             if (!el || posSet) return;
             const rect = el.getBoundingClientRect();
 
-            console.log(window.innerWidth, rect.right, el.offsetWidth);
             setLeft(window.innerWidth - rect.right < 0 ? "auto" : "100%");
             setRight(window.innerWidth - rect.right < 0 ? "100%" : "auto");
             setPosSet(true);
@@ -102,7 +101,8 @@ const DesktopCategorySubItem: React.FC<{ categories: Category[], category: Categ
   );
 }
 
-export const CategoryMenuButton : React.FC<{category: Category,
+export const CategoryMenuButton : React.FC<{
+  category: Category,
   children?: React.ReactNode,
   hasArrow?: boolean,
   visibleOutline?: boolean,
