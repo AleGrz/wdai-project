@@ -43,13 +43,9 @@ export default function AddProduct({ productData }: { productData: Product }) {
 
     if (button) {
       const { left, top, width, height } = button.getBoundingClientRect();
-      const x =
-        (left + width / 2 + window.scrollX) /
-        document.documentElement.scrollWidth;
-      const y =
-        (top + height / 2 + window.scrollY) /
-        document.documentElement.scrollHeight;
-
+      console.log(left, top, width, height);
+      const x = (left + width / 2) / window.innerWidth;
+      const y = (top + height / 2) / window.innerHeight;
       confetti({
         particleCount: 150,
         spread: 60,
