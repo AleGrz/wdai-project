@@ -1,5 +1,6 @@
+import type { MessageResponse } from "@/types";
+
 import { PrismaClient } from "@prisma/client";
-import { OrderDetail } from "@prisma/client";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -14,12 +15,21 @@ export async function GET(
   });
 
   if (await prisma.user.findFirst({ where: { id: parseInt((await params).userId) } }) === null) {
-    return Response.json({ message: "User not found!" }, { status: 404 });
+    return Response.json(
+      { message: "User not found!" } as MessageResponse,
+      { status: 404 }
+    );
   }
 
   if (!cart) {
-    cart = await prisma.order.create({ data: { userId: parseInt(id) }, include: { orderDetails: true } });
+    cart = await prisma.order.create({
+      data: {
+        userId: parseInt(id) },
+        include: {
+          orderDetails: true
+    }});
   }
+
   return Response.json(cart);
 }
 
@@ -32,7 +42,10 @@ export async function POST(
   const body = await request.json();
 
   if (await prisma.user.findFirst({ where: { id: parseInt((await params).userId) } }) === null) {
-    return Response.json({ message: "User not found!" }, { status: 404 });
+    return Response.json(
+      { message: "User not found!" } as MessageResponse,
+      { status: 404 }
+    );
   }
 
   let cart = await prisma.order.findFirst({ where: { userId: parseInt(id), orderDate: null}, include: { orderDetails: true } });
@@ -55,5 +68,9 @@ export async function POST(
     },
   });
   }
-  return Response.json({ message: "Order details added successfully!" });
+
+  return Response.json(
+    { message: "Order details added successfully!" } as MessageResponse,
+    { status: 201 }
+  );
 }
