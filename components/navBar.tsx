@@ -11,6 +11,8 @@ import { Avatar } from "./ui/avatar";
 import SearchControl from "./searchControl";
 import LogoutButton from "./logoutButton";
 
+import { FaShoppingCart } from "react-icons/fa";
+
 const NavBar: React.FC = async () => {
   const categories = (await fetch("http://localhost:3000/api/category", {
     next: { revalidate: 300 },
@@ -18,14 +20,20 @@ const NavBar: React.FC = async () => {
   const user = await getUserData();
 
   return (
-    (<Box px={4}>
+    <Box px={4}>
       <Flex
         h={16}
         alignItems={"center"}
         justifyContent={"space-between"}
         gap={200}
       >
-        <Box height={7} width={200} justifyContent="center" position="relative" asChild>
+        <Box
+          height={7}
+          width={200}
+          justifyContent="center"
+          position="relative"
+          asChild
+        >
           <Link href={"/"}>
             <Image
               src="/logo.svg"
@@ -35,8 +43,9 @@ const NavBar: React.FC = async () => {
               priority
               sizes="100vw"
               style={{
-                objectFit: "contain"
-              }} />
+                objectFit: "contain",
+              }}
+            />
           </Link>
         </Box>
         <Flex grow={1} asChild>
@@ -47,17 +56,20 @@ const NavBar: React.FC = async () => {
             <>
               <Avatar size={"sm"} name={user.firstName + " " + user.lastName} />
               <LogoutButton>Log out</LogoutButton>
+              <NavButton route={`/cart/${user.id}`}>
+                <FaShoppingCart />
+              </NavButton>
             </>
           ) : (
             <>
-              <NavButton route="login">Log in</NavButton>
-              <NavButton route="signup">Sign up</NavButton>
+              <NavButton route="/login">Log in</NavButton>
+              <NavButton route="/signup">Sign up</NavButton>
             </>
           )}
         </Flex>
       </Flex>
       <DesktopCategoryMenu categories={categories} />
-    </Box>)
+    </Box>
   );
 };
 

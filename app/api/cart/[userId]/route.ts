@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { OrderDetail } from "@prisma/client";
 import { NextRequest } from "next/server";
 
 export async function GET(

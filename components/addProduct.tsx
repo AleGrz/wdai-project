@@ -6,10 +6,12 @@ import { useRouter } from "next/router";
 import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "./ui/stepper-input";
 import { Product } from "@prisma/client";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import confetti from "canvas-confetti";
 
 export default function AddProduct({ productData }: { productData: Product }) {
   const [quantity, setQuantity] = useState("1");
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const addToCart = async () => {
     const user = await getUserData();
@@ -32,6 +34,23 @@ export default function AddProduct({ productData }: { productData: Product }) {
       console.error("Failed to add product to cart");
       return;
     }
+
+    const button = buttonRef.current;
+    if (button) {
+      const { left, top, width, height } = button.getBoundingClientRect();
+      const x =
+        (left + width / 2 + window.scrollX) /
+        document.documentElement.scrollWidth;
+      const y =
+        (top + height / 2 + window.scrollY) /
+        document.documentElement.scrollHeight;
+
+      confetti({
+        particleCount: 150,
+        spread: 60,
+        origin: { x, y },
+      });
+    }
   };
 
   return (
@@ -43,7 +62,7 @@ export default function AddProduct({ productData }: { productData: Product }) {
         margin={5}
         onValueChange={(value) => setQuantity(value.value)}
       />
-      <Button w={"auto"} margin={5} onClick={addToCart}>
+      <Button ref={buttonRef} w={"auto"} margin={5} onClick={addToCart}>
         Add to cart
         <FiShoppingCart />
       </Button>
