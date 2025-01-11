@@ -2,7 +2,7 @@
 
 import { getUserData } from "@/app/api/auth/helper";
 import { Button, Flex } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { FiShoppingCart } from "react-icons/fi";
 import { StepperInput } from "./ui/stepper-input";
 import { Product } from "@prisma/client";
@@ -26,7 +26,6 @@ export default function AddProduct({ productData }: { productData: Product }) {
         productId: productData.id,
         quantity: parseInt(quantity),
       }),
-      headers: { "Content-Type": "application/json" },
       method: "POST",
     });
 
@@ -38,13 +37,9 @@ export default function AddProduct({ productData }: { productData: Product }) {
     const button = buttonRef.current;
     if (button) {
       const { left, top, width, height } = button.getBoundingClientRect();
-      const x =
-        (left + width / 2 + window.scrollX) /
-        document.documentElement.scrollWidth;
-      const y =
-        (top + height / 2 + window.scrollY) /
-        document.documentElement.scrollHeight;
-
+      console.log(left, top, width, height);
+      const x = (left + width / 2) / window.innerWidth;
+      const y = (top + height / 2) / window.innerHeight;
       confetti({
         particleCount: 150,
         spread: 60,
