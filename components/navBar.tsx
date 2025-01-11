@@ -8,7 +8,7 @@ import { DesktopCategoryMenu } from "@/components/categoryMenu";
 
 import { Avatar } from "./ui/avatar";
 import SearchControl from "./searchControl";
-import { getUserData } from "./validator";
+import { getUserData } from "../app/validator";
 
 const NavBar: React.FC = async () => {
   const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(

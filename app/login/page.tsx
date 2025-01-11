@@ -1,12 +1,10 @@
 "use client";
 import { Button, Fieldset, Input, Stack, Link } from "@chakra-ui/react";
-import { useState } from "react";
 
 import { Field } from "@/components/ui/field";
 import { useState } from "react";
 import { setCookies } from "./actions";
 
-import { setCookies } from "./actions";
 import router from "next/router";
 
 export default function LoginPage() {

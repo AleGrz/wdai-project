@@ -54,10 +54,6 @@ export async function middleware(request: NextRequest) {
   const method = request.method;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken");
-<<<<<<< HEAD
-
-=======
->>>>>>> 081dc51f2c9d5468272308010f16b4ce9166da66
   const matchesPath = (rulePath: string, requestPath: string) => {
     const ruleRegex = new RegExp(
       "^" + rulePath.replace(/:([a-zA-Z]+)/g, "([^/]+)") + "$"
@@ -82,11 +78,7 @@ export async function middleware(request: NextRequest) {
     headers: {
       "Content-Type": "application/json",
     },
-<<<<<<< HEAD
-    body: JSON.stringify({ token: accessToken }),
-=======
     body: JSON.stringify({ accessToken: accessToken?.value }),
->>>>>>> 081dc51f2c9d5468272308010f16b4ce9166da66
   });
 
 
