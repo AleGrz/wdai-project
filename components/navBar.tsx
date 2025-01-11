@@ -18,22 +18,25 @@ const NavBar: React.FC = async () => {
   const user = await getUserData();
 
   return (
-    <Box px={4}>
+    (<Box px={4}>
       <Flex
         h={16}
         alignItems={"center"}
         justifyContent={"space-between"}
         gap={200}
       >
-        <Box height={7} width={200} justifyContent="center" position="relative">
+        <Box height={7} width={200} justifyContent="center" position="relative" asChild>
           <Link href={"/"}>
             <Image
               src="/logo.svg"
               alt="Logo"
-              layout="fill"
-              objectFit="contain"
               loading="eager"
-            />
+              fill
+              priority
+              sizes="100vw"
+              style={{
+                objectFit: "contain"
+              }} />
           </Link>
         </Box>
         <Flex grow={1} asChild>
@@ -54,7 +57,7 @@ const NavBar: React.FC = async () => {
         </Flex>
       </Flex>
       <DesktopCategoryMenu categories={categories} />
-    </Box>
+    </Box>)
   );
 };
 
