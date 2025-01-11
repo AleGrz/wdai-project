@@ -18,8 +18,7 @@ export default async function SearchPage({
   if (query) queryParams.append('query', query.toString());
 
   const productResponse = await fetch(
-    `http://localhost:3000/api/product?${queryParams.toString()}`, 
-    { next: { revalidate: 300 } }
+    `http://localhost:3000/api/product?${queryParams.toString()}`
   );
   const products = await productResponse.json();
   let counter = 0;

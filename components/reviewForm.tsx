@@ -11,23 +11,35 @@ import { useState } from "react";
 
 import { Field } from "./ui/field";
 import { Rating } from "./ui/rating";
+import { getUserData } from "@/app/api/auth/helper";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 export default function ReviewForm({ productId }: { productId: string }) {
+  const router = useRouter();
   const [isRatingInvalid, setIsRatingInvalid] = useState(false);
+  const [isResponseInvalid, setIsResponseInvalid] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // const ratingField = event.target.rating;
-
-    // if (ratingField.value === "-1") {
-    //   setIsRatingInvalid(true);
-    //   ratingField.setCustomValidity("Please select a rating");
-    //   ratingField.reportValidity();
-    //   return;
-    // }
-
-    // setIsRatingInvalid(false);
-    // ratingField.setCustomValidity("");
+    const target = event.target as HTMLFormElement;
+    if (target.rating.value === "-1") {
+      setIsRatingInvalid(true);
+      return;
+    }
+    const response = await fetch(`/api/product/${productId}/review`, {
+      method: "POST",
+      body: JSON.stringify({
+        userId: (await getUserData())?.id,
+        rating: parseInt(target.rating.value),
+        description: target.description.value,
+      }),
+    });
+    if (response.status === 403) {
+      setIsResponseInvalid(true);
+      return
+    }
+    router.refresh();
   };
 
   return (
@@ -38,18 +50,10 @@ export default function ReviewForm({ productId }: { productId: string }) {
             <Field
               label="Rating"
               errorText="This field is required"
-              required
               invalid={isRatingInvalid}
+              required
             >
-              <Rating
-                name="rating"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                  if (event.target.value !== "-1") {
-                    setIsRatingInvalid(false);
-                    event.target.setCustomValidity("");
-                  }
-                }}
-              />
+              <Rating name="rating" />
             </Field>
             <Field label="Comment" errorText="This field is required" required>
               <Textarea
@@ -63,7 +67,12 @@ export default function ReviewForm({ productId }: { productId: string }) {
         </Fieldset.Root>
       </DialogBody>
       <DialogFooter>
-        <Button type="submit">Submit</Button>
+        <Field
+          invalid={isResponseInvalid}
+          errorText="You have already reviewed this product!"
+        >
+          <Button type="submit">Submit</Button>
+        </Field>
       </DialogFooter>
     </form>
   );

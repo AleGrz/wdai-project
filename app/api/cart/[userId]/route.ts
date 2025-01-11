@@ -92,3 +92,35 @@ export async function POST(
     { status: 201 }
   );
 }
+
+export async function DELETE(
+  _request: NextRequest,
+  { params }: { params: Promise<{ userId: string }> },
+) {
+  const prisma = new PrismaClient();
+  const id = parseInt((await params).userId);
+
+  if (isNaN(id) || id < 1) {
+    return Response.json(
+      { message: "Invalid user id!" } as MessageResponse,
+      { status: 400 }
+    );
+  }
+
+
+  const cart = await prisma.order.findFirst({ where: { userId: id, orderDate: null }, include: { orderDetails: true } });
+
+  if (!cart) {
+    return Response.json(
+      { message: "Cart not found!" } as MessageResponse,
+      { status: 404 }
+    );
+  }
+
+  await prisma.orderDetail.deleteMany({ where: { orderId: cart.id } });
+
+  return Response.json(
+    { message: "Cart deleted successfully!" } as MessageResponse,
+    { status: 200 }
+  );
+}

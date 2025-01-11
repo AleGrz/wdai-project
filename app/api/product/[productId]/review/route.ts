@@ -74,9 +74,9 @@ export async function POST(
 
   if (data.userId === undefined) {
     return Response.json({ message: "No userId provided!" }, { status: 400 });
-  } else if (typeof data.userId !== "string") {
+  } else if (typeof data.userId !== "number") {
     return Response.json(
-      { message: "UserId must be a string!" } as MessageResponse,
+      { message: "UserId must be a number!" } as MessageResponse,
       { status: 400 },
     );
   } else if (data.rating === undefined) {
@@ -104,6 +104,11 @@ export async function POST(
     return Response.json(
       { message: "Product not found!" } as MessageResponse,
       { status: 404 });
+  } else if (await prisma.review.findFirst({ where: { userId: data.userId, productId: productId } })) {
+    return Response.json(
+      { message: "User has already reviewed this product!" } as MessageResponse,
+      { status: 403 },
+    );
   }
   await prisma.review.create({
     data: {
@@ -114,6 +119,19 @@ export async function POST(
     },
   });
 
+  const { reviewsCount = 0, rating = 0 } = await prisma.product.findFirst({
+    where: { id: productId },
+    select: { rating: true, reviewsCount: true },
+  }) || {};
+
+  await prisma.product.update({
+    where: { id: productId },
+    data: {
+      reviewsCount: reviewsCount + 1,
+      rating: (rating * reviewsCount + data.rating) / (reviewsCount + 1)
+    }
+  });
+  
   return Response.json(
     { message: "Successfully added new review." } as MessageResponse,
     { status: 201 },

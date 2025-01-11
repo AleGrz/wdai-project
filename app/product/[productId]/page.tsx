@@ -3,7 +3,6 @@ import type { Prisma } from "@prisma/client";
 import { Box, Image, Tabs, Spinner, HStack, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
-import { FiShoppingCart } from "react-icons/fi";
 
 import {
   DialogBackdrop,
@@ -14,16 +13,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { StepperInput } from "@/components/ui/stepper-input";
 import { Button } from "@/components/ui/button";
 import ReviewLabel from "@/components/reviewLabel";
 import ReviewForm from "@/components/reviewForm";
 
 import AddProduct from "@/components/addProduct";
+import { getUserData } from "@/app/api/auth/helper";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
-}>;
+}> & { isUD?: boolean };
 
 export default async function ProductPage({
   params,
@@ -36,6 +35,7 @@ export default async function ProductPage({
   const reviewsData = (await fetch(
     `http://localhost:3000/api/product/${(await params).productId}/review`
   ).then((res) => res.json())) as ReviewWithUser[];
+  const user = await getUserData();
 
   if (!productData) {
     return (
@@ -95,7 +95,7 @@ export default async function ProductPage({
                 {productData.price.toFixed(2)}
               </Box>
             </Flex>
-            <AddProduct productData={productData}/>
+            <AddProduct productData={productData} />
           </Box>
         </Box>
       </HStack>
@@ -136,9 +136,22 @@ export default async function ProductPage({
                 </DialogContent>
               </DialogRoot>
               {reviewsData.length > 0
-                ? reviewsData.map((review) => (
-                    <ReviewLabel key={review.id} review={review} />
-                  ))
+                ? reviewsData.map(
+                    (review) => (
+                      console.log(review),
+                      (
+                        <ReviewLabel
+                          key={review.id}
+                          review={review}
+                          isUD={
+                            review.user.id === user?.id ||
+                            user?.isAdmin ||
+                            false
+                          }
+                        />
+                      )
+                    )
+                  )
                 : "No reviews yet"}
             </Flex>
           </Flex>
