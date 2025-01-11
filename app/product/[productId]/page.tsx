@@ -1,13 +1,6 @@
 import type { Prisma } from "@prisma/client";
 
-import {
-  Box,
-  Image,
-  Tabs,
-  Spinner,
-  HStack,
-  Flex,
-} from "@chakra-ui/react";
+import { Box, Image, Tabs, Spinner, HStack, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { FiShoppingCart } from "react-icons/fi";
@@ -25,6 +18,8 @@ import { StepperInput } from "@/components/ui/stepper-input";
 import { Button } from "@/components/ui/button";
 import ReviewLabel from "@/components/reviewLabel";
 import ReviewForm from "@/components/reviewForm";
+
+import AddProduct from "@/components/addProduct";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
   include: { user: true };
@@ -100,18 +95,7 @@ export default async function ProductPage({
                 {productData.price.toFixed(2)}
               </Box>
             </Flex>
-            <Flex alignContent="center">
-              <StepperInput
-                defaultValue="1"
-                min={1}
-                max={productData.inStock}
-                margin={5}
-              />
-              <Button w={"auto"} margin={5}>
-                Add to cart
-                <FiShoppingCart />
-              </Button>
-            </Flex>
+            <AddProduct productData={productData}/>
           </Box>
         </Box>
       </HStack>
@@ -163,11 +147,3 @@ export default async function ProductPage({
     </>
   );
 }
-
-// function onSubmit(event: any) {
-//   event.preventDefault();
-//   if (!event.target.rating.value) {
-//     alert("Rating is required");
-//     return;
-//   }
-// }

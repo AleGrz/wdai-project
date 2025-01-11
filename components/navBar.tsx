@@ -12,9 +12,9 @@ import SearchControl from "./searchControl";
 import LogoutButton from "./logoutButton";
 
 const NavBar: React.FC = async () => {
-  const categories = await fetch("http://localhost:3000/api/category", { next: { revalidate: 300 } }).then(
-    (data) => data.json()
-  ) as Category[];
+  const categories = (await fetch("http://localhost:3000/api/category", {
+    next: { revalidate: 300 },
+  }).then((data) => data.json())) as Category[];
   const user = await getUserData();
 
   return (
@@ -40,30 +40,25 @@ const NavBar: React.FC = async () => {
           </Link>
         </Box>
         <Flex grow={1} asChild>
-          <SearchControl/>
+          <SearchControl />
         </Flex>
         <Flex justifyContent="flex-end" gap={5} width={200}>
-          {user ?
-          (
+          {user ? (
             <>
-              <Avatar
-                size={"sm"}
-                name={user.firstName + " " + user.lastName}
-              />
+              <Avatar size={"sm"} name={user.firstName + " " + user.lastName} />
               <LogoutButton>Log out</LogoutButton>
             </>
-          )
-          : (
+          ) : (
             <>
               <NavButton route="login">Log in</NavButton>
               <NavButton route="signup">Sign up</NavButton>
-            </>)
-          }
+            </>
+          )}
         </Flex>
       </Flex>
       <DesktopCategoryMenu categories={categories} />
     </Box>)
   );
-}
+};
 
 export default NavBar;

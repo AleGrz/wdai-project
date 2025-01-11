@@ -81,6 +81,7 @@ export async function middleware(request: NextRequest) {
     body: JSON.stringify({ accessToken: accessToken?.value }),
   });
 
+
   const loginUrl = request.nextUrl.clone();
 
   loginUrl.pathname = "/login";
