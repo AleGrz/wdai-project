@@ -4,46 +4,9 @@ import type { TokenPair } from "./types";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
-import { login } from "@/app/api/auth/helper";
+import { login } from "@/app/(auth)/helper";
 
 const accessRules = [
-  {
-    path: "/api/cart/:userid/buy",
-    methods: ["PATCH"],
-    roles: ["user", "admin"],
-    userSpecific: true
-  },
-  {
-    path: "/api/cart/:userid",
-    methods: ["GET"],
-    roles: ["user", "admin"],
-    userSpecific: true
-  },
-  {
-    path: "/api/category/:categoryId",
-    methods: ["PATCH", "DELETE"],
-    roles: ["admin"]
-  },
-  {
-    path: "/api/category",
-    methods: ["POST"],
-    roles: ["admin"]
-  },
-  {
-    path: "/api/product/:productId",
-    methods: ["PATCH", "DELETE"],
-    roles: ["admin"]
-  },
-  {
-    path: "/api/product",
-    methods: ["POST"],
-    roles: ["admin"]
-  },
-  {
-    path: "/api/user",
-    methods: ["GET"],
-    roles: ["admin"]
-  },
   {
     path: "/cart/:userid",
     methods: ["GET"],
@@ -66,7 +29,7 @@ export async function middleware(request: NextRequest) {
     return ruleRegex.test(requestPath);
   };
 
-  if (!accessToken || !accessToken.value && refreshToken && refreshToken.value) {
+  if ((accessToken === undefined || !accessToken.value) && refreshToken !== undefined && refreshToken.value) {
     const response = await fetch(`${request.nextUrl.origin}/api/auth/refresh`, {
       method: "POST",
       headers: {
@@ -74,7 +37,7 @@ export async function middleware(request: NextRequest) {
       },
       body: JSON.stringify({ refreshToken: refreshToken?.value }),
     });
-
+    
     if (response.ok) {
       const data = await response.json() as TokenPair;
 

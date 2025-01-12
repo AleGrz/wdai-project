@@ -1,5 +1,5 @@
 "use client";
-import type { Prisma } from "@prisma/client";
+import type { ReviewWithUser } from "@/types";
 
 import { Box, Button, Flex, Textarea } from "@chakra-ui/react";
 import { LuCheck, LuX } from "react-icons/lu";
@@ -8,10 +8,6 @@ import { useState, useRef } from "react";
 import { Rating } from "@/components/ui/rating";
 import { Avatar } from "@/components/ui/avatar";
 import { Field } from "@/components/ui/field";
-
-type ReviewWithUser = Prisma.ReviewGetPayload<{
-  include: { user: true };
-}>;
 
 export default function ReviewLabel({
   review,

@@ -1,8 +1,9 @@
-import type { Prisma } from "@prisma/client";
+import type { Prisma, Product } from "@prisma/client";
 
-import { Box, Tabs, Spinner, HStack, Flex } from "@chakra-ui/react";
+import { Box, Tabs, HStack, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
+import { notFound } from "next/navigation";
 
 import ReviewLabel from "@/components/reviewLabel";
 import AddProduct from "@/components/addProduct";
@@ -11,34 +12,37 @@ import { getUserData } from "@/app/api/auth/helper";
 import ReviewDialog from "@/components/reviewDialog";
 
 type ReviewWithUser = Prisma.ReviewGetPayload<{
-  include: { user: true };
-}> & { isUD?: boolean };
+  include: {
+    user: true
+}}>;
+
+// export const revalidate = 60;
+
+// export const dynamicParams = false;
+ 
+// export async function generateStaticParams() {
+//   const products = await fetch("http://localhost:3000/api/product").then((res) => !res.ok ? [] : res.json()) as Product[];
+
+//   return products.map((product) => ({
+//     id: String(product.id),
+//   }))
+// }
 
 export default async function ProductPage({
   params,
 }: {
   params: Promise<{ productId: string }>;
 }) {
-  const productData = await fetch(
-    `http://localhost:3000/api/product/${(await params).productId}`
-  ).then((res) => res.json());
-  const reviewsData = (await fetch(
-    `http://localhost:3000/api/product/${(await params).productId}/review`
-  ).then((res) => res.json())) as ReviewWithUser[];
-  const user = await getUserData();
+  const productId = (await params).productId;
+  const product = await fetch(
+    `http://localhost:3000/api/product/${productId}`
+  ).then((res) => !res.ok ? null : res.json()) as Product | null;
 
-  if (!productData) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minH="100vh"
-      >
-        <Spinner size="xl" color="teal.500" />
-      </Box>
-    );
-  }
+  if (!product) notFound();
+  const reviewsData = (await fetch(
+    `http://localhost:3000/api/product/${productId}/review`
+  ).then((res) => !res.ok ? [] : res.json())) as ReviewWithUser[];
+  const user = await getUserData();
 
   return (
     <>
@@ -52,8 +56,8 @@ export default async function ProductPage({
       >
         <Box position="relative" height={600} maxW={800} width="100%">
           <SkeletonNextImage
-            src={productData.imageUrl}
-            alt={productData.name}
+            src={product.imageUrl}
+            alt={product.name}
             fill
             priority
             loading="eager"
@@ -73,7 +77,7 @@ export default async function ProductPage({
             <Flex mt="1" justifyContent="space-between" alignItems={"center"}>
               <Flex flexDirection={"column"}>
                 <Box as="span" color={"white"} fontSize="lg">
-                  {productData.brand}
+                  {product.brand}
                 </Box>
                 <Box
                   fontSize="2xl"
@@ -81,7 +85,7 @@ export default async function ProductPage({
                   as="h4"
                   lineHeight="tight"
                 >
-                  {productData.name}
+                  {product.name}
                 </Box>
               </Flex>
             </Flex>
@@ -92,10 +96,10 @@ export default async function ProductPage({
                 <Box as="span" color={"white"} fontSize="lg">
                   $
                 </Box>
-                {productData.price.toFixed(2)}
+                {product.price.toFixed(2)}
               </Box>
             </Flex>
-            <AddProduct productData={productData} />
+            <AddProduct productData={product} />
           </Box>
         </Box>
       </HStack>
@@ -113,14 +117,14 @@ export default async function ProductPage({
 
         <Tabs.Content value="description">
           <Flex justifyContent={"center"} fontSize={"2xl"}>
-            {productData.description}
+            {product.description}
           </Flex>
         </Tabs.Content>
 
         <Tabs.Content value="reviews">
           <Flex justifyContent={"center"}>
             <Flex flexFlow={"column"} justifyContent={"flex-start"} gap={10}>
-              <ReviewDialog product={productData} />
+              <ReviewDialog product={product} />
               {reviewsData.length > 0
                 ? reviewsData.map((review) => (
                     <ReviewLabel
@@ -129,7 +133,7 @@ export default async function ProductPage({
                       isUD={
                         review.user.id === user?.id || user?.isAdmin || false
                       }
-                      productId={productData.id}
+                      productId={product.id}
                     />
                   ))
                 : "No reviews yet"}

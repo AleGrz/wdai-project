@@ -5,8 +5,14 @@ import { RxCross2 } from "react-icons/rx";
 import ProductCard from "@/components/productCard";
 import { EmptyState } from "@/components/ui/empty-state";
 
+export const dynamic = 'force-dynamic'
+
 export default async function Home() {
-  const products = await fetch(`http://localhost:3000/api/product?featured=true&pageSize=9`).then((res) => res.json());
+  const response = await fetch(`http://localhost:3000/api/product?featured=true&pageSize=9`);
+  let products: Product[] = [];
+
+  if (response.ok)
+    products = await response.json();
   let counter = 0;
 
   return (

@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation"
 
 import { Field } from "@/components/ui/field"
 import { PasswordInput } from "@/components/ui/password-input"
-import { login } from "@/app/api/auth/helper"
+import { login } from "@/app/(auth)/helper"
 
 interface FormValues {
   email: string

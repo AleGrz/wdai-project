@@ -39,7 +39,7 @@ const ProductCard: React.FC<{
             <SkeletonNextImage
               src={product.imageUrl}
               alt={product.name}
-              quality={65}
+              quality={50}
               loading={loading}
               fill
               variant="pulse"

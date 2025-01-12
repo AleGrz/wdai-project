@@ -1,12 +1,12 @@
 "use client";
+import type { Product } from "@/types";
 
 import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FiShoppingCart } from "react-icons/fi";
-import { Product } from "@prisma/client";
 import { useState, useRef } from "react";
 
-import { getUserData } from "@/app/api/auth/helper";
+import { getUserData } from "@/app/(auth)/helper";
 
 import { StepperInput } from "./ui/stepper-input";
 

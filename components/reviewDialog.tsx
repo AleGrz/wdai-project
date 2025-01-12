@@ -1,6 +1,5 @@
 "use client";
-
-import type { Product } from "@prisma/client";
+import type { Product } from "@/types";
 
 import {
   Button,
@@ -13,7 +12,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
-import { getUserData } from "@/app/api/auth/helper";
+import { getUserData } from "@/app/(auth)/helper";
 
 import { Field } from "./ui/field";
 import { Rating } from "./ui/rating";
