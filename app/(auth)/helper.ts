@@ -9,7 +9,7 @@ export async function getUserData(): Promise<User | null> {
 
   if (!accessToken === undefined || accessToken?.value === undefined) return null;
 
-  return await fetch("http://localhost:3000/api/auth", {
+  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
     method: "POST",
     body: JSON.stringify({ accessToken: accessToken.value })
   }).then((res) => !res.ok ? null : res.json());

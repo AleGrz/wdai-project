@@ -11,7 +11,7 @@ import SearchControl from "@/components/nav/searchControl";
 import AvatarButton from "@/components/nav/avatarButton";
 
 const NavBar: React.FC = async () => {
-  const categories = await fetch("http://localhost:3000/api/category", {
+  const categories = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`, {
     next: { revalidate: 300 },
   }).then((res) => !res.ok ? [] : res.json()) as Category[];
   const user = await getUserData();

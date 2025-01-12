@@ -6,8 +6,7 @@ import Link from "next/link";
 import React from "react";
 
 import SkeletonNextImage from "@/components/skeletonNextImage";
-
-import { Rating } from "./ui/rating";
+import { Rating } from "@/components/ui/rating";
 
 const ProductCard: React.FC<{
   product: Product;
@@ -38,7 +37,7 @@ const ProductCard: React.FC<{
             position="relative"
           >
             <SkeletonNextImage
-              src={product.imageUrl}
+              src={`${process.env.NEXT_PUBLIC_API_URL}${product.imageUrl}`}
               alt={product.name}
               quality={50}
               loading={loading}

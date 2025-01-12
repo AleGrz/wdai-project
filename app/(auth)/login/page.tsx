@@ -25,28 +25,28 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
 
   const onSubmit = handleSubmit(async (data) => {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
       method: "POST",
       body: JSON.stringify({
         email: data.email,
         password: data.password,
       })
-    });
+    }).catch((e) => console.error(e));
+    
+    // if (response.ok) {
+    //   const tokens = await response.json() as TokenPair;
 
-    if (response.ok) {
-      const tokens = await response.json() as TokenPair;
+    //   await login(tokens);
+    //   router.push("/");
+    // } else {
+    //   const body = await response.json() as MessageResponse;
 
-      await login(tokens);
-      router.push("/");
-    } else {
-      const body = await response.json() as MessageResponse;
-
-      if (body.message === "User not found!") {
-        setError("email", { type: "manual", message: "User not found!" });
-      } else if (body.message === "Invalid password!") {
-        setError("password", { type: "manual", message: "Invalid password!" });
-      }
-    }
+    //   if (body.message === "User not found!") {
+    //     setError("email", { type: "manual", message: "User not found!" });
+    //   } else if (body.message === "Invalid password!") {
+    //     setError("password", { type: "manual", message: "Invalid password!" });
+    //   }
+    // }
   });
 
   return (

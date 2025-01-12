@@ -13,10 +13,9 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 import { getUserData } from "@/app/(auth)/helper";
-
-import { Field } from "./ui/field";
-import { Rating } from "./ui/rating";
-import { DialogBackdrop, DialogCloseTrigger, DialogContent, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "./ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Rating } from "@/components/ui/rating";
+import { DialogBackdrop, DialogCloseTrigger, DialogContent, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const ReviewDialog: React.FC<{
   product: Product
@@ -42,7 +41,7 @@ const ReviewDialog: React.FC<{
 
       return;
     }
-    const response = await fetch(`/api/product/${product.id}/review`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${product.id}/review`, {
       method: "POST",
       body: JSON.stringify({
         userId: (await getUserData())?.id,

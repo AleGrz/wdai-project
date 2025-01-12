@@ -33,7 +33,7 @@ export default function ReviewLabel({
     }
     setIsEditing(false);
     setPrev(content);
-    await fetch(`/api/product/${productId}/review/${review.id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${productId}/review/${review.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default function ReviewLabel({
   };
   const onDeleteClicked = async () => {
     setIsVisible(false);
-    await fetch(`/api/product/${productId}/review/${review.id}`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${productId}/review/${review.id}`, {
       method: "DELETE",
     });
   };

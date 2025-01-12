@@ -5,8 +5,6 @@ import { Flex, Stack } from "@chakra-ui/react";
 
 import CartProduct from "@/components/cartProduct";
 
-
-
 export default async function CartPage({
   params,
 }: {
@@ -14,7 +12,7 @@ export default async function CartPage({
 }) {
   const cookieStore = await cookies();
   const allCookies = cookieStore.getAll().map(x => `${x.name}=${x.value}`).join("; ");
-  const response = await fetch(`http://localhost:3000/api/cart/${(await params).userId}`, {
+  const response = await fetch(`${process.env.API_URL}/cart/${(await params).userId}`, {
     headers: {
       Cookie: allCookies
     }

@@ -25,7 +25,7 @@ export default function AddProduct({ productData }: { productData: Product }) {
       return;
     }
 
-    const response = await fetch(`/api/cart/${user.id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${user.id}`, {
       body: JSON.stringify({
         productId: productData.id,
         quantity: parseInt(quantity),

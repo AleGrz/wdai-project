@@ -7,8 +7,7 @@ import { FiShoppingCart } from "react-icons/fi";
 import { useState, useRef } from "react";
 
 import { getUserData } from "@/app/(auth)/helper";
-
-import { StepperInput } from "./ui/stepper-input";
+import { StepperInput } from "@/components/ui/stepper-input";
 
 export default function AddProduct({ productData }: { productData: Product }) {
   const [quantity, setQuantity] = useState("1");
@@ -24,7 +23,7 @@ export default function AddProduct({ productData }: { productData: Product }) {
       return;
     }
 
-    const response = await fetch(`/api/cart/${user.id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${user.id}`, {
       body: JSON.stringify({
         productId: productData.id,
         quantity: parseInt(quantity),

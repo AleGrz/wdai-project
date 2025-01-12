@@ -25,7 +25,7 @@ export default async function SearchPage({
   if (categoryId) queryParams.append('categoryId', categoryId.toString());
   if (query) queryParams.append('query', query.toString());
 
-  const productResponse = await fetch(`http://localhost:3000/api/product?${queryParams.toString()}`);
+  const productResponse = await fetch(`${process.env.NEXT_PUBLIC_NEXT_PUBLIC_NEXT_PUBLIC_NEXT_PUBLIC_NEXT_PUBLIC_NEXT_PUBLIC_API_URL}/api/product?${queryParams.toString()}`);
   const products = await productResponse.json();
   let counter = 0;
 

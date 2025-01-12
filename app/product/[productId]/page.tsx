@@ -11,17 +11,17 @@ import SkeletonNextImage from "@/components/skeletonNextImage";
 import ReviewDialog from "@/components/reviewDialog";
 import { getUserData } from "@/app/(auth)/helper";
 
-// export const revalidate = 60;
+export const revalidate = 60;
 
-// export const dynamicParams = false;
+export const dynamicParams = false;
  
-// export async function generateStaticParams() {
-//   const products = await fetch("http://localhost:3000/api/product").then((res) => !res.ok ? [] : res.json()) as Product[];
+export async function generateStaticParams() {
+  const products = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product`).then((res) => !res.ok ? [] : res.json()) as Product[];
 
-//   return products.map((product) => ({
-//     id: String(product.id),
-//   }))
-// }
+  return products.map((product) => ({
+    id: String(product.id),
+  }))
+}
 
 export default async function ProductPage({
   params,
@@ -30,12 +30,12 @@ export default async function ProductPage({
 }) {
   const productId = (await params).productId;
   const product = await fetch(
-    `http://localhost:3000/api/product/${productId}`
+    `${process.env.NEXT_PUBLIC_API_URL}/product/${productId}`
   ).then((res) => !res.ok ? null : res.json()) as Product | null;
 
   if (!product) notFound();
   const reviewsData = (await fetch(
-    `http://localhost:3000/api/product/${productId}/review`
+    `${process.env.NEXT_PUBLIC_API_URL}/product/${productId}/review`
   ).then((res) => !res.ok ? [] : res.json())) as ReviewWithUser[];
   const user = await getUserData();
 
@@ -51,7 +51,7 @@ export default async function ProductPage({
       >
         <Box position="relative" height={600} maxW={800} width="100%">
           <SkeletonNextImage
-            src={product.imageUrl}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${product.imageUrl}`}
             alt={product.name}
             fill
             priority
