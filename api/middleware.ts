@@ -38,6 +38,12 @@ const accessRules = [
     userSpecific: true
   },
   {
+    path: "/product/:productId/review/:reviewId",
+    methods: ["PATCH", "DELETE"],
+    roles: ["user", "admin"],
+    userSpecific: true
+  },
+  {
     path: "/product",
     methods: ["POST"],
     roles: ["admin"]
