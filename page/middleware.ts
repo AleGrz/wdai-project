@@ -24,6 +24,12 @@ const accessRules = [
     roles: ["user", "admin"],
     userSpecific: true,
     redirect: "/login",
+  },
+  {
+    path: "/cart",
+    methods: ["GET"],
+    roles: ["user", "admin"],
+    redirect: "/login",
   }
 ];
 
@@ -71,11 +77,7 @@ export async function middleware(request: NextRequest) {
   for (const rule of accessRules) {
     if (matchesPath(rule.path, path) && rule.methods.includes(method)) {
       if (!rule.roles.includes(userRole)) {
-        const url = request.nextUrl.clone();
-
-        url.pathname = rule.redirect;
-
-        return NextResponse.redirect(url);
+        return NextResponse.redirect(new URL(rule.redirect, request.url));
       }
 
       if (rule.userSpecific && user) {
@@ -83,11 +85,7 @@ export async function middleware(request: NextRequest) {
         const userIdFromPath = path.split("/")[userSpecificPlace];
 
         if (parseInt(userIdFromPath) !== user.id && !user.isAdmin) {
-          const url = request.nextUrl.clone();
-
-          url.pathname = rule.redirect;
-  
-          return NextResponse.redirect(url);
+          return NextResponse.redirect(new URL(rule.redirect, request.url));
         }
       }
     }
