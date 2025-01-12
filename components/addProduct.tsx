@@ -30,7 +30,7 @@ export default function AddProduct({ productData }: { productData: Product }) {
         productId: productData.id,
         quantity: parseInt(quantity),
       }),
-      method: "POST",
+      method: "PUT",
     });
 
     if (!response.ok) {

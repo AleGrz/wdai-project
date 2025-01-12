@@ -18,7 +18,7 @@ export async function POST(_request: NextRequest,
 
   await prisma.order.updateMany({
     where: { userId: id, orderDate: null },
-    data: { orderDate: new Date() },
+    data: { orderDate: new Date()},
   });
 
   return Response.json(
