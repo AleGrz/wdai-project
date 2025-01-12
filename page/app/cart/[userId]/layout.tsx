@@ -6,5 +6,9 @@ export default function PricingLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <Flex>{children}</Flex>;
+  return (
+    <Flex justifyContent={"center"} alignItems={"center"} h="80vh">
+      {children}
+    </Flex>
+  );
 }

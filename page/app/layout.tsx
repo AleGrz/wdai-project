@@ -3,6 +3,7 @@ import { Flex } from "@chakra-ui/react";
 import NavBar from "@/components/nav/navBar";
 import Provider from "@/components/ui/provider";
 import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/toaster";
 
 export default async function RootLayout({
   children,
@@ -28,6 +29,7 @@ export default async function RootLayout({
                 <NavBar />
                 {children}
               </Flex>
+              <Toaster />
               <Footer />
             </Flex>
           </Flex>

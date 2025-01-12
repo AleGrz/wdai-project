@@ -5,10 +5,12 @@ import type { TokenPair, MessageResponse } from "@/types"
 import { Button, Fieldset, Input, Link, Stack } from "@chakra-ui/react"
 import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
+import NextLink from "next/link"
 
 import { Field } from "@/components/ui/field"
 import { PasswordInput } from "@/components/ui/password-input"
 import { login } from "@/app/(auth)/helper"
+
 
 interface FormValues {
   email: string
@@ -54,7 +56,7 @@ const SignupPage: React.FC = () => {
   });
 
   return (
-    (<Fieldset.Root size="lg" maxW="md">
+    <Fieldset.Root size="lg" maxW="md">
       <form onSubmit={onSubmit} noValidate>
         <Stack>
           <Fieldset.Legend>Log in</Fieldset.Legend>
@@ -134,9 +136,12 @@ const SignupPage: React.FC = () => {
         <Button variant="outline" type="submit" marginTop={5}>Sign up</Button>
       </form>
       <Fieldset.HelperText>
-        Already have an account? <Link href="/login">Log in</Link>
+        Already have an account? {""}
+        <Link asChild>
+          <NextLink href="/login">Log in</NextLink>
+        </Link>
       </Fieldset.HelperText>
-    </Fieldset.Root>)
+    </Fieldset.Root>
   );
 }
 

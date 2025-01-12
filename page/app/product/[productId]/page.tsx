@@ -5,23 +5,11 @@ import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { notFound } from "next/navigation";
 
-import ReviewLabel from "@/components/reviewLabel";
-import AddProduct from "@/components/addProduct";
+import ReviewLabel from "@/components/review/reviewLabel";
+import AddToCartButton from "@/components/cart/addToCartButton";
 import SkeletonNextImage from "@/components/skeletonNextImage";
-import ReviewDialog from "@/components/reviewDialog";
+import ReviewDialog from "@/components/review/reviewDialog";
 import { getUserData } from "@/app/(auth)/helper";
-
-export const revalidate = 60;
-
-export const dynamicParams = false;
- 
-export async function generateStaticParams() {
-  const products = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product`).then((res) => !res.ok ? [] : res.json()) as Product[];
-
-  return products.map((product) => ({
-    id: String(product.id),
-  }))
-}
 
 export default async function ProductPage({
   params,
@@ -94,7 +82,7 @@ export default async function ProductPage({
                 {product.price.toFixed(2)}
               </Box>
             </Flex>
-            <AddProduct productData={product} />
+            <AddToCartButton productData={product} />
           </Box>
         </Box>
       </HStack>
@@ -119,19 +107,22 @@ export default async function ProductPage({
         <Tabs.Content value="reviews">
           <Flex justifyContent={"center"}>
             <Flex flexFlow={"column"} justifyContent={"flex-start"} gap={10}>
-              <ReviewDialog product={product} />
-              {reviewsData.length > 0
-                ? reviewsData.map((review) => (
-                    <ReviewLabel
-                      key={review.id}
-                      review={review}
-                      isUD={
-                        review.user.id === user?.id || user?.isAdmin || false
-                      }
-                      productId={product.id}
-                    />
-                  ))
-                : "No reviews yet"}
+              {user && 
+                <ReviewDialog product={product} />
+}
+              {reviewsData.length > 0 ?
+                reviewsData.map((review) => (
+                  <ReviewLabel
+                    key={review.id}
+                    review={review}
+                    isUD={
+                      review.user.id === user?.id || user?.isAdmin || false
+                    }
+                    productId={product.id}
+                  />
+                )) :
+                  "No reviews yet"
+              }
             </Flex>
           </Flex>
         </Tabs.Content>

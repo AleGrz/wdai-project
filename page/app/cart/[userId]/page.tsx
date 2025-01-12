@@ -3,7 +3,7 @@ import type { OrderWithOrderDetailWithProduct } from "@/types";
 import { Stack } from "@chakra-ui/react";
 
 import { getTokensFromCookies } from "@/app/(auth)/helper";
-import Cart from "@/components/cart";
+import Cart from "@/components/cart/cart";
 
 export default async function CartPage({
   params,

@@ -1,12 +1,12 @@
 import type { Product } from "@/types";
 
-import { Box, Flex, Button } from "@chakra-ui/react";
-import { FiShoppingCart } from "react-icons/fi";
+import { Box, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
 
 import SkeletonNextImage from "@/components/skeletonNextImage";
 import { Rating } from "@/components/ui/rating";
+import AddToCartButton from "@/components/cart/addToCartButton";
 
 const ProductCard: React.FC<{
   product: Product;
@@ -69,9 +69,7 @@ const ProductCard: React.FC<{
                 {product.name}
               </Box>
             </Flex>
-            <Button w={30}>
-              <FiShoppingCart />
-            </Button>
+            <AddToCartButton productData={product} small={false} />
           </Flex>
         </Box>
         <Box p="6">

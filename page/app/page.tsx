@@ -5,10 +5,9 @@ import { Product } from "@/types";
 import ProductCard from "@/components/productCard";
 import { EmptyState } from "@/components/ui/empty-state";
 
-export const dynamic = 'force-dynamic'
-
 export default async function Home() {
-  const products = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product?featured=true&pageSize=9`).then((res) => !res.ok ? [] : res.json()) as Product[];
+  const products = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product?featured=true&pageSize=9`)
+    .then((res) => !res.ok ? [] : res.json()) as Product[];
   let counter = 0;
 
   return (
