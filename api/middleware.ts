@@ -5,14 +5,14 @@ import { User } from "@prisma/client";
 
 const accessRules = [
   {
-    path: "/cart/:userid/buy",
-    methods: ["PATCH"],
+    path: "/cart/:userId/buy",
+    methods: ["POST"],
     roles: ["user", "admin"],
     userSpecific: true
   },
   {
-    path: "/cart/:userid",
-    methods: ["GET", "PUT"],
+    path: "/cart/:userId",
+    methods: ["GET", "PUT", "DELETE"],
     roles: ["user", "admin"],
     userSpecific: true
   },
