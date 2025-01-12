@@ -2,20 +2,26 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  crossOrigin: "anonymous",
-  experimental: {
-    optimizePackageImports: ["@chakra-ui/react"],
-  },
-  images: {
-    remotePatterns: [
+  async headers() {
+    return [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3000',
-        pathname: '/images/**/*',
-        search: '',
+        source: "/(.*)",
+        headers: [
+          {
+            key: "Access-Control-Allow-Origin",
+            value: "*",
+          },
+          {
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, PUT, DELETE, OPTIONS",
+          },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
+          },
+        ],
       },
-    ],
+    ];
   },
 };
 
