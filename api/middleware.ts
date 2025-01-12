@@ -67,7 +67,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const user = await fetch(`${request.nextUrl.origin}/api/auth`, {
+  const user = await fetch(`${request.nextUrl.origin}/auth`, {
     method: "POST",
     body: JSON.stringify({ accessToken: token }),
   }).then((res) => !res.ok ? null : res.json()) as User | null;

@@ -8,8 +8,7 @@ import confetti from "canvas-confetti";
 
 import { Product } from "@/types";
 import { getUserData } from "@/app/(auth)/helper";
-
-import { StepperInput } from "./ui/stepper-input";
+import { StepperInput } from "@/components/ui/stepper-input";
 
 export default function AddProduct({ productData }: { productData: Product }) {
   const [quantity, setQuantity] = useState("1");

@@ -1,21 +1,21 @@
 import type { OrderWithOrderDetailWithProduct, OrderDetailWithProduct } from "@/types";
 
-import { cookies } from "next/headers";
 import { Flex, Stack } from "@chakra-ui/react";
 
 import CartProduct from "@/components/cartProduct";
+import { getTokensFromCookies } from "@/app/(auth)/helper";
 
 export default async function CartPage({
   params,
 }: {
   params: Promise<{ userId: string }>;
 }) {
-  const cookieStore = await cookies();
-  const allCookies = cookieStore.getAll().map(x => `${x.name}=${x.value}`).join("; ");
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${(await params).userId}`, {
+  const userId = (await params).userId;
+  const { accessToken } = await getTokensFromCookies();
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${userId}`, {
     headers: {
-      Cookie: allCookies
-    }
+      "Authorization": `Bearer ${accessToken}`,
+    },
   });
 
   if (!response.ok) return;
