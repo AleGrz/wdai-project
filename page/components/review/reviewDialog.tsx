@@ -10,63 +10,49 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import { useForm } from "react-hook-form";
 
-import { getUserData } from "@/app/(auth)/helper";
 import { Field } from "@/components/ui/field";
 import { Rating } from "@/components/ui/rating";
 import { DialogBackdrop, DialogCloseTrigger, DialogContent, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import addReview from "@/components/review/serverActions";
+
+interface FormValues {
+  rating: number;
+  description: string;
+}
 
 const ReviewDialog: React.FC<{
   product: Product
 }> = ({ product }) => {
   const router = useRouter();
-  const [isRatingInvalid, setIsRatingInvalid] = useState(false);
-  const [isResponseInvalid, setIsResponseInvalid] = useState(false);
-  const [empty, setEmpty] = useState(false);
-  const [open, setOpen] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState:
+    { errors }, reset }
+    = useForm<FormValues>();
+  const [open, setOpen] = useState(false);
+  const onSubmit = handleSubmit(async (data: FormValues) => {
+    const { statusCode, message } = await addReview(product.id, data.rating, data.description);
 
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    const target = event.target as HTMLFormElement;
-
-    event.preventDefault();
-    if (target.description.value === "") {
-      setEmpty(true);
-
-      return;
-    }
-    if (target.rating.value === "-1") {
-      setIsRatingInvalid(true);
+    if (statusCode === 403) {
+      setError("root", { type: "manual", message: "You have already reviewed this product!" });
 
       return;
-    }
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${product.id}/review`, {
-      method: "POST",
-      body: JSON.stringify({
-        userId: (await getUserData())?.id,
-        rating: parseInt(target.rating.value),
-        description: target.description.value,
-      }),
-    });
-
-    if (response.status === 403) {
-      setIsResponseInvalid(true);
+    } else if (statusCode !== 201) {
+      console.error(message);
 
       return;
     }
     setOpen(false);
+    reset();
     router.refresh();
-  };
-
-  const handleDescriptionChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setEmpty(event.target.value === "");
-  };
+  });
 
   return (
-    <DialogRoot lazyMount open={open} onOpenChange={(e) => setOpen(e.open)}>
+    <DialogRoot lazyMount open={open} onOpenChange={(e) => { setOpen(e.open); reset() }}>
       <DialogBackdrop />
       <DialogTrigger asChild>
         <Button>Write a review</Button>
@@ -77,34 +63,44 @@ const ReviewDialog: React.FC<{
           <DialogTitle>
             Write a review for {product.name}
           </DialogTitle>
-          <form onSubmit={handleSubmit}>
+          <form noValidate onSubmit={onSubmit}>
             <DialogBody key={product.id}>
               <Fieldset.Root size="lg">
                 <Fieldset.Content>
                   <Field
                     label="Rating"
-                    errorText="This field is required"
-                    invalid={isRatingInvalid}
+                    invalid={!!errors.rating}
+                    errorText={errors.rating?.message}
                     required
                   >
                     <Rating
-                      name="rating"
-                      onChange={() => setIsRatingInvalid(false)}
+                      defaultValue={0}
+                      {...register("rating", {
+                        required: true,
+                        min: {
+                          value: 1,
+                          message: "Rating is required!"
+                        },
+                        valueAsNumber: true
+                      })}
                     />
                   </Field>
                   <Field
                     label="Comment"
-                    errorText="This field is required"
+                    invalid={!!errors.description}
+                    errorText={errors.description?.message}
                     required
-                    invalid={empty}
                   >
                     <Textarea
-                      required={false}
-                      name="description"
                       resize="none"
                       height={300}
-                      maxLength={500}
-                      onChange={handleDescriptionChange}
+                      {...register("description", {
+                        required: {
+                          value: true,
+                          message: "Comment is required!"
+                        },
+                        maxLength: 500
+                      })}
                     />
                   </Field>
                 </Fieldset.Content>
@@ -112,8 +108,8 @@ const ReviewDialog: React.FC<{
             </DialogBody>
             <DialogFooter>
               <Field
-                invalid={isResponseInvalid}
-                errorText="You have already reviewed this product!"
+                invalid={!!errors.root}
+                errorText={errors.root?.message}
               >
                 <Button type="submit">Submit</Button>
               </Field>

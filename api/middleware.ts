@@ -32,6 +32,12 @@ const accessRules = [
     roles: ["admin"]
   },
   {
+    path: "/product/:productId/review",
+    methods: ["POST"],
+    roles: ["user", "admin"],
+    userSpecific: true
+  },
+  {
     path: "/product",
     methods: ["POST"],
     roles: ["admin"]
@@ -88,14 +94,29 @@ export async function middleware(request: NextRequest) {
       }
 
       if (rule.userSpecific) {
-        const userSpecificPlace = rule.path.split("/").indexOf(":userid");
-        const userIdFromPath = path.split("/")[userSpecificPlace];
+        if (!rule.path.includes(":userid")) {
+          try {
+            const body = await request.json();
 
-        if (parseInt(userIdFromPath) !== user.id && !user.isAdmin) {
-          return NextResponse.json(
-            { message: "Forbidden: You can only access your own resources." },
-            { status: 403 }
-          );
+            if (body && body.userId && parseInt(body.userId) !== user.id) {
+              return NextResponse.json(
+                { message: "Forbidden: You can only access your own resources." },
+                { status: 403 }
+              );
+            }
+          } catch {
+
+          }
+        } else {
+          const userSpecificPlace = rule.path.split("/").indexOf(":userid");
+          const userIdFromPath = path.split("/")[userSpecificPlace];
+
+          if (parseInt(userIdFromPath) !== user.id && !user.isAdmin) {
+            return NextResponse.json(
+              { message: "Forbidden: You can only access your own resources." },
+              { status: 403 }
+            );
+          }
         }
       }
     }
