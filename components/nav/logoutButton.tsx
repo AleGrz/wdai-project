@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-import { logout } from "@/app/api/auth/helper";
+import { logout } from "@/app/(auth)/helper";
 import { Button } from "@/components/ui/button";
 
 const LogoutButton: React.FC<{

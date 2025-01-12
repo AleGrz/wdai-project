@@ -1,5 +1,6 @@
 import { HStack } from "@chakra-ui/react";
-import { Product } from "@prisma/client";
+
+import { Product } from "@/types";
 
 export default function CartProduct({
   product,

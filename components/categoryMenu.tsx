@@ -1,5 +1,6 @@
 "use client";
-import { Category } from "@prisma/client";
+import type { Category } from "@/types";
+
 import { useRouter } from "next/navigation";
 import { MouseEventHandler, useState } from "react";
 import { Box, Flex, VStack } from "@chakra-ui/react";

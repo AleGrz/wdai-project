@@ -3,11 +3,11 @@
 import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { FiShoppingCart } from "react-icons/fi";
-import { Product } from "@prisma/client";
 import { useState, useRef } from "react";
 import confetti from "canvas-confetti";
 
-import { getUserData } from "@/app/api/auth/helper";
+import { Product } from "@/types";
+import { getUserData } from "@/app/(auth)/helper";
 
 import { StepperInput } from "./ui/stepper-input";
 

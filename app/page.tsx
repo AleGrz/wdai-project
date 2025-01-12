@@ -1,18 +1,14 @@
 import { AbsoluteCenter, Flex, Separator, Stack } from "@chakra-ui/react";
-import { Product } from "@prisma/client";
 import { RxCross2 } from "react-icons/rx";
 
+import { Product } from "@/types";
 import ProductCard from "@/components/productCard";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export const dynamic = 'force-dynamic'
 
 export default async function Home() {
-  const response = await fetch(`http://localhost:3000/api/product?featured=true&pageSize=9`);
-  let products: Product[] = [];
-
-  if (response.ok)
-    products = await response.json();
+  const products = await fetch(`http://localhost:3000/api/product?featured=true&pageSize=9`).then((res) => !res.ok ? [] : res.json()) as Product[];
   let counter = 0;
 
   return (

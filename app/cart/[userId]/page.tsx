@@ -1,20 +1,11 @@
-import { Prisma } from "@prisma/client";
+import type { OrderWithOrderDetailWithProduct, OrderDetailWithProduct } from "@/types";
+
 import { cookies } from "next/headers";
 import { Flex, Stack } from "@chakra-ui/react";
 
 import CartProduct from "@/components/cartProduct";
 
-type OrderWithOrderDetailWithProducts = Prisma.OrderGetPayload<{
-  include: { 
-    orderDetails: {
-      include: {
-        product: true
-}}}}>;
 
-type OrderDetailWithProducts = Prisma.OrderDetailGetPayload<{
-  include: { 
-    product: true
-}}>;
 
 export default async function CartPage({
   params,
@@ -30,14 +21,14 @@ export default async function CartPage({
   });
 
   if (!response.ok) return;
-  const cart = await response.json() as OrderWithOrderDetailWithProducts;
+  const cart = await response.json() as OrderWithOrderDetailWithProduct;
 
   return (
     <Stack>
       <h1>Cart</h1>
       {cart.orderDetails.length === 0 && <p>Your cart is empty</p>}
       <Flex direction="column" gap={4}>
-        {cart.orderDetails.map((cartProduct: OrderDetailWithProducts) => {
+        {cart.orderDetails.map((cartProduct: OrderDetailWithProduct) => {
           return (
             <CartProduct
               key={cartProduct.id}

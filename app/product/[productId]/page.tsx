@@ -1,4 +1,4 @@
-import type { Prisma, Product } from "@prisma/client";
+import type { Product, ReviewWithUser } from "@/types";
 
 import { Box, Tabs, HStack, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
@@ -8,13 +8,8 @@ import { notFound } from "next/navigation";
 import ReviewLabel from "@/components/reviewLabel";
 import AddProduct from "@/components/addProduct";
 import SkeletonNextImage from "@/components/skeletonNextImage";
-import { getUserData } from "@/app/api/auth/helper";
 import ReviewDialog from "@/components/reviewDialog";
-
-type ReviewWithUser = Prisma.ReviewGetPayload<{
-  include: {
-    user: true
-}}>;
+import { getUserData } from "@/app/(auth)/helper";
 
 // export const revalidate = 60;
 

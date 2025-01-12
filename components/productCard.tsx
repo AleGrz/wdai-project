@@ -1,4 +1,5 @@
-import { Product } from "@prisma/client";
+import type { Product } from "@/types";
+
 import { Box, Flex, Button } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import Link from "next/link";

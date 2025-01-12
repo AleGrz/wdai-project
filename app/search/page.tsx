@@ -1,6 +1,6 @@
 import type React from "react";
+import type { Product } from "@/types";
 
-import { Product } from "@prisma/client";
 import { AbsoluteCenter, Flex, Separator, Stack } from "@chakra-ui/react";
 import { RxCross2 } from "react-icons/rx";
 

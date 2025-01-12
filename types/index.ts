@@ -44,8 +44,39 @@ export type Product = {
   inStock: number;
   categoryId: number;
   imageUrl: string;
-  reviewCount: number;
+  reviewsCount: number;
   rating: number;
+}
+
+export type Order = {
+  id: number;
+  userId: number;
+  orderDate?: Date;
+}
+
+export type OrderDetail = {
+  id: number;
+  orderId: number;
+  productId: number;
+  quantity: number;
+}
+
+export type OrderWithOrderDetail = Order & {
+  orderDetails: OrderDetail[];
+}
+
+export type OrderDetailWithProduct = OrderDetail & {
+  product: Product;
+}
+
+export type OrderWithOrderDetailWithProduct = Order & {
+  orderDetails: OrderDetailWithProduct[];
+}
+
+export type Category = {
+  id: number;
+  name: string;
+  parentCategoryId: number;
 }
 
 export type ReviewWithUser = Review & {

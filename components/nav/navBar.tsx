@@ -1,19 +1,19 @@
 import Link from "next/link";
 import { Box, Flex } from "@chakra-ui/react";
 import Image from "next/image";
-import { Category } from "@prisma/client";
 import { FaShoppingCart } from "react-icons/fa";
 
+import { Category } from "@/types";
 import NavButton from "@/components/nav/navButton";
 import { DesktopCategoryMenu } from "@/components/categoryMenu";
-import { getUserData } from "@/app/api/auth/helper";
+import { getUserData } from "@/app/(auth)/helper";
 import SearchControl from "@/components/nav/searchControl";
 import AvatarButton from "@/components/nav/avatarButton";
 
 const NavBar: React.FC = async () => {
-  const categories = (await fetch("http://localhost:3000/api/category", {
+  const categories = await fetch("http://localhost:3000/api/category", {
     next: { revalidate: 300 },
-  }).then((data) => data.json())) as Category[];
+  }).then((res) => !res.ok ? [] : res.json()) as Category[];
   const user = await getUserData();
 
   return (
