@@ -69,7 +69,7 @@ const ProductCard: React.FC<{
                 {product.name}
               </Box>
             </Flex>
-            <AddToCartButton productData={product} small={false} />
+            <AddToCartButton productData={product} small={true} />
           </Flex>
         </Box>
         <Box p="6">

@@ -61,7 +61,7 @@ const AddToCartButton: React.FC<{
 
   return (
     <Flex alignContent="center">
-      {small &&
+      {!small &&
         <StepperInput
           defaultValue="1"
           min={1}
@@ -70,7 +70,7 @@ const AddToCartButton: React.FC<{
           onValueChange={e => setQuantity(e.value)}
         />}
       <Button ref={buttonRef} w={"auto"} margin={small ? 0 : 5} onClick={addToCart}>
-        {small && "Add to cart"}
+        {!small && "Add to cart"}
         <FiShoppingCart />
       </Button>
     </Flex>
