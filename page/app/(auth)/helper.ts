@@ -22,7 +22,6 @@ export async function logout(): Promise<void> {
   cookieStore.delete("refreshToken");
 }
 
-
 export async function login(tokens: TokenPair): Promise<void> {
   const cookieStore = await cookies();
 
@@ -41,3 +40,11 @@ export async function login(tokens: TokenPair): Promise<void> {
     sameSite: "strict",
   })
 };
+
+export async function getTokensFromCookies(): Promise<{accessToken: string | null, refreshToken: string | null}> {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken");
+  const refreshToken = cookieStore.get("refreshToken");
+
+  return { accessToken: accessToken?.value || null, refreshToken: refreshToken?.value || null };
+}

@@ -12,7 +12,7 @@ export default async function CartPage({
 }) {
   const cookieStore = await cookies();
   const allCookies = cookieStore.getAll().map(x => `${x.name}=${x.value}`).join("; ");
-  const response = await fetch(`${process.env.API_URL}/cart/${(await params).userId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${(await params).userId}`, {
     headers: {
       Cookie: allCookies
     }
