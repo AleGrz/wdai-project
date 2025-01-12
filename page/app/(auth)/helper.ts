@@ -1,0 +1,43 @@
+"use server";
+import type { TokenPair, User } from "@/types";
+
+import { cookies } from "next/headers";
+
+export async function getUserData(): Promise<User | null> {
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken");
+
+  if (!accessToken === undefined || accessToken?.value === undefined) return null;
+
+  return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
+    method: "POST",
+    body: JSON.stringify({ accessToken: accessToken.value })
+  }).then((res) => !res.ok ? null : res.json());
+}
+
+export async function logout(): Promise<void> {
+  const cookieStore = await cookies();
+
+  cookieStore.delete("accessToken");
+  cookieStore.delete("refreshToken");
+}
+
+
+export async function login(tokens: TokenPair): Promise<void> {
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: "accessToken",
+    value: tokens.accessToken.value,
+    httpOnly: true,
+    maxAge: tokens.accessToken.expiresIn,
+    sameSite: "strict",
+  })
+  cookieStore.set({
+    name: "refreshToken",
+    value: tokens.refreshToken.value,
+    httpOnly: true,
+    maxAge: tokens.refreshToken.expiresIn,
+    sameSite: "strict",
+  })
+};
