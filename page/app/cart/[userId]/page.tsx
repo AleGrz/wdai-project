@@ -1,9 +1,9 @@
-import type { OrderWithOrderDetailWithProduct, OrderDetailWithProduct } from "@/types";
+import type { OrderWithOrderDetailWithProduct } from "@/types";
 
-import { Flex, Stack } from "@chakra-ui/react";
+import { Stack } from "@chakra-ui/react";
 
-import CartProduct from "@/components/cartProduct";
 import { getTokensFromCookies } from "@/app/(auth)/helper";
+import Cart from "@/components/cart";
 
 export default async function CartPage({
   params,
@@ -24,18 +24,7 @@ export default async function CartPage({
   return (
     <Stack>
       <h1>Cart</h1>
-      {cart.orderDetails.length === 0 && <p>Your cart is empty</p>}
-      <Flex direction="column" gap={4}>
-        {cart.orderDetails.map((cartProduct: OrderDetailWithProduct) => {
-          return (
-            <CartProduct
-              key={cartProduct.id}
-              product={cartProduct.product}
-              quantity={cartProduct.quantity}
-            />
-          );
-        })}
-      </Flex>
+      <Cart cart={cart} />
     </Stack>
   );
 }

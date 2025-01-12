@@ -12,7 +12,7 @@ const accessRules = [
   },
   {
     path: "/cart/:userid",
-    methods: ["GET"],
+    methods: ["GET", "PUT"],
     roles: ["user", "admin"],
     userSpecific: true
   },
