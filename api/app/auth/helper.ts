@@ -19,16 +19,16 @@ export async function generateTokens(user: User): Promise<TokenPair> {
   return {
     accessToken: {
       value: accessToken,
-      expiresIn: 36000,
+      expiresIn: 3_600_000,
     },
     refreshToken: {
       value: refreshToken,
-      expiresIn: 6048000,
+      expiresIn: 604_800_000,
     },
   }
 }
 
-export async function decodeToken(token: string): Promise<number | null> {
+export async function decodeToken(token: string): Promise<{userId: number | null, expired: boolean}> {
   try {
     const jwtSecret = process.env.JWT_SECRET as string;
     const decoded = await jose.jwtVerify(
@@ -36,8 +36,8 @@ export async function decodeToken(token: string): Promise<number | null> {
       new TextEncoder().encode(jwtSecret)
     );
 
-    return decoded.payload.userId as number;
-  } catch {
-    return null;
+    return {userId: decoded.payload.userId as number, expired: false};
+  } catch(e) {
+    return {userId: null, expired: e instanceof jose.errors.JWTExpired};
   }
 }

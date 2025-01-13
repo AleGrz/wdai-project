@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       { status: 400 },
     );
   }
-  const userId = await decodeToken(data.refreshToken);
+  const { userId } = await decodeToken(data.refreshToken);
 
   if (userId === null) {
     return Response.json(

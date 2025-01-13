@@ -25,7 +25,7 @@ export default async function ProductPage({
   const reviewsData = (await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/product/${productId}/review`
   ).then((res) => !res.ok ? [] : res.json())) as ReviewWithUser[];
-  const user = await getUserData();
+  const user = await getUserData(false);
 
   return (
     <>

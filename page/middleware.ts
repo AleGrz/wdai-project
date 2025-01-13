@@ -51,9 +51,10 @@ export async function middleware(request: NextRequest) {
       break;
     }
   }
+  const user = await getUserData();
+  
   if (move)
     return NextResponse.next();
-  const user = await getUserData();
   const userRole = !user ? "guest" : user.isAdmin ? "admin" : "user";
 
   for (const rule of accessRules) {

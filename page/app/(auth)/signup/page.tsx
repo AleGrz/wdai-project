@@ -31,7 +31,7 @@ const SignupPage: React.FC = () => {
   const router = useRouter();
 
   const onSubmit = handleSubmit(async (data) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
       method: "POST",
       body: JSON.stringify({
         email: data.email,

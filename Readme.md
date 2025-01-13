@@ -27,3 +27,17 @@ Projekt podzielony jest na dwie aplikacje - stronę kliencką i serwer API.
    - Uruchamiamy aplikację przy użyciu ```npm run start```.
 
 ## Funkcjonalności
+   - logowanie
+   - rejestracja
+   - uwierzytelnianie tokenem JWT
+   - odświeżanie tokena sesji
+   - przeglądanie i wyszukiwanie produktów
+   - strona główna, z produktami posortowanymi po średniej opini i ilości opini
+   - strona każdego produktu ze zdjęciem i opisem
+   - wystawianie opini oraz ich modyfikowania i usuwania
+   - dodawanie produktów do koszyka
+   - usuwanie produktów z koszyka
+   - przeliczanie wartości koszyka
+   - składanie zamówienia
+   - zapisywanie ilości produktów w magazynie
+   - przekierowywanie do strony logowania w razie użycia akcji wymagającej zalogowania
