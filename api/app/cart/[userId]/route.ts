@@ -98,7 +98,7 @@ export async function PUT(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ userId: string }> },
 ) {
   const prisma = new PrismaClient();
@@ -110,8 +110,7 @@ export async function DELETE(
       { status: 400 }
     );
   }
-
-
+  const body = await request.json();
   const cart = await prisma.order.findFirst({ where: { userId: id, orderDate: null }, include: { orderDetails: true } });
 
   if (!cart) {
@@ -121,7 +120,7 @@ export async function DELETE(
     );
   }
 
-  await prisma.orderDetail.deleteMany({ where: { orderId: cart.id } });
+  await prisma.orderDetail.deleteMany({ where: { orderId: cart.id, productId: body.productId } });
 
   return Response.json(
     { message: "Cart deleted successfully!" } as MessageResponse,

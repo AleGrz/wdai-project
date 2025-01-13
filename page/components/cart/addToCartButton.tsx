@@ -8,7 +8,7 @@ import confetti from "canvas-confetti";
 import { toaster } from "@/components/ui/toaster";
 import { Product } from "@/types";
 import { StepperInput } from "@/components/ui/stepper-input";
-import addProduct from "@/components/cart/serverActions";
+import { addProduct } from "@/components/cart/serverActions";
 import { Button } from "@/components/ui/button";
 
 const AddToCartButton: React.FC<{

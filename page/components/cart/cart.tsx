@@ -4,8 +4,9 @@ import type { OrderWithOrderDetailWithProduct, OrderDetailWithProduct} from "@/t
 import { Button, Flex } from "@chakra-ui/react";
 import { useState } from "react";
 
-import CartProduct from "./cartProduct";
-
+import { buy } from "@/components/cart/serverActions";
+import CartProduct from "@/components/cart/cartProduct";
+import { toaster } from "@/components/ui/toaster";
 
 export default function Cart({
   cart,
@@ -14,19 +15,27 @@ export default function Cart({
 }) {
   const [total, setTotal] = useState<Map<number, number>>(new Map());
 
-  const buy = async () => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${cart.userId}/buy`, {
-      method: "POST",
+  const buyHandle = async () => {
+    const promise = buy(cart.userId);
+    
+    toaster.promise(promise, {
+      success: {
+        title: "Successfully!",
+        description: "Order has been finalized successfully!",
+      },
+      error: {
+        title: "Failed to process",
+        description: "Failed to finalize the order!",
+      },
+      loading: {
+        title: "Finalizing the order...",
+        description: "Please wait"
+      },
     });
-
-    if (!response.ok) {
-      alert("Error buying products");
-
+    if (!(await promise))
       return;
-    }
     cart.orderDetails = [];
     setTotal(new Map());
-    alert("Products bought successfully");
   };
 
   return (
@@ -53,7 +62,7 @@ export default function Cart({
       </h2>
       <Button
         colorScheme="blue"
-        onClick={buy}
+        onClick={buyHandle}
         disabled={
           Array.from(total.values()).reduce((acc, curr) => acc + curr, 0) === 0
         }

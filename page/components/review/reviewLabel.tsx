@@ -8,6 +8,7 @@ import { useState, useRef } from "react";
 import { Rating } from "@/components/ui/rating";
 import { Avatar } from "@/components/ui/avatar";
 import { Field } from "@/components/ui/field";
+import { deleteReview, editReview } from "./serverActions";
 
 export default function ReviewLabel({
   review,
@@ -31,15 +32,10 @@ export default function ReviewLabel({
 
       return;
     }
+    await editReview(review.rating, content, productId, review.id);
     setIsEditing(false);
     setPrev(content);
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${productId}/review/${review.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ description: content, rating: review.rating }),
-    });
+
   };
 
   const onCancel = () => {
@@ -47,10 +43,8 @@ export default function ReviewLabel({
     setContent(prev);
   };
   const onDeleteClicked = async () => {
+    await deleteReview(productId, review.id);
     setIsVisible(false);
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/product/${productId}/review/${review.id}`, {
-      method: "DELETE",
-    });
   };
 
   const onChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

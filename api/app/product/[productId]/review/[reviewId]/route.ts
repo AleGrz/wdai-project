@@ -93,7 +93,7 @@ export async function DELETE(
 ) {
   const prisma = new PrismaClient();
   const id = (await params).reviewId;
-
+  
   try {
     await prisma.review.delete({ where: { id: id } });
 

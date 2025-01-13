@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 
 import { Product } from "@/types";
 import { StepperInput } from "@/components/ui/stepper-input";
-
+import { removeProduct, setQuantity } from "@/components/cart/serverActions";
+import { toaster } from "@/components/ui/toaster";
 
 type ValueChangeDetails = {
   value: string;
@@ -37,35 +38,29 @@ export default function CartProduct({
     const change = newQuantity - currentQuantity;
 
     setCurrentQuantity(newQuantity);
-
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${userId}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          productId: product.id,
-          quantity: change,
-        }),
-      });
-    } catch (error) {
-      console.error("Error updating quantity:", error);
-    }
+    await setQuantity(product.id, change, userId);
   };
 
-  const handleDelete = async () => {
+  const handleRemove = async () => {
     setActive(false);
     setTotal((prev: Map<number, number>) => new Map(prev).set(product.id, 0));
+    const promise = removeProduct(product.id, userId);
 
-    try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart/${userId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: product.id,
-        }),
-      });
-    } catch (error) {
-      console.error("Error deleting product:", error);
-    }
+    toaster.promise(promise, {
+      success: {
+        title: "Successfully remove!",
+        description: "Look in the cart!",
+      },
+      error: {
+        title: "Failed",
+        description: "Failed to remove a product from the cart!",
+      },
+      loading: {
+        title: "Removing item from the cart...",
+        description: "Please wait"
+      },
+    });
+    await promise;
   };
 
   return (
@@ -79,7 +74,7 @@ export default function CartProduct({
           min={1}
           max={product.inStock}
         />
-        <Button onClick={handleDelete}>Delete</Button>
+        <Button onClick={handleRemove}>Remove</Button>
       </HStack>
     )
   );

@@ -15,7 +15,7 @@ import { useForm } from "react-hook-form";
 import { Field } from "@/components/ui/field";
 import { Rating } from "@/components/ui/rating";
 import { DialogBackdrop, DialogCloseTrigger, DialogContent, DialogHeader, DialogRoot, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import addReview from "@/components/review/serverActions";
+import { addReview } from "@/components/review/serverActions";
 
 interface FormValues {
   rating: number;
