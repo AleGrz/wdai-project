@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, GridItem, useMediaQuery } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem } from '@chakra-ui/react';
 import Link from 'next/link';
 import { FaLocationDot, FaPhone } from 'react-icons/fa6';
 
