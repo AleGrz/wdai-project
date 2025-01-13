@@ -20,6 +20,52 @@ export const DesktopCategoryMenu: React.FC<{
   )
 }
 
+export const MobileCategoryMenu: React.FC<{
+  categories: Category[]
+}> = ({ categories }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  const subCategories = categories.filter(x => x.parentCategoryId === null);
+
+  return (
+    <Flex wrap="wrap" justifyContent="center" display={{base: "flex", "2xl": "none"}}>
+      <CategoryMainButton
+        content="Categories"
+        visibleOutline={true}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}>
+        {isHovered  && (
+          <VStack
+            background="bg.panel"
+            position="absolute"
+            top="100%"
+            left="0"
+            boxShadow="md"
+            rounded="md"
+            align="stretch"
+            width="100%"
+            zIndex={10}
+          >
+            {subCategories.map(cat => <MobileCategorySubItem key={cat.id} category={cat} onClick={() => setIsHovered(false)} />)}
+          </VStack>
+        )}
+      </CategoryMainButton>
+    </Flex>
+  );
+}
+
+const MobileCategorySubItem: React.FC<{
+  category: Category,
+  onClick?: MouseEventHandler<HTMLButtonElement>
+}> = ({ category, onClick }) => {
+  const handle = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) onClick(event);
+  };
+
+  return (
+    <CategoryMenuButton category={category} hasArrow={false} onClick={handle} />
+  );
+}
+
 const DesktopCategoryMainItem: React.FC<{
   categories: Category[],
   category: Category
@@ -130,6 +176,27 @@ export const CategoryMenuButton : React.FC<{
             router.push(`/search?categoryId=${category.id}`);
           }}>
         {category.name}
+        {hasArrow && (<LuChevronRight />)}
+      </Button>
+      {<>{children}</>}
+    </Box>
+  );
+}
+
+export const CategoryMainButton : React.FC<{
+  content: string,
+  children?: React.ReactNode,
+  hasArrow?: boolean,
+  visibleOutline?: boolean,
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>,
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>,
+  onClick?: MouseEventHandler<HTMLButtonElement>
+}> = ({content, children, hasArrow, visibleOutline, onMouseEnter, onMouseLeave}) => {
+  return (
+    <Box position="relative" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} width="100%">
+      <Button key={content} width="100%" justifyContent="left"
+        variant={visibleOutline ? "outline" : "ghost"}>
+        {content}
         {hasArrow && (<LuChevronRight />)}
       </Button>
       {<>{children}</>}
