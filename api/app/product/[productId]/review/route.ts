@@ -4,7 +4,7 @@ import type { MessageResponse } from "@/types";
 import { PrismaClient } from "@prisma/client";
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ productId: string }> },
 ) {
   const prisma = new PrismaClient();
@@ -24,31 +24,8 @@ export async function GET(
       { status: 404 });
   }
 
-  const searchParams = request.nextUrl.searchParams;
-  const page = parseInt(searchParams.get("page") || "1", 10);
-  const pageSize = Math.min(
-    parseInt(searchParams.get("pageSize") || "10", 10),
-    100,
-  );
-  
-  if (isNaN(page) || page < 1) {
-    return Response.json(
-      { message: "Invalid page number!" } as MessageResponse,
-      { status: 400 }
-    );
-  }
-  if (isNaN(pageSize) || pageSize < 1) {
-    return Response.json(
-      { message: "Invalid page size!" } as MessageResponse,
-      { status: 400 }
-    );
-  }
-  const skip = (page - 1) * pageSize;
-
   return Response.json(
     await prisma.review.findMany({
-      skip: skip,
-      take: pageSize,
       where: { productId: productId },
       include: {
         user: {

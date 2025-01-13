@@ -37,13 +37,6 @@ export default async function SearchPage({
               <ProductCard key={product.id} product={product} loading={counter++ < 5 ? "eager" : "lazy"} />
             ))}
           </Flex>
-          <PaginationRoot count={20} pageSize={2} defaultPage={1} variant="solid">
-            <Flex justifyContent="center" alignItems="center">
-              <PaginationPrevTrigger />
-              <PaginationItems />
-              <PaginationNextTrigger />
-            </Flex>
-          </PaginationRoot>
         </Flex>
       ) : (
         <AbsoluteCenter>

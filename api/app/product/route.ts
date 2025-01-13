@@ -27,23 +27,7 @@ async function getDescendantCategoryIds(prisma: PrismaClient, categoryId: number
 export async function GET(request: NextRequest) {
   const prisma = new PrismaClient();
   const searchParams = request.nextUrl.searchParams;
-  // const page = parseInt(searchParams.get("page") || "1");
-  // const pageSize = parseInt(searchParams.get("pageSize") || "");
-
-  // if (isNaN(page) || page < 1) {
-  //   return Response.json(
-  //     { message: "Invalid page number!" } as MessageResponse,
-  //     { status: 400 }
-  //   );
-  // }
-  // if (pageSize < 1) {
-  //   return Response.json(
-  //     { message: "Invalid page size!" } as MessageResponse,
-  //     { status: 400 }
-  //   );
-  // }
   const featured = searchParams.get("featured") === "true";
-  //const skip = (page - 1) * pageSize;
   const filters: Prisma.ProductWhereInput = {};
   let orderBy: Prisma.ProductOrderByWithRelationInput[] = [];
   const searchParam = searchParams.get("query");
@@ -94,8 +78,6 @@ export async function GET(request: NextRequest) {
   return Response.json(
     await prisma.product.findMany({
       where: filters,
-      // skip: skip,
-      // take: pageSize,
       orderBy: orderBy,
     }
   ));
