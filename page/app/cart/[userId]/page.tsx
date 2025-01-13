@@ -1,8 +1,9 @@
 import type { OrderWithOrderDetailWithProduct } from "@/types";
 
+import { Text } from "@chakra-ui/react";
+
 import { getTokensFromCookies } from "@/app/(auth)/helper";
 import Cart from "@/components/cart/cart";
-import { Text } from "@chakra-ui/react";
 
 export default async function CartPage({
   params,
