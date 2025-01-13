@@ -23,7 +23,7 @@ model User {
 
 model Order {
   id        Int  @id @default(autoincrement())
-  user      User    @relation(fields: [userId], references: [id])
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   orderDate DateTime?
   orderDetails OrderDetail[]
@@ -32,9 +32,9 @@ model Order {
 model OrderDetail {
   id        Int  @id @default(autoincrement())
   orderId   Int
-  order     Order   @relation(fields: [orderId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId Int 
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   quantity  Int
 }
 
@@ -66,9 +66,9 @@ model Category {
 model Review {
   id          String  @id @default(cuid())
   userId      Int
-  user        User    @relation(fields: [userId], references: [id])
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId   Int
-  product     Product @relation(fields: [productId], references: [id])
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   rating      Int
   description String
 }

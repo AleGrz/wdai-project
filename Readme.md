@@ -14,11 +14,10 @@
 ## Struktura projektu
 Projekt podzielony jest na dwie aplikacje - stronę kliencką i serwer API.
 
-## Inicjalizacja w wersji produkcyjnej
+## Inicjalizacja
 1. Uruchamianie serwera API
    - Instalujemy wymagane paczki poprzez ```npm install```.
-   - Tworzymy nową bazę danych z odpowiednią strukturą ```npx migrate deploy```.
-   - Opcjonalnie wypełniamy bazę danych w wersji produkcyjnej ```npx prisma db seed```.
+   - Tworzymy nową bazę danych z odpowiednią strukturą ```npx migrate dev```.
    - Kompilujemy aplikację przy użyciu ```npm run build```.
    - Uruchamiamy aplikację z użyciem ```npm run start```.
 2. Uruchamianie aplikacji głównej

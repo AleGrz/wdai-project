@@ -12,6 +12,13 @@ export interface Seeder {
 
 async function main() {
   console.log('Seeding database...'); 
+  const tableCount = await prisma.$queryRawUnsafe<number[]>(`SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';`);
+  if (tableCount[0] > 0) {
+    console.log('Database is not empty. Skipping seeding.');
+    return;
+  }
+  
+  console.log('Running migrations...');
   const { values } = parseArgs({
     options: {
       filename: {
