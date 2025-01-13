@@ -1,9 +1,8 @@
 import type { OrderWithOrderDetailWithProduct } from "@/types";
 
-import { Stack } from "@chakra-ui/react";
-
 import { getTokensFromCookies } from "@/app/(auth)/helper";
 import Cart from "@/components/cart/cart";
+import { Text } from "@chakra-ui/react";
 
 export default async function CartPage({
   params,
@@ -22,9 +21,9 @@ export default async function CartPage({
   const cart = await response.json() as OrderWithOrderDetailWithProduct;
 
   return (
-    <Stack>
-      <h1>Cart</h1>
+    <>
+      <Text fontSize={50} fontWeight={900}>Cart</Text>
       <Cart cart={cart} />
-    </Stack>
+    </>
   );
 }

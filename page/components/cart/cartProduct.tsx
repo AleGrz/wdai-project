@@ -1,4 +1,4 @@
-import { Button, HStack } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import { Product } from "@/types";
@@ -65,17 +65,19 @@ export default function CartProduct({
 
   return (
     active && (
-      <HStack>
+      <Flex direction="row" gap={{"base": 5, "lg": 20}} justifyContent="space-between" alignItems="center">
         <h2>{product.name}</h2>
-        <p>{product.price}</p>
-        <StepperInput
-          defaultValue={currentQuantity.toString()}
-          onValueChange={handleQuantityChange}
-          min={1}
-          max={product.inStock}
-        />
-        <Button onClick={handleRemove}>Remove</Button>
-      </HStack>
+        <Flex direction="row" gap={2} alignItems="center">
+          <p>{product.price}</p>
+          <StepperInput
+            defaultValue={currentQuantity.toString()}
+            onValueChange={handleQuantityChange}
+            min={1}
+            max={product.inStock}
+          />
+          <Button onClick={handleRemove}>Remove</Button>
+        </Flex>
+      </Flex>
     )
   );
 }

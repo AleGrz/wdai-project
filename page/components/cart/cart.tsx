@@ -53,22 +53,23 @@ export default function Cart({
             />
           );
         })}
+        <h2>
+          Total: $
+          {Array.from(total.values())
+            .reduce((acc, curr) => acc + curr, 0)
+            .toFixed(2)}
+        </h2>
+        <Button
+          colorScheme="blue"
+          onClick={buyHandle}
+          width="100%"
+          disabled={
+            Array.from(total.values()).reduce((acc, curr) => acc + curr, 0) === 0
+          }
+        >
+          Checkout
+        </Button>
       </Flex>
-      <h2>
-        Total: $
-        {Array.from(total.values())
-          .reduce((acc, curr) => acc + curr, 0)
-          .toFixed(2)}
-      </h2>
-      <Button
-        colorScheme="blue"
-        onClick={buyHandle}
-        disabled={
-          Array.from(total.values()).reduce((acc, curr) => acc + curr, 0) === 0
-        }
-      >
-        Checkout
-      </Button>
     </>
   );
 }

@@ -7,7 +7,7 @@ export default function PricingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Flex justifyContent={"center"} alignItems={"center"} h="80vh">
+    <Flex justifyContent={"center"} direction="column" alignItems={"center"} padding={10} gap={5}>
       {children}
     </Flex>
   );
