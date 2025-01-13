@@ -51,7 +51,7 @@ const LoginPage: React.FC = () => {
   });
 
   return (
-    <Fieldset.Root size="lg" maxW="md">
+    <Fieldset.Root size="lg" maxW="md" padding={5}>
       <form onSubmit={onSubmit} noValidate>
         <Stack>
           <Fieldset.Legend>Log in</Fieldset.Legend>
