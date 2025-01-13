@@ -1,6 +1,6 @@
 import type { Product, ReviewWithUser } from "@/types";
 
-import { Box, Tabs, HStack, Flex } from "@chakra-ui/react";
+import { Box, Tabs, Flex } from "@chakra-ui/react";
 import { TbListDetails } from "react-icons/tb";
 import { FaStar } from "react-icons/fa6";
 import { notFound } from "next/navigation";

@@ -21,6 +21,7 @@ const AddToCartButton: React.FC<{
     const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const button = buttonRef.current;
+
     if (!button) {
       return;
     }
