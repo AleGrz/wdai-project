@@ -8,7 +8,7 @@ export async function generateTokens(user: User): Promise<TokenPair> {
   const jwtSecret = process.env.JWT_SECRET as string;
   const accessToken = await new jose.SignJWT({ userId: user.id })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("1min")
+    .setExpirationTime("60sec")
     .sign(new TextEncoder().encode(jwtSecret));
 
   const refreshToken = await new jose.SignJWT({ userId: user.id })
@@ -28,7 +28,7 @@ export async function generateTokens(user: User): Promise<TokenPair> {
   }
 }
 
-export async function decodeToken(token: string): Promise<number | null> {
+export async function decodeToken(token: string): Promise<{userId: number | null, expired: boolean}> {
   try {
     const jwtSecret = process.env.JWT_SECRET as string;
     const decoded = await jose.jwtVerify(
@@ -36,8 +36,8 @@ export async function decodeToken(token: string): Promise<number | null> {
       new TextEncoder().encode(jwtSecret)
     );
 
-    return decoded.payload.userId as number;
-  } catch {
-    return null;
+    return {userId: decoded.payload.userId as number, expired: false};
+  } catch(e) {
+    return {userId: null, expired: e instanceof jose.errors.JWTExpired};
   }
 }

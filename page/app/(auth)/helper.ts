@@ -1,5 +1,5 @@
 "use server"
-import type { TokenPair, User } from "@/types";
+import type { MessageResponse, TokenPair, User } from "@/types";
 
 import { cookies } from "next/headers";
 
@@ -7,13 +7,15 @@ export async function getUserData(refresh: boolean = true): Promise<User | null>
   const cookieStore = await cookies();
   let accessToken = cookieStore.get("accessToken");
   let refreshToken = cookieStore.get("refreshToken");
+  let onceRefreshed = false;
 
   if ((accessToken === undefined || !accessToken.value) && refreshToken !== undefined && refreshToken.value && refresh) {
     const tokens = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
       method: "POST",
       body: JSON.stringify({ refreshToken: refreshToken.value })
     }).then((res) => !res.ok ? null : res.json()) as TokenPair | null;
-  
+
+    onceRefreshed = true;
     if (tokens) {
       cookieStore.set({
         name: "accessToken",
@@ -36,9 +38,44 @@ export async function getUserData(refresh: boolean = true): Promise<User | null>
 
   if (!accessToken) return null;
 
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
+    method: "POST",
+    body: JSON.stringify({ accessToken: accessToken.value })
+  });
+
+  if (!response.ok) {
+    const message = await response.json() as MessageResponse;
+
+    if (!refresh || onceRefreshed || message.message !== "Token expired" || refreshToken === undefined || !refreshToken.value) return null;
+      const tokens = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+        method: "POST",
+        body: JSON.stringify({ refreshToken: refreshToken.value })
+      }).then((res) => !res.ok ? null : res.json()) as TokenPair | null;
+
+    if (tokens) {
+      cookieStore.set({
+        name: "accessToken",
+        value: tokens.accessToken.value,
+        httpOnly: true,
+        maxAge: tokens.accessToken.expiresIn,
+        sameSite: "strict",
+      })
+      cookieStore.set({
+        name: "refreshToken",
+        value: tokens.refreshToken.value,
+        httpOnly: true,
+        maxAge: tokens.refreshToken.expiresIn,
+        sameSite: "strict",
+      })
+      accessToken = cookieStore.get("accessToken");
+      refreshToken = cookieStore.get("refreshToken");
+    }
+  }
+  if (!accessToken) return null;
+
   return await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
     method: "POST",
-    body: JSON.stringify({ accessToken: accessToken })
+    body: JSON.stringify({ accessToken: accessToken.value })
   }).then((res) => !res.ok ? null : res.json());
 }
 

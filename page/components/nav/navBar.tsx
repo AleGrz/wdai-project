@@ -15,7 +15,7 @@ const NavBar: React.FC = async () => {
   const categories = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`, {
     next: { revalidate: 300 },
   }).then((res) => !res.ok ? [] : res.json()) as Category[];
-  const user = await getUserData(false);
+  const user = await getUserData(true);
 
   return (
     <Box px={4}>

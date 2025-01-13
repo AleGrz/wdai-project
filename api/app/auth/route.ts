@@ -15,7 +15,14 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   }
-  const userId = await decodeToken(data.accessToken);
+  const { userId, expired } = await decodeToken(data.accessToken);
+
+  if (expired) {
+    return Response.json(
+      { message: "Token expired" } as MessageResponse,
+      { status: 401 }
+    );
+  }
 
   if (userId === null) {
     return Response.json(
