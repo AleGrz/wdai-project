@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
+import type { Review, User } from "@prisma/client";
 
 import { NextResponse } from "next/server";
-import { User } from "@prisma/client";
 
 const accessRules = [
   {
@@ -59,6 +59,7 @@ export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const method = request.method;
   const token = request.headers.get("Authorization")?.split(" ")[1] || "";
+  
   const matchesPath = (rulePath: string, requestPath: string) => {
     const ruleRegex = new RegExp(
       "^" + rulePath.replace(/:([a-zA-Z]+)/g, "([^/]+)") + "$"
@@ -82,7 +83,7 @@ export async function middleware(request: NextRequest) {
   const user = await fetch(`${request.nextUrl.origin}/auth`, {
     method: "POST",
     body: JSON.stringify({ accessToken: token }),
-  }).then((res) => !res.ok ? null : res.json()) as User | null;
+  }).then((res) => (!res.ok ? null : res.json())) as User | null;
 
   for (const rule of accessRules) {
     if (matchesPath(rule.path, path) && rule.methods.includes(method)) {
@@ -100,7 +101,22 @@ export async function middleware(request: NextRequest) {
       }
 
       if (rule.userSpecific) {
-        if (!rule.path.includes(":userid")) {
+        if (rule.path.includes(":reviewId") && method !== "POST") {
+          const reviewSpecificPlace = rule.path.split("/").indexOf(":reviewId");
+          const reviewId = decodeURIComponent(path.split("/")[reviewSpecificPlace]);
+          const productSpecificPlace = rule.path.split("/").indexOf(":productId");
+          const productId = decodeURIComponent(path.split("/")[productSpecificPlace]);
+          const review = await fetch(`${request.nextUrl.origin}/product/${productId}/review/${reviewId}`).then((res) =>
+            res.ok ? res.json() : null
+          ) as Review | null;
+
+          if (!review || (review.userId !== user.id && !user.isAdmin)) {
+            return NextResponse.json(
+              { message: "Forbidden: You can only access your own resources." },
+              { status: 403 }
+            );
+          }
+        } else if (!rule.path.includes(":userId")) {
           try {
             const body = await request.json();
 
@@ -111,12 +127,15 @@ export async function middleware(request: NextRequest) {
               );
             }
           } catch {
-
+            return NextResponse.json(
+              { message: "Bad Request: Invalid body format." },
+              { status: 400 }
+            );
           }
         } else {
-          const userSpecificPlace = rule.path.split("/").indexOf(":userid");
-          const userIdFromPath = path.split("/")[userSpecificPlace];
-
+          const userSpecificPlace = rule.path.split("/").indexOf(":userId");
+          const userIdFromPath = decodeURIComponent(path.split("/")[userSpecificPlace]);
+          
           if (parseInt(userIdFromPath) !== user.id && !user.isAdmin) {
             return NextResponse.json(
               { message: "Forbidden: You can only access your own resources." },

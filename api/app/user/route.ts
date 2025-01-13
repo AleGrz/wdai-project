@@ -29,6 +29,13 @@ export async function GET(request: NextRequest) {
   const users = await prisma.user.findMany({
     skip: skip,
     take: pageSize,
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      isAdmin: true,
+    },
   });
 
   return Response.json(users);

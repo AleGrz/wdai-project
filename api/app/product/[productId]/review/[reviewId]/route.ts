@@ -10,7 +10,18 @@ export async function GET(
   const prisma = new PrismaClient();
   const id = (await params).reviewId;
   
-  const review = await prisma.review.findUnique({ where: { id: id } });
+  const review = await prisma.review.findUnique({
+    where: { id: id },
+    include: {
+      user: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      }
+    }
+  });
 
   if (!review) {
     return Response.json(

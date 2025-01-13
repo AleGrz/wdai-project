@@ -51,7 +51,13 @@ export async function GET(
       take: pageSize,
       where: { productId: productId },
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        }
       },
     })
   );

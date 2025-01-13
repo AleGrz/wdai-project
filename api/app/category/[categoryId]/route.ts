@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import type { MessageResponse } from "@/types";
 
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient, Prisma, Category } from "@prisma/client";
 
 export async function GET(
   _request: NextRequest,
@@ -16,11 +16,22 @@ export async function GET(
       { status: 400 }
     );
   }
-  const category = await prisma.category.findMany({ where: { parentCategoryId: id } });
+  const category = await prisma.category.findFirst({
+    where: { id: id },
+    include: {
+      childrenCategories: {
+        select: {
+          id: true,
+          name: true,
+          parentCategoryId: true,
+        }
+      }
+    }
+  }) as Category;
 
   if (!category) {
     return Response.json(
-      { message: "Category has no subcategories!" } as MessageResponse,
+      { message: "Category not found!" } as MessageResponse,
       { status: 404 });
   }
 

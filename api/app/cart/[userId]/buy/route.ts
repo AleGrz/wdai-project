@@ -22,7 +22,7 @@ export async function POST(_request: NextRequest,
   });
 
   return Response.json(
-    { message: "Order details added successfully!" } as MessageResponse,
+    { message: "Order placed successfully!" } as MessageResponse,
     { status: 200 }
   );
 }

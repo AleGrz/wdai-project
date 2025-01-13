@@ -16,7 +16,16 @@ export async function GET(
       { status: 400 }
     );
   }
-  const user = await prisma.user.findUnique({ where: { id: id } });
+  const user = await prisma.user.findUnique({
+    where: { id: id },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      isAdmin: true,
+    },
+  });
 
   if (!user) {
     return Response.json(
@@ -25,5 +34,5 @@ export async function GET(
     );
   }
 
-  return Response.json({id: user.id, firstName: user.firstName, lastName: user.lastName});
+  return Response.json(user);
 }

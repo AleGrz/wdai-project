@@ -29,11 +29,21 @@
 				{
 					"name": "/category",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"\",\r\n    \"categoryParentId\": \"\"\r\n}",
+							"raw": "{\r\n    \"name\": \"\",\r\n    \"categoryParentId\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,11 +65,21 @@
 				{
 					"name": "/category/:categoryId",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"\",\r\n    \"categoryParentId\": null\r\n}",
+							"raw": "{\r\n    \"name\": \"Nabiał\",\r\n    \"parentCategoryId\": 2825\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -78,7 +98,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": ""
+									"value": "2825"
 								}
 							]
 						}
@@ -88,6 +108,16 @@
 				{
 					"name": "/category/:categoryId",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -102,7 +132,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": ""
+									"value": "2825"
 								}
 							]
 						}
@@ -126,7 +156,7 @@
 							"variable": [
 								{
 									"key": "categoryId",
-									"value": "cm5i82utd0000ui1ozj293e83"
+									"value": "2825"
 								}
 							]
 						}
@@ -159,7 +189,7 @@
 									"variable": [
 										{
 											"key": "productId",
-											"value": "cm5ihwdvj0001uin0iwqs1vy9"
+											"value": "2"
 										}
 									]
 								}
@@ -167,13 +197,23 @@
 							"response": []
 						},
 						{
-							"name": "/product/:productId/review Copy",
+							"name": "/product/:productId/review",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"userId\": \"cm5i82utd0000ui1ozj293e83\",\r\n    \"rating\": 5.0,\r\n    \"description\": \"\"\r\n}",
+									"raw": "{\r\n    \"userId\": 33,\r\n    \"rating\": 5.0,\r\n    \"description\": \"\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -193,7 +233,7 @@
 									"variable": [
 										{
 											"key": "productId",
-											"value": "cm5ihwdvj0001uin0iwqs1vy9"
+											"value": "2"
 										}
 									]
 								}
@@ -219,11 +259,11 @@
 									"variable": [
 										{
 											"key": "productId",
-											"value": "cm5ihwdvj0001uin0iwqs1vy9"
+											"value": "1"
 										},
 										{
 											"key": "reviewId",
-											"value": "cm5ioca620001ui108eozig2j"
+											"value": "533"
 										}
 									]
 								}
@@ -233,11 +273,21 @@
 						{
 							"name": "/product/:productId/review/:reviewId",
 							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
 								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"rating\": 6.0,\r\n    \"description\": \"\"\r\n}",
+									"raw": "{\r\n    \"rating\": 5.0,\r\n    \"description\": \"\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -258,11 +308,51 @@
 									"variable": [
 										{
 											"key": "productId",
-											"value": "cm5ihwdvj0001uin0iwqs1vy9"
+											"value": "2"
 										},
 										{
 											"key": "reviewId",
-											"value": "cm5ioca620001ui108eozig2j"
+											"value": "454"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/product/:productId/review/:reviewId",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/product/:productId/review/:reviewId",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"product",
+										":productId",
+										"review",
+										":reviewId"
+									],
+									"variable": [
+										{
+											"key": "productId",
+											"value": "1"
+										},
+										{
+											"key": "reviewId",
+											"value": "533"
 										}
 									]
 								}
@@ -291,11 +381,21 @@
 				{
 					"name": "/product",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Kadzidła\",\r\n    \"brand\": \"Babcia basia\",\r\n    \"description\": \"Najlepsze kadzidła babci kasi\",\r\n    \"price\": 10.0,\r\n    \"inStock\": 5.0,\r\n    \"categoryId\": \"cm5iacm4k0000uiu4cr38wx23\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Kadzidła\",\r\n    \"brand\": \"XYZ\",\r\n    \"description\": \"Najlepsze kadzidła od XYZ\",\r\n    \"price\": 10.0,\r\n    \"inStock\": 5.0,\r\n    \"categoryId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -317,11 +417,21 @@
 				{
 					"name": "/product/:productId",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"ewq\",\r\n    \"brand\": \"weq\",\r\n    \"description\": \"ew\",\r\n    \"price\": 1.0,\r\n    \"inStock\": 0.0,\r\n    \"categoryId\": \"cm5iacm4k0000uiu4cr38wx2\"\r\n}",
+							"raw": "{\r\n    \"name\": \"ewq\",\r\n    \"brand\": \"weq\",\r\n    \"description\": \"ew\",\r\n    \"price\": 1.0,\r\n    \"inStock\": 0.0,\r\n    \"categoryId\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -340,7 +450,7 @@
 							"variable": [
 								{
 									"key": "productId",
-									"value": "cm5ihwdvj0001uin0iwqs1vy9"
+									"value": "1"
 								}
 							]
 						}
@@ -350,6 +460,16 @@
 				{
 					"name": "/product/:productId",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -364,7 +484,7 @@
 							"variable": [
 								{
 									"key": "productId",
-									"value": "cm5ibh1tb0001uijgvp6ltzjy"
+									"value": "1"
 								}
 							]
 						}
@@ -388,7 +508,7 @@
 							"variable": [
 								{
 									"key": "productId",
-									"value": "cm5ibh1tb0001uijgvp6ltzjy"
+									"value": "1"
 								}
 							]
 						}
@@ -408,7 +528,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJjbTVpb2hjYm8wMDAydWkxMDJmeGJoeWczIiwiZXhwIjoxNzM2MDgzNjY3fQ.BFb9wBf-UnhqxH7Vi_fSNKodzX8XNNeGdlqpUn0sPq0",
+									"value": "{{accessToken}}",
 									"type": "string"
 								}
 							]
@@ -416,7 +536,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/user?page=2&pageSize=1",
+							"raw": "{{url}}/user",
 							"host": [
 								"{{url}}"
 							],
@@ -426,11 +546,47 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "2"
+									"value": "2",
+									"disabled": true
 								},
 								{
 									"key": "pageSize",
-									"value": "1"
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/user/:userId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/user/:userId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "33"
 								}
 							]
 						}
@@ -444,6 +600,22 @@
 			"item": [
 				{
 					"name": "/auth/register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    const res = pm.response.json();\r",
+									"    pm.collectionVariables.set('accessToken', res.accessToken.value);\r",
+									"    pm.collectionVariables.set('refreshToken', res.refreshToken.value);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -471,6 +643,22 @@
 				},
 				{
 					"name": "/auth/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    const res = pm.response.json();\r",
+									"    pm.collectionVariables.set('accessToken', res.accessToken.value);\r",
+									"    pm.collectionVariables.set('refreshToken', res.refreshToken.value);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -498,12 +686,28 @@
 				},
 				{
 					"name": "/auth/refresh",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {\r",
+									"    const res = pm.response.json();\r",
+									"    pm.collectionVariables.set('accessToken', res.accessToken.value);\r",
+									"    pm.collectionVariables.set('refreshToken', res.refreshToken.value);\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjbTVpb2hjYm8wMDAydWkxMDJmeGJoeWczIiwiaXNBZG1pbiI6ZmFsc2UsImlhdCI6MTczNjAyNTMwMSwiZXhwIjoxNzM2NjMwMTAxfQ.ERuIJmQFe84JOloO-BfsFEs-7SeDR7C7sEv9mDUlYkY\"\r\n}",
+							"raw": "{\r\n    \"refreshToken\": \"{{refreshToken}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -518,6 +722,195 @@
 							"path": [
 								"auth",
 								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/auth",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"accessToken\": \"{{accessToken}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "cart",
+			"item": [
+				{
+					"name": "/cart/:userId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/cart/:userId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cart",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "33"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/cart/:userId/buy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/cart/:userId/buy",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cart",
+								":userId",
+								"buy"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "33"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/cart/:userId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": 1,\r\n    \"quantity\": 22\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cart/:userId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cart",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "33"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/cart/:userId",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/cart/:userId",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"cart",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "33"
+								}
 							]
 						}
 					},
@@ -551,7 +944,17 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "http://localhost:3000/api",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
 			"type": "string"
 		}
 	]
