@@ -1,5 +1,6 @@
 import type { PrismaClient } from '@prisma/client/extension';
 import type { Seeder } from '../seed';
+
 import { faker } from '@faker-js/faker';
 
 export default class FakerSeeder implements Seeder {
