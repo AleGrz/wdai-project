@@ -8,7 +8,7 @@ import { useState, useRef } from "react";
 import { Rating } from "@/components/ui/rating";
 import { Avatar } from "@/components/ui/avatar";
 import { Field } from "@/components/ui/field";
-import { deleteReview, editReview } from "./serverActions";
+import { deleteReview, editReview } from "@/components/review/serverActions";
 
 export default function ReviewLabel({
   review,
