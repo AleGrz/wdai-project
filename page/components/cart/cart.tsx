@@ -20,7 +20,7 @@ export default function Cart({
     
     toaster.promise(promise, {
       success: {
-        title: "Successfully!",
+        title: "Success!",
         description: "Order has been finalized successfully!",
       },
       error: {
