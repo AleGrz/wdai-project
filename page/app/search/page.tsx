@@ -6,12 +6,6 @@ import { RxCross2 } from "react-icons/rx";
 
 import ProductCard from "@/components/productCard";
 import { EmptyState } from "@/components/ui/empty-state";
-import {
-  PaginationItems,
-  PaginationNextTrigger,
-  PaginationPrevTrigger,
-  PaginationRoot,
-} from "@/components/ui/pagination"
 
 export default async function SearchPage({
   searchParams,
