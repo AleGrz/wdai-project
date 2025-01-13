@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import { useState, useRef } from "react";
 import confetti from "canvas-confetti";
@@ -16,15 +16,12 @@ const AddToCartButton: React.FC<{
   small?: boolean,
 }> = ({ productData, small = false }) => {
   const [quantity, setQuantity] = useState("1");
+  const [inStock, setInStock] = useState(productData.inStock);
   const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const addToCart = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const button = buttonRef.current;
-    
     if (!button) {
-      console.error("Button position not found to throw confetti!");
-
       return;
     }
     button.disabled = true;
@@ -51,29 +48,35 @@ const AddToCartButton: React.FC<{
     const x = (left + width / 2) / window.innerWidth;
     const y = (top + height / 2) / window.innerHeight;
 
+    setInStock((prev) => prev - parseInt(quantity));
+
     button.disabled = false;
     await confetti({
       particleCount: 150,
       spread: 60,
       origin: { x, y },
     });
+
   };
 
   return (
+    <Box>
+      {!small && <Box fontSize={"md"} color={"GrayText"}>In stock: {inStock}</Box>}
     <Flex alignContent="center">
       {!small &&
         <StepperInput
           defaultValue="1"
           min={1}
-          max={productData.inStock || 1}
+          max={inStock}
           margin={5}
           onValueChange={e => setQuantity(e.value)}
         />}
-      <Button ref={buttonRef} w={"auto"} margin={small ? 0 : 5} onClick={addToCart}>
+      <Button ref={buttonRef} w={"auto"} margin={small ? 0 : 5} onClick={addToCart} disabled={inStock <= 0}>
         {!small && "Add to cart"}
         <FiShoppingCart />
       </Button>
     </Flex>
+    </Box>
   );
 }
 

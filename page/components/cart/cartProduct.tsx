@@ -44,7 +44,7 @@ export default function CartProduct({
   const handleRemove = async () => {
     setActive(false);
     setTotal((prev: Map<number, number>) => new Map(prev).set(product.id, 0));
-    const promise = removeProduct(product.id, userId);
+    const promise = removeProduct(product.id, userId, currentQuantity);
 
     toaster.promise(promise, {
       success: {

@@ -68,8 +68,8 @@ export default async function ProductPage({
           </Box>
           <Box p="6">
             <Flex justifyContent="space-between" alignContent="center">
-              <Box fontSize="2xl" color={"white"}>
-                <Box as="span" color={"white"} fontSize="2xl">
+              <Box fontSize="4xl" color={"white"}>
+                <Box as="span" color={"white"} fontSize="3xl">
                   $
                 </Box>
                 {product.price.toFixed(2)}

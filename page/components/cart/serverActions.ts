@@ -26,7 +26,7 @@ export async function addProduct(product: Product, quantity: number): Promise<bo
   return response.ok;
 }
 
-export async function removeProduct(productId: number, userId: number): Promise<boolean> {
+export async function removeProduct(productId: number, userId: number, quantity: number): Promise<boolean> {
   const { accessToken } = await getTokensFromCookies();
   const user = await getUserData();
 
@@ -37,6 +37,7 @@ export async function removeProduct(productId: number, userId: number): Promise<
     method: "DELETE",
     body: JSON.stringify({
       productId: productId,
+      quantity: quantity,
     }),
     headers: {
       "Authorization": `Bearer ${accessToken}`,

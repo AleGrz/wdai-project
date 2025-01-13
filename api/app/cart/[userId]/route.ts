@@ -91,6 +91,11 @@ export async function PUT(
   });
   }
 
+  await prisma.product.update({
+    where: { id: body.productId },
+    data: { inStock: { decrement: body.quantity } },
+  });
+
   return Response.json(
     { message: "Order details added successfully!" } as MessageResponse,
     { status: 201 }
@@ -121,6 +126,11 @@ export async function DELETE(
   }
 
   await prisma.orderDetail.deleteMany({ where: { orderId: cart.id, productId: body.productId } });
+
+  await prisma.product.update({
+    where: { id: body.productId },
+    data: { inStock: { increment: body.quantity } },
+  });
 
   return Response.json(
     { message: "Cart deleted successfully!" } as MessageResponse,
