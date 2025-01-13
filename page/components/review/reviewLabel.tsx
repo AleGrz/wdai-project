@@ -59,7 +59,7 @@ export default function ReviewLabel({
             variant="subtle"
             name={review.user.firstName + " " + review.user.lastName}
           />
-          <Box w={800}>
+          <Box w={"80%"} maxW={800}>
             <h2>{review.user.firstName + " " + review.user.lastName}</h2>
             <Rating
               readOnly={!isEditing}
