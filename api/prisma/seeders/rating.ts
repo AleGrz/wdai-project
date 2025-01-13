@@ -1,41 +1,23 @@
 import type { PrismaClient } from '@prisma/client/extension';
 import type { Seeder } from '../seed';
+import { randomInt } from 'crypto';
+import * as fs from 'fs';
 
 export default class FakerSeeder implements Seeder {
   async main(prisma: PrismaClient) {
-    const products = await prisma.product.findMany();
-    const reviews = await prisma.review.findMany();
-
-    for (const product of products) {
-      product.reviewsCount = 0;
-      product.rating = 0;
-    }
-
-    for (const product of products) {
-      for (const review of reviews) {
-        if (review.productId === product.id) {
-          product.reviewsCount += 1;
-          product.rating += review.rating;
+    const products = JSON.parse(fs.readFileSync('./prisma/seeders/products.json', 'utf-8'));
+    const reviews = JSON.parse(fs.readFileSync('./prisma/seeders/reviews.json', 'utf-8'));
+    for (const review of reviews) {
+        for (let i = 0; i <= randomInt(2, 5); i++) {
+            await prisma.rating.create({
+                data: {
+                    rating: review.rating,
+                    review: review.review,
+                    productId: products[randomInt(0, products.length - 1)].id,
+                    userId: randomInt(1, 20),
+                }
+            });
         }
-      }
-    }
-
-    for (const product of products) {
-      if (product.reviewsCount === 0) {
-        product.rating = 0;
-      } else {
-        product.rating = product.rating / product.reviewsCount;
-      }
-    }
-
-    for (const product of products) {
-      await prisma.product.update({
-        where: { id: product.id },
-        data: {
-          rating: product.rating,
-          reviewsCount: product.reviewsCount,
-        },
-      });
     }
   }
 }
