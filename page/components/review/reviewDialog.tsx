@@ -54,8 +54,8 @@ const ReviewDialog: React.FC<{
   return (
     <DialogRoot lazyMount open={open} onOpenChange={(e) => { setOpen(e.open); reset() }}>
       <DialogBackdrop />
-      <DialogTrigger asChild>
-        <Button>Write a review</Button>
+      <DialogTrigger>
+        <Button w={200}>Write a review</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogCloseTrigger />

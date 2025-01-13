@@ -14,7 +14,7 @@ export const DesktopCategoryMenu: React.FC<{
   const subCategories = categories.filter(x => x.parentCategoryId === null);
 
   return (
-    <Flex wrap="wrap" justifyContent="center">
+    <Flex wrap="wrap" justifyContent="center" display={{base: "none", "2xl": "flex"}}>
       {subCategories.map(cat => <DesktopCategoryMainItem key={cat.id} categories={categories} category={cat} />)}
     </Flex>
   )

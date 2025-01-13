@@ -23,7 +23,7 @@ const NavBar: React.FC = async () => {
         h={16}
         alignItems={"center"}
         justifyContent={"space-between"}
-        gap={200}
+        gap="10%"
       >
         <Box
           height={7}
@@ -46,10 +46,10 @@ const NavBar: React.FC = async () => {
             />
           </Link>
         </Box>
-        <Flex grow={1} asChild>
+        <Flex grow={1} asChild display={{ base: "none", md: "flex" }}>
           <SearchControl />
         </Flex>
-        <Flex justifyContent="flex-end" gap={5} width={200}>
+        <Flex justifyContent="flex-end" gap={5}>
           {user ? (
             <>
               <AvatarButton name={user.firstName + " " + user.lastName} />
@@ -65,7 +65,10 @@ const NavBar: React.FC = async () => {
           )}
         </Flex>
       </Flex>
-      <DesktopCategoryMenu categories={categories} />
+      <Flex grow={1} asChild display={{ base: "flex", md: "none" }}>
+          <SearchControl />
+        </Flex>
+      <DesktopCategoryMenu categories={categories}/>
     </Box>
   );
 };

@@ -105,11 +105,10 @@ export default async function ProductPage({
         </Tabs.Content>
 
         <Tabs.Content value="reviews">
-          <Flex justifyContent={"center"}>
-            <Flex flexFlow={"column"} justifyContent={"flex-start"} gap={10}>
-              {user && 
-                <ReviewDialog product={product} />
-}
+          <Flex justifyContent={"center"} flexDirection="column">
+          {user && 
+                <ReviewDialog product={product} />}
+            <Flex flexDirection={"column"} gap={10} padding={50}>
               {reviewsData.length > 0 ?
                 reviewsData.map((review) => (
                   <ReviewLabel
