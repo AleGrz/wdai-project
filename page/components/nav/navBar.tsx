@@ -6,7 +6,7 @@ import { FaShoppingCart } from "react-icons/fa";
 
 import { Category } from "@/types";
 import NavButton from "@/components/nav/navButton";
-import { DesktopCategoryMenu } from "@/components/categoryMenu";
+import { DesktopCategoryMenu, MobileCategoryMenu } from "@/components/categoryMenu";
 import { getUserData } from "@/app/(auth)/helper";
 import SearchControl from "@/components/nav/searchControl";
 import AvatarButton from "@/components/nav/avatarButton";
@@ -66,9 +66,10 @@ const NavBar: React.FC = async () => {
         </Flex>
       </Flex>
       <Flex grow={1} asChild display={{ base: "flex", md: "none" }}>
-          <SearchControl />
-        </Flex>
+        <SearchControl />
+      </Flex>
       <DesktopCategoryMenu categories={categories}/>
+      <MobileCategoryMenu categories={categories}/>
     </Box>
   );
 };
