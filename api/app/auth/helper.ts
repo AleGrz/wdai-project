@@ -8,7 +8,7 @@ export async function generateTokens(user: User): Promise<TokenPair> {
   const jwtSecret = process.env.JWT_SECRET as string;
   const accessToken = await new jose.SignJWT({ userId: user.id })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("1h")
+    .setExpirationTime("1min")
     .sign(new TextEncoder().encode(jwtSecret));
 
   const refreshToken = await new jose.SignJWT({ userId: user.id })
@@ -19,7 +19,7 @@ export async function generateTokens(user: User): Promise<TokenPair> {
   return {
     accessToken: {
       value: accessToken,
-      expiresIn: 36000,
+      expiresIn: 60000,
     },
     refreshToken: {
       value: refreshToken,

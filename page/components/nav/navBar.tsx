@@ -1,3 +1,4 @@
+"use server";
 import Link from "next/link";
 import { Box, Flex } from "@chakra-ui/react";
 import Image from "next/image";
@@ -14,7 +15,7 @@ const NavBar: React.FC = async () => {
   const categories = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`, {
     next: { revalidate: 300 },
   }).then((res) => !res.ok ? [] : res.json()) as Category[];
-  const user = await getUserData();
+  const user = await getUserData(false);
 
   return (
     <Box px={4}>

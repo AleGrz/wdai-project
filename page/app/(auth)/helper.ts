@@ -1,10 +1,38 @@
-"use server";
+"use server"
 import type { TokenPair, User } from "@/types";
 
 import { cookies } from "next/headers";
 
-export async function getUserData(): Promise<User | null> {
-  const {accessToken } = await getTokensFromCookies();
+export async function getUserData(refresh: boolean = true): Promise<User | null> {
+  const cookieStore = await cookies();
+  let accessToken = cookieStore.get("accessToken");
+  let refreshToken = cookieStore.get("refreshToken");
+
+  if ((accessToken === undefined || !accessToken.value) && refreshToken !== undefined && refreshToken.value && refresh) {
+    const tokens = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+      method: "POST",
+      body: JSON.stringify({ refreshToken: refreshToken.value })
+    }).then((res) => !res.ok ? null : res.json()) as TokenPair | null;
+  
+    if (tokens) {
+      cookieStore.set({
+        name: "accessToken",
+        value: tokens.accessToken.value,
+        httpOnly: true,
+        maxAge: tokens.accessToken.expiresIn,
+        sameSite: "strict",
+      })
+      cookieStore.set({
+        name: "refreshToken",
+        value: tokens.refreshToken.value,
+        httpOnly: true,
+        maxAge: tokens.refreshToken.expiresIn,
+        sameSite: "strict",
+      })
+      accessToken = cookieStore.get("accessToken");
+      refreshToken = cookieStore.get("refreshToken");
+    }
+  }
 
   if (!accessToken) return null;
 
@@ -14,15 +42,7 @@ export async function getUserData(): Promise<User | null> {
   }).then((res) => !res.ok ? null : res.json());
 }
 
-export async function refreshTokens(refreshToken: string): Promise<void> {
-  const tokens = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
-    method: "POST",
-    body: JSON.stringify({ refreshToken: refreshToken })
-  }).then((res) => !res.ok ? null : res.json()) as TokenPair | null;
 
-  if (tokens)
-    await login(tokens);
-}
 
 export async function logout(): Promise<void> {
   const cookieStore = await cookies();
@@ -50,14 +70,37 @@ export async function login(tokens: TokenPair): Promise<void> {
   })
 };
 
+
 export async function getTokensFromCookies(): Promise<{accessToken: string | null, refreshToken: string | null}> {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken");
-  const refreshToken = cookieStore.get("refreshToken");
+  let accessToken = cookieStore.get("accessToken");
+  let refreshToken = cookieStore.get("refreshToken");
 
   if ((accessToken === undefined || !accessToken.value) && refreshToken !== undefined && refreshToken.value) {
-    await refreshTokens(refreshToken.value);
+    const tokens = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh`, {
+      method: "POST",
+      body: JSON.stringify({ refreshToken: refreshToken.value })
+    }).then((res) => !res.ok ? null : res.json()) as TokenPair | null;
+  
+    if (tokens) {
+      cookieStore.set({
+        name: "accessToken",
+        value: tokens.accessToken.value,
+        httpOnly: true,
+        maxAge: tokens.accessToken.expiresIn,
+        sameSite: "strict",
+      })
+      cookieStore.set({
+        name: "refreshToken",
+        value: tokens.refreshToken.value,
+        httpOnly: true,
+        maxAge: tokens.refreshToken.expiresIn,
+        sameSite: "strict",
+      })
+      accessToken = cookieStore.get("accessToken");
+      refreshToken = cookieStore.get("refreshToken");
+    }
   }
 
-  return { accessToken: cookieStore.get("accessToken")?.value || null, refreshToken: cookieStore.get("refreshToken")?.value || null };
+  return { accessToken: accessToken?.value ?? null, refreshToken: refreshToken?.value ?? null };
 }
