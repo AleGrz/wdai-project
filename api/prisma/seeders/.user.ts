@@ -7,12 +7,11 @@ export default class FakerSeeder implements Seeder {
     for (let i = 1; i <= 20; i++) {
       await prisma.user.create({
         data: {
-            id: i,
           email: faker.internet.email(),
             firstName: faker.person.firstName(),
             lastName: faker.person.lastName(),
             password: faker.internet.password(),
-            isAdmin: 0,
+            isAdmin: false,
   }
 });
     }

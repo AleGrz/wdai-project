@@ -8,7 +8,6 @@ export default class FakerSeeder implements Seeder {
     for (const product of products) {
       await prisma.product.create({
         data: {
-            id: product.id,
           name: product.name,
           brand: product.brand,
           description: product.description,
