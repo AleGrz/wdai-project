@@ -29,14 +29,7 @@ export default async function ProductPage({
 
   return (
     <>
-      <HStack
-        alignItems="flex-start"
-        bg={"gray.800"}
-        borderWidth="1px"
-        rounded="lg"
-        shadow="lg"
-        position="relative"
-      >
+      <Flex justifyContent={"center"} fontSize={"2xl"} flexDirection={{ base: "column", md: "row" }} gap={10} padding={50}>
         <Box position="relative" height={600} maxW={800} width="100%">
           <SkeletonNextImage
             src={`${process.env.NEXT_PUBLIC_API_URL}${product.imageUrl}`}
@@ -44,7 +37,7 @@ export default async function ProductPage({
             fill
             priority
             loading="eager"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            sizes="(max-width: 768px) 50%, (max-width: 1200px) 50%, 33%"
             style={{
               background: "white",
               borderRadius: "0.5rem",
@@ -55,15 +48,15 @@ export default async function ProductPage({
           />
         </Box>
 
-        <Box>
+        <Flex flexDirection={"column"} width={"100%"} justifyContent={"space-between"}>
           <Box p="6">
             <Flex mt="1" justifyContent="space-between" alignItems={"center"}>
               <Flex flexDirection={"column"}>
-                <Box as="span" color={"white"} fontSize="lg">
+                <Box as="span" color={"white"} fontSize="2xl">
                   {product.brand}
                 </Box>
                 <Box
-                  fontSize="2xl"
+                  fontSize="4xl"
                   fontWeight="semibold"
                   as="h4"
                   lineHeight="tight"
@@ -76,7 +69,7 @@ export default async function ProductPage({
           <Box p="6">
             <Flex justifyContent="space-between" alignContent="center">
               <Box fontSize="2xl" color={"white"}>
-                <Box as="span" color={"white"} fontSize="lg">
+                <Box as="span" color={"white"} fontSize="2xl">
                   $
                 </Box>
                 {product.price.toFixed(2)}
@@ -84,8 +77,8 @@ export default async function ProductPage({
             </Flex>
             <AddToCartButton productData={product} />
           </Box>
-        </Box>
-      </HStack>
+        </Flex>
+      </Flex>
       <Tabs.Root defaultValue="description" variant={"line"}>
         <Tabs.List>
           <Tabs.Trigger value="description">
@@ -99,17 +92,17 @@ export default async function ProductPage({
         </Tabs.List>
 
         <Tabs.Content value="description">
-          <Flex justifyContent={"center"} fontSize={"2xl"}>
+          <Flex justifyContent={"center"} fontSize={"2xl"} padding={50}>
             {product.description}
           </Flex>
         </Tabs.Content>
 
         <Tabs.Content value="reviews">
-          <Flex justifyContent={"center"} width={800}>
-            <Flex flexDirection={"column"} gap={10} padding={50} width={800}>
+          <Flex justifyContent={"center"} width="100%">
+            <Flex flexDirection={"column"} gap={10} padding={50} maxWidth={800} width={"80%"}>
             {user && 
                 <ReviewDialog product={product} />}
-                <Flex justifyContent="center">
+                <Flex justifyContent="center" flexDirection={"column"} gap={5}>
               {reviewsData.length > 0 ?
                 reviewsData.map((review) => (
                   <ReviewLabel
