@@ -71,6 +71,7 @@ const AddToCartButton: React.FC<{
           max={inStock}
           margin={5}
           onValueChange={e => setQuantity(e.value)}
+          spinOnPress={false}
         />}
       <Button ref={buttonRef} w={"auto"} margin={small ? 0 : 5} onClick={addToCart} disabled={inStock <= 0}>
         {!small && "Add to cart"}

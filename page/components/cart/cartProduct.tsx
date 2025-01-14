@@ -21,6 +21,7 @@ export default function CartProduct({
   setTotal: React.Dispatch<React.SetStateAction<Map<number, number>>>;
   userId: number;
 }) {
+  const totalQuantity = product.inStock + quantity;
   const [active, setActive] = useState(true);
   const [currentQuantity, setCurrentQuantity] = useState(quantity);
 
@@ -29,7 +30,6 @@ export default function CartProduct({
       new Map(prev).set(product.id, product.price * currentQuantity)
     );
   }, [product, currentQuantity, setTotal]);
-
   const handleQuantityChange = async (details: ValueChangeDetails) => {
     const newQuantity = parseInt(details.value);
 
@@ -73,7 +73,8 @@ export default function CartProduct({
             defaultValue={currentQuantity.toString()}
             onValueChange={handleQuantityChange}
             min={1}
-            max={product.inStock}
+            max={totalQuantity}
+            spinOnPress={false}
           />
           <Button onClick={handleRemove}>Remove</Button>
         </Flex>
